@@ -1,0 +1,12 @@
+{
+    "extends": [
+        "airbnb",
+        "airbnb-typescript",
+        "airbnb/hooks",
+        "next/core-web-vitals",
+        "prettier"
+    ],
+    "parserOptions": {
+        "project": "./tsconfig.json"
+    }
+}
