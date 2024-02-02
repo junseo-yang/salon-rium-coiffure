@@ -10,6 +10,14 @@
         "project": "./tsconfig.json"
     },
     "rules": {
-        "react/self-closing-comp": "off"
+        "import/prefer-default-export": "off",
+        "react/button-has-type": "off",
+        "react/function-component-definition": "off",
+        "react/require-default-props": "off",
+        "react/jsx-no-useless-fragment": "off",
+        "react/self-closing-comp": "off",
+        "consistent-return": "off",
+        "no-param-reassign": "off",
+        "@typescript-eslint/no-explicit-any": "off"
     }
 }

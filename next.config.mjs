@@ -1,8 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+    reactStrictMode: true,
+    swcMinify: true,
     images: {
-        domains: ["fakeimg.pl", "static.wixstatic.com"],
-        formats: ["image/webp"]
+        domains: ["lh3.googleusercontent.com", "vercel.com"]
     }
 };
 
