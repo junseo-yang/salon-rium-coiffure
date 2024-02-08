@@ -19,6 +19,16 @@ export default function UserDropdown({ session }: { session: Session }) {
             <Popover
                 content={
                     <div className="w-full rounded-md bg-white p-2 sm:w-56">
+                        <div className="p-2">
+                            {session?.user?.name && (
+                                <p className="truncate text-sm font-medium text-gray-900">
+                                    {session?.user?.name}
+                                </p>
+                            )}
+                            <p className="truncate text-sm text-gray-500">
+                                {session?.user?.email}
+                            </p>
+                        </div>
                         {session.user.role === "admin" ? (
                             <Link
                                 className="relative flex w-full items-center justify-start space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-gray-100"
