@@ -25,7 +25,7 @@ export default function NavBar({ session }: { session: Session | null }) {
                         href="/"
                         className="flex items-center font-display text-2xl"
                     >
-                        <p>Rium Salon</p>
+                        <p>Salon Rium Coiffure</p>
                     </Link>
                     <div>
                         {session ? (
