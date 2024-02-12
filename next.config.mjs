@@ -3,7 +3,18 @@ const nextConfig = {
     reactStrictMode: true,
     swcMinify: true,
     images: {
-        domains: ["lh3.googleusercontent.com", "vercel.com"]
+        remotePatterns: [
+            {
+              protocol: 'https',
+              hostname: 'lh3.googleusercontent.com',
+              pathname: '**',
+            },
+            {
+                protocol: 'https',
+                hostname: 'vercel.com',
+                pathname: '**',
+            }
+        ],
     }
 };
 
