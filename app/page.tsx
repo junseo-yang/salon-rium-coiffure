@@ -3,10 +3,12 @@ import { BOOKING_PAGE_URL } from "@/lib/constants";
 import prisma from "@/lib/prisma";
 import { ServiceCategory } from "@prisma/client";
 
+
 export default async function Home() {
     "use server";
 
     const services = await prisma.service.findMany();
+    const staffs = await prisma.staff.findMany();
 
     const menServices = services.filter(
         (s) => s.category === ServiceCategory.Men
@@ -123,6 +125,49 @@ export default async function Home() {
                                         </div>
                                     ))}
                                 </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Staff Profiles Section */}
+            <div
+                className="my-10 w-full max-w-screen-xl animate-fade-up gap-5 px-5 opacity-0 xl:px-0"
+                style={{
+                    animationDelay: "0.4s", // Adjust the delay as needed
+                    animationFillMode: "forwards"
+                }}
+            >
+                <div className="relative rounded-xl border border-gray-200 bg-white shadow-md">
+                    <div className="mx-auto w-full p-6 text-center">
+                        <h2 className="flex items-center justify-center bg-gradient-to-br from-black to-stone-500 bg-clip-text font-display text-xl font-bold text-transparent md:text-3xl md:font-normal">
+                            <Balancer>Our Staff</Balancer>
+                        </h2>
+                        {!staffs.length ? (
+                            <div className="prose-sm mt-2 leading-normal text-gray-500 md:prose">
+                                <Balancer>
+                                    No staff profiles to display
+                                </Balancer>
+                            </div>
+                        ) : (
+                            <div className="mt-3 grid grid-cols-1 gap-4 md:grid-cols-3">
+                                {staffs.map((member) => (
+                                    <div
+                                        className="prose-sm mt-2 leading-normal text-gray-500 md:prose"
+                                        key={member.id}
+                                    >
+                                        <Balancer>
+                                            <div className="font-bold">
+                                                {member.name}
+                                            </div>
+                                            <p>{member.description}</p>
+                                            <p className="italic">
+                                                {member.role}
+                                            </p>
+                                        </Balancer>
+                                    </div>
+                                ))}
                             </div>
                         )}
                     </div>

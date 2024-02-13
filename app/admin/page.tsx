@@ -45,10 +45,10 @@ export default async function Page() {
                     animationFillMode: "forwards",
                     cursor: "pointer"
                 }}
-                href="/admin/teams"
+                href="/admin/staffs"
             >
                 <p>
-                    <Balancer>Go to Team Management</Balancer>
+                    <Balancer>Go to Staff Management</Balancer>
                 </p>
             </a>
         </>
