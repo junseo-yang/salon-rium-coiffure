@@ -5,12 +5,10 @@ import AccessDenied from "@/components/Shared/AccessDenied";
 import StaffDialog from "@/components/Staffs/StaffDialog";
 import StaffDelete from "@/components/Staffs/StaffDelete";
 import StaffEditDialog from "@/components/Staffs/StaffEditDialog";
-import { PrismaClient } from '@prisma/client';
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 export default async function Page() {
-    const staffMembers = await prisma?.staff.findMany();
+    const staffs = await prisma.staff.findMany();
 
     const session = await getServerSession(AuthOptions);
 
@@ -34,12 +32,13 @@ export default async function Page() {
                     </div>
                     <div className="text-center">
                         <ul>
-                            {staffMembers?.map((member) => (
+                            {staffs?.map((member) => (
                                 <li className="mt-5" key={member.id}>
                                     <div className="mt-5 grid grid-cols-3">
                                         <div></div>
                                         <p>
-                                            {member.name} - {member.role} <br/> {member.description}
+                                            {member.name} - {member.role} <br />{" "}
+                                            {member.description}
                                         </p>
                                         <div className="flex items-stretch">
                                             <StaffEditDialog staff={member} />

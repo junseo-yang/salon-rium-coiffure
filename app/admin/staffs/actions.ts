@@ -1,9 +1,14 @@
-'use server';
+"use server";
 
 import { Roles } from "@prisma/client";
+import prisma from "@/lib/prisma";
 
-export async function createStaff(name: string, description: string, role: Roles) {
-    const staff = await prisma?.staff.create({
+export async function createStaff(
+    name: string,
+    description: string,
+    role: Roles
+) {
+    const staff = await prisma.staff.create({
         data: {
             name,
             description,
@@ -15,7 +20,7 @@ export async function createStaff(name: string, description: string, role: Roles
 }
 
 export async function getStaff(id: string) {
-    const staff = await prisma?.staff.findUnique({
+    const staff = await prisma.staff.findUnique({
         where: {
             id
         }
@@ -24,8 +29,13 @@ export async function getStaff(id: string) {
     return staff;
 }
 
-export async function putStaff(staffId: string, name: string, description: string, role: Roles) {
-    const result = await prisma?.staff.update({
+export async function putStaff(
+    staffId: string,
+    name: string,
+    description: string,
+    role: Roles
+) {
+    const result = await prisma.staff.update({
         where: {
             id: staffId
         },
@@ -40,10 +50,10 @@ export async function putStaff(staffId: string, name: string, description: strin
 }
 
 export async function deleteStaff(staffId: string) {
-    const result = await prisma?.staff.delete({
+    const result = await prisma.staff.delete({
         where: {
             id: staffId
-        },
+        }
     });
 
     return result;
