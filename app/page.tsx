@@ -3,7 +3,6 @@ import { BOOKING_PAGE_URL } from "@/lib/constants";
 import prisma from "@/lib/prisma";
 import { ServiceCategory } from "@prisma/client";
 
-
 export default async function Home() {
     "use server";
 
@@ -78,7 +77,7 @@ export default async function Home() {
                         </h2>
 
                         {!services.length ? (
-                            <div className="prose-sm mt-2 leading-normal text-gray-500 md:prose">
+                            <div className="prose-sm mt-2 leading-normal text-gray-500">
                                 <Balancer>No service to display</Balancer>
                             </div>
                         ) : (
@@ -145,7 +144,7 @@ export default async function Home() {
                             <Balancer>Our Staff</Balancer>
                         </h2>
                         {!staffs.length ? (
-                            <div className="prose-sm mt-2 leading-normal text-gray-500 md:prose">
+                            <div className="prose-sm mt-2 leading-normal text-gray-500">
                                 <Balancer>
                                     No staff profiles to display
                                 </Balancer>
