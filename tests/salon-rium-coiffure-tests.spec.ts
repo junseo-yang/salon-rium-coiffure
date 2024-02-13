@@ -149,7 +149,7 @@ test("delete service", async ({ page }) => {
 
 
     await page.goto("/");
-    await expect(page.getByText("Women’s Cut - $")).toBeHidden()
+    await expect(page.getByText("Women's Root Colour - $")).toBeHidden()
 });
 
 
