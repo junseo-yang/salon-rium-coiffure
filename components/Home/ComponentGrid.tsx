@@ -1,12 +1,11 @@
-/* eslint-disable react/button-has-type */
-
 "use client";
 
 import { useState } from "react";
-import { useDemoModal } from "@/components/Home/DemoModal";
+
 import Popover from "@/components/Shared/Popover";
 import Tooltip from "@/components/Shared/Tooltip";
 import { ChevronDown } from "lucide-react";
+import { useDemoModal } from "./DemoModal";
 
 export default function ComponentGrid() {
     const { DemoModal, setShowDemoModal } = useDemoModal();

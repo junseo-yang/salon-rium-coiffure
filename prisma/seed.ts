@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, ServiceCategory } from "@prisma/client";
 
 const prisma = new PrismaClient();
 async function main() {
@@ -9,7 +9,9 @@ async function main() {
         update: {},
         create: {
             name: "Women's Haircut",
-            price: "$70"
+            price: "$70",
+            category: ServiceCategory.Women,
+            startDate: new Date()
         }
     });
 
@@ -18,7 +20,9 @@ async function main() {
         update: {},
         create: {
             name: "Women's Bangcut",
-            price: "$10"
+            price: "$10",
+            category: ServiceCategory.Women,
+            startDate: new Date()
         }
     });
 
@@ -27,7 +31,9 @@ async function main() {
         update: {},
         create: {
             name: "Women's Hair Wave and Straight Perm",
-            price: "$320"
+            price: "$320",
+            category: ServiceCategory.Women,
+            startDate: new Date()
         }
     });
 
@@ -36,7 +42,9 @@ async function main() {
         update: {},
         create: {
             name: "Women's Bang Perm",
-            price: "$95"
+            price: "$95",
+            category: ServiceCategory.Women,
+            startDate: new Date()
         }
     });
 
@@ -45,7 +53,9 @@ async function main() {
         update: {},
         create: {
             name: "Women's Root Volume Perm",
-            price: "$95"
+            price: "$95",
+            category: ServiceCategory.Women,
+            startDate: new Date()
         }
     });
 
@@ -54,7 +64,9 @@ async function main() {
         update: {},
         create: {
             name: "Women's Regular Colour",
-            price: "$180"
+            price: "$180",
+            category: ServiceCategory.Women,
+            startDate: new Date()
         }
     });
 
@@ -63,7 +75,9 @@ async function main() {
         update: {},
         create: {
             name: "Women's Root Colour",
-            price: "$80"
+            price: "$80",
+            category: ServiceCategory.Women,
+            startDate: new Date()
         }
     });
 
@@ -72,7 +86,9 @@ async function main() {
         update: {},
         create: {
             name: "Men's Haircut",
-            price: "$45"
+            price: "$45",
+            category: ServiceCategory.Men,
+            startDate: new Date()
         }
     });
 
@@ -81,7 +97,9 @@ async function main() {
         update: {},
         create: {
             name: "Men's Side Down Perm",
-            price: "$90"
+            price: "$90",
+            category: ServiceCategory.Men,
+            startDate: new Date()
         }
     });
 
@@ -90,7 +108,9 @@ async function main() {
         update: {},
         create: {
             name: "Men's Perm",
-            price: "$190"
+            price: "$190",
+            category: ServiceCategory.Men,
+            startDate: new Date()
         }
     });
 
@@ -99,7 +119,9 @@ async function main() {
         update: {},
         create: {
             name: "Men's Regular Colour",
-            price: "$70"
+            price: "$70",
+            category: ServiceCategory.Men,
+            startDate: new Date()
         }
     });
 }

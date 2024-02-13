@@ -1,8 +1,23 @@
 import Balancer from "react-wrap-balancer";
 import { BOOKING_PAGE_URL } from "@/lib/constants";
-import Service from "@/components/Home/Service";
+import prisma from "@/lib/prisma";
+import { ServiceCategory } from "@prisma/client";
 
 export default async function Home() {
+    "use server";
+
+    const services = await prisma.service.findMany();
+
+    const menServices = services.filter(
+        (s) => s.category === ServiceCategory.Men
+    );
+    const womenServices = services.filter(
+        (s) => s.category === ServiceCategory.Women
+    );
+    const kidServices = services.filter(
+        (s) => s.category === ServiceCategory.Kid
+    );
+
     return (
         <>
             <div className="z-10 w-full max-w-xl px-5 xl:px-0">
@@ -47,7 +62,72 @@ export default async function Home() {
                 </div>
             </div>
 
-            <Service />
+            <div
+                className="my-10 w-full max-w-screen-xl animate-fade-up gap-5 px-5 opacity-0 xl:px-0"
+                style={{
+                    animationDelay: "0.35s",
+                    animationFillMode: "forwards"
+                }}
+            >
+                <div className="relative rounded-xl border border-gray-200 bg-white shadow-md">
+                    <div className="mx-auto w-full p-6 text-center">
+                        <h2 className="flex items-center justify-center bg-gradient-to-br from-black to-stone-500 bg-clip-text font-display text-xl font-bold text-transparent md:text-3xl md:font-normal">
+                            <Balancer>Services</Balancer>
+                        </h2>
+
+                        {!services.length ? (
+                            <div className="prose-sm mt-2 leading-normal text-gray-500 md:prose">
+                                <Balancer>No service to display</Balancer>
+                            </div>
+                        ) : (
+                            <div className="mt-3 grid grid-cols-3">
+                                <div>
+                                    <h3>Men</h3>
+                                    {menServices.map((service) => (
+                                        <div
+                                            className="prose-sm mt-2 leading-normal text-gray-500 md:prose"
+                                            key={service.id}
+                                        >
+                                            <Balancer>
+                                                {service.name} - $
+                                                {service.price}
+                                            </Balancer>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div>
+                                    <h3>Women</h3>
+                                    {womenServices.map((service) => (
+                                        <div
+                                            className="prose-sm mt-2 leading-normal text-gray-500 md:prose"
+                                            key={service.id}
+                                        >
+                                            <Balancer>
+                                                {service.name} - $
+                                                {service.price}
+                                            </Balancer>
+                                        </div>
+                                    ))}
+                                </div>
+                                <div>
+                                    <h3>Kid</h3>
+                                    {kidServices.map((service) => (
+                                        <div
+                                            className="prose-sm mt-2 leading-normal text-gray-500 md:prose"
+                                            key={service.id}
+                                        >
+                                            <Balancer>
+                                                {service.name} - $
+                                                {service.price}
+                                            </Balancer>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
         </>
     );
 }

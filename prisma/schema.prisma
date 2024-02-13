@@ -56,8 +56,27 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+enum ServiceCategory {
+  Men
+  Women
+  Kid
+}
+
 model Service {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String    @unique
+
+  // staff or designer
+
+  description   String?
+  
+  startDate     DateTime
+  endDate       DateTime?
+  
   price         String
+  image         String?
+  duration      String?
+  
+  category      ServiceCategory
 }
+
