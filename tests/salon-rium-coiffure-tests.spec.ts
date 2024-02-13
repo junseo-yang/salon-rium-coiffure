@@ -15,7 +15,7 @@ test("sign in with google", async ({ page }) => {
     // Login with Google Email
     await page
         .getByLabel("Email or Phone")
-        .fill(process.env.USERNAME as string);
+        .fill(process.env.GOOGLE_USERNAME as string);
 
     // Click Next
     await page.locator("#identifierNext").click();
@@ -23,7 +23,7 @@ test("sign in with google", async ({ page }) => {
     // Login with Google Password
     await page
         .getByLabel("Enter your password")
-        .fill(process.env.PASSWORD as string);
+        .fill(process.env.GOOGLE_PASSWORD as string);
 
     // Click Next
     await page.locator("#passwordNext").click();
@@ -35,10 +35,12 @@ test("sign in with google", async ({ page }) => {
     await expect(page).toHaveTitle(/Salon Rium Coiffure/);
 
     // Click the user icon to open the dropdown menu
-    await page.getByAltText(process.env.USERNAME as string).click();
+    await page.getByAltText(process.env.GOOGLE_USERNAME as string).click();
 
     // Expect a username to be visible
-    await expect(page.getByText(process.env.USERNAME as string)).toBeVisible();
+    await expect(
+        page.getByText(process.env.GOOGLE_USERNAME as string)
+    ).toBeVisible();
 
     // Click the Logout button
     await page.getByText("Logout", { exact: true }).click();
