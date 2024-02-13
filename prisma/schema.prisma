@@ -80,3 +80,15 @@ model Service {
   category      ServiceCategory
 }
 
+enum Roles {
+  Admin
+  Designer
+}
+
+
+model Staff {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String   @unique
+  description String? 
+  role        Roles
+}
