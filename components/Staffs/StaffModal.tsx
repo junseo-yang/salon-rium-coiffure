@@ -67,6 +67,7 @@ const StaffModal = ({
                         </div>
                             <Form.Control asChild>
                                 <input
+                                    id="name-input"
                                     className="Input"
                                     type="text"
                                     value={name}
@@ -126,6 +127,7 @@ const StaffModal = ({
 
                         <Form.Submit asChild>
                             <button
+                                id="submit-button"
                                 type="submit"
                                 className="Button"
                                 style={{ marginTop: 10 }}

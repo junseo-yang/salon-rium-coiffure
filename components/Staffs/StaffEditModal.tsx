@@ -78,6 +78,7 @@ const StaffEditModal = ({
                             </div>
                             <Form.Control asChild>
                                 <input
+                                    id="name-input"
                                     className="Input"
                                     type="text"
                                     value={name}
@@ -139,6 +140,7 @@ const StaffEditModal = ({
 
                         <Form.Submit asChild>
                             <button
+                                id="submit-button"
                                 type="submit"
                                 className="Button"
                                 style={{ marginTop: 10 }}
