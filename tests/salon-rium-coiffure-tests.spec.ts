@@ -137,7 +137,7 @@ test("Create Services", async ({ page }) => {
     await logout(page);
 });
 
-test("update service", async ({ page }) => {
+test("Update Services", async ({ page }) => {
     // Login
     await login(page);
 
