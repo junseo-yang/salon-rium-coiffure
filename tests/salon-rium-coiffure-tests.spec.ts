@@ -1,5 +1,7 @@
 import { test, expect, Page } from "@playwright/test";
 
+test.describe.configure({ mode: "serial" });
+
 const login = async (page: Page) => {
     await page.goto("/");
 
@@ -10,6 +12,9 @@ const login = async (page: Page) => {
 
     // Click the Sign In with Google button
     await page.getByText("Sign In with Google", { exact: true }).click();
+
+    // Wait for opening google login
+    await page.waitForTimeout(1000);
 
     // Expect a title "Sign in - Google Accounts" a substring.
     await expect(page).toHaveTitle(/Sign in - Google Accounts/);
@@ -50,6 +55,9 @@ test("sign in with google", async ({ page }) => {
 
     // Click the Sign In with Google button
     await page.getByText("Sign In with Google", { exact: true }).click();
+
+    // Wait for opening google login
+    await page.waitForTimeout(1000);
 
     // Expect a title "Sign in - Google Accounts" a substring.
     await expect(page).toHaveTitle(/Sign in - Google Accounts/);
