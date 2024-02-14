@@ -8,7 +8,10 @@ export default function StaffDialog() {
     return (
         <div className="flex h-full items-center">
             <DemoModal />
-            <button onClick={() => setShowDemoModal(true)} aria-label="Add Staff">
+            <button 
+            id="btnAddStaff"
+            onClick={() => setShowDemoModal(true)} 
+            aria-label="Add Staff">
                 <PlusCircledIcon />
             </button>
         </div>
