@@ -78,6 +78,7 @@ const ServiceModal = ({
                             </div>
                             <Form.Control asChild>
                                 <input
+                                    id="name-input"
                                     className="Input"
                                     type="text"
                                     value={name}
@@ -107,6 +108,7 @@ const ServiceModal = ({
                             </div>
                             <Form.Control asChild>
                                 <input
+                                    id="price-input"
                                     className="number"
                                     type="number"
                                     value={price}
@@ -166,6 +168,7 @@ const ServiceModal = ({
 
                         <Form.Submit asChild>
                             <button
+                                id="submit-button"
                                 type="submit"
                                 className="Button"
                                 style={{ marginTop: 10 }}
