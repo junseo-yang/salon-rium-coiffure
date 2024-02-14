@@ -6,6 +6,8 @@ const login = async (page: Page) => {
     // Click the Sign In button
     await page.getByRole("button", { name: "Sign In" }).click();
 
+    await page.waitForTimeout(1000);
+
     // Click the Sign In with Google button
     await page.getByText("Sign In with Google", { exact: true }).click();
 
@@ -87,6 +89,139 @@ test("sign in with google", async ({ page }) => {
 
     // Expect the Sign In button to be visible
     await expect(page.getByRole("button", { name: "Sign In" })).toBeVisible();
+});
+
+test("Blocked with no authentication", async ({ page }) => {
+    await page.goto("/admin/services");
+
+    await expect(page.getByText("Access Denied")).toBeVisible();
+});
+
+test("Get All Services", async ({ page }) => {
+    await page.goto("/");
+
+    await expect(page.getByText("Services")).toBeVisible();
+});
+
+test("Create Services", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Create a service
+    await page.goto("/admin/services");
+
+    await page.locator("#btnAddService").click();
+
+    await page.locator("#name-input").fill("Test Service");
+    await page.locator("#price-input").fill("13.99");
+    await page.locator("#submit-button").click();
+
+    await page.waitForTimeout(1000);
+
+    // Assert
+    await page.goto("/");
+    await expect(page.getByText("Test Service")).toBeVisible();
+
+    // Cleanup: Delete the service
+    await page.goto("/admin/services");
+    page.on("dialog", (dialog) => dialog.accept());
+    await page
+        .locator("li")
+        .filter({ hasText: "Test Service" })
+        .getByRole("button")
+        .nth(1)
+        .click();
+    await page.waitForTimeout(1000);
+
+    // Logout
+    await logout(page);
+});
+
+test("Update Services", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Create a service to update
+    await page.goto("/admin/services");
+
+    await page.locator("#btnAddService").click();
+
+    await page.locator("#name-input").fill("Test Service");
+    await page.locator("#price-input").fill("13.99");
+    await page.locator("#submit-button").click();
+
+    await page.waitForTimeout(1000);
+
+    // Update the service
+    await page.goto("/admin/services");
+
+    await page
+        .locator("li")
+        .filter({ hasText: "Test Service" })
+        .getByRole("button")
+        .first()
+        .click();
+
+    await page.locator("#name-input").fill("Test's Perm");
+    await page.locator("#price-input").fill("99.99");
+    await page.locator("#submit-button").click();
+
+    await page.waitForTimeout(1000);
+
+    // Assert
+    await page.goto("/");
+    await expect(page.getByText("Test's Perm")).toBeVisible();
+    await expect(page.getByText("99.99")).toBeVisible();
+
+    // Cleanup: Delete the service
+    await page.goto("/admin/services");
+    page.on("dialog", (dialog) => dialog.accept());
+    await page
+        .locator("li")
+        .filter({ hasText: "Test's Perm" })
+        .getByRole("button")
+        .nth(1)
+        .click();
+    await page.waitForTimeout(1000);
+
+    // Logout
+    await logout(page);
+});
+
+test("Delete Services", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Create a service to delete
+    await page.goto("/admin/services");
+
+    await page.locator("#btnAddService").click();
+
+    await page.locator("#name-input").fill("Test Service");
+    await page.locator("#price-input").fill("13.99");
+    await page.locator("#submit-button").click();
+    await page.waitForTimeout(1000);
+
+    // Delete the service
+    await page.goto("/admin/services");
+    page.on("dialog", (dialog) => {
+        dialog.accept();
+    });
+    await page
+        .locator("li")
+        .filter({ hasText: "Test Service" })
+        .getByRole("button")
+        .nth(1)
+        .click();
+
+    await page.waitForTimeout(1000);
+
+    // Assert
+    await page.goto("/");
+    await expect(page.getByText("Test Service")).toBeHidden();
+
+    // Logout
+    await logout(page);
 });
 
 test("Get All Staffs", async ({ page }) => {
