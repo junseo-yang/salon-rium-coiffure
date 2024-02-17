@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { signOut } from "next-auth/react";
-import { LayoutDashboard, LogOut } from "lucide-react";
+import { Bot, LayoutDashboard, LogOut } from "lucide-react";
 import Popover from "@/components/Shared/Popover";
 import Image from "next/image";
 import { Session } from "next-auth";
@@ -33,9 +33,20 @@ export default function UserDropdown({ session }: { session: Session }) {
                             <Link
                                 className="relative flex w-full items-center justify-start space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-gray-100"
                                 href="/admin"
+                                onClick={() => setOpenPopover(!openPopover)}
                             >
                                 <LayoutDashboard className="h-4 w-4" />
                                 <p className="text-sm">Dashboard</p>
+                            </Link>
+                        ) : null}
+                        {session ? (
+                            <Link
+                                className="relative flex w-full items-center justify-start space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-gray-100"
+                                href="/ai-virtual-hairstyle"
+                                onClick={() => setOpenPopover(!openPopover)}
+                            >
+                                <Bot className="h-4 w-4" />
+                                <p className="text-sm">Ai Virtual Hairstyle</p>
                             </Link>
                         ) : null}
                         <button

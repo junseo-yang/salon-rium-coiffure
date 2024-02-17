@@ -5,16 +5,21 @@ const nextConfig = {
     images: {
         remotePatterns: [
             {
-              protocol: 'https',
-              hostname: 'lh3.googleusercontent.com',
-              pathname: '**',
+                protocol: "https",
+                hostname: "lh3.googleusercontent.com",
+                pathname: "**"
             },
             {
-                protocol: 'https',
-                hostname: 'vercel.com',
-                pathname: '**',
+                protocol: "https",
+                hostname: "vercel.com",
+                pathname: "**"
+            },
+            {
+                protocol: "https",
+                hostname: "img.hair.ailabapi.com",
+                pathname: "**"
             }
-        ],
+        ]
     }
 };
 
