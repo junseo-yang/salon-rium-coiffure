@@ -4,7 +4,7 @@ import prisma from "@/lib/prisma";
 import { ServiceCategory } from "@prisma/client";
 
 export default async function Home() {
-    "use server";
+    // "use server";
 
     const services = await prisma.service.findMany();
     const staffs = await prisma.staff.findMany();
