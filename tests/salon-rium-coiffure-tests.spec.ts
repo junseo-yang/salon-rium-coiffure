@@ -1,4 +1,5 @@
 import { test, expect, Page } from "@playwright/test";
+import fs from "fs";
 
 test.describe.configure({ mode: "serial" });
 
@@ -47,7 +48,7 @@ const logout = async (page: Page) => {
     await page.getByText("Logout", { exact: true }).click();
 };
 
-test("sign in with google", async ({ page }) => {
+test("Sign In with Google", async ({ page }) => {
     await page.goto("/");
 
     // Click the Sign In button
@@ -333,6 +334,103 @@ test("Delete Staffs", async ({ page }) => {
     // Assert
     await page.goto("/");
     await expect(page.getByText("Test Staff")).toBeHidden();
+
+    // Logout
+    await logout(page);
+});
+
+test("Upload Image", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Navigate to Ai Virtual Hairstyle
+    await page.goto("/ai-virtual-hairstyle");
+
+    // Upload Image from test-assets
+    await page
+        .locator("input[name='image']")
+        .setInputFiles("tests/test-assets/woman.jpg");
+
+    // Verify Image is uploaded
+    await expect(page.getByAltText("Before image")).toBeVisible();
+
+    // Logout
+    await logout(page);
+});
+
+test("Ai Virtual Hairstyle", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Navigate to Ai Virtual Hairstyle
+    await page.goto("/ai-virtual-hairstyle");
+
+    // Select Params for request
+    await page.getByText("Select a Hairstyle").click();
+    await page
+        .getByText("Short Pixie With Shaved Sides", { exact: true })
+        .click();
+    await page.getByText("Select a Color").click();
+    await page.getByText("Blue Hair", { exact: true }).click();
+
+    // Upload Image from test-assets
+    await page
+        .locator("input[name='image']")
+        .setInputFiles("tests/test-assets/woman.jpg");
+
+    // Click Try the Hairstyle Button
+    await page.getByRole("button", { name: "Try the Hairstyle" }).click();
+
+    // Verify Image is uploaded
+    await expect(page.getByAltText("After image")).toBeVisible({
+        timeout: 70000
+    });
+
+    // Logout
+    await logout(page);
+});
+
+test("Download Image", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Navigate to Ai Virtual Hairstyle
+    await page.goto("/ai-virtual-hairstyle");
+
+    // Select Params for request
+    await page.getByText("Select a Hairstyle").click();
+    await page
+        .getByText("Short Pixie With Shaved Sides", { exact: true })
+        .click();
+    await page.getByText("Select a Color").click();
+    await page.getByText("Blue Hair", { exact: true }).click();
+
+    // Upload Image from test-assets
+    await page
+        .locator("input[name='image']")
+        .setInputFiles("tests/test-assets/woman.jpg");
+
+    // Click Try the Hairstyle Button
+    await page.getByRole("button", { name: "Try the Hairstyle" }).click();
+
+    // Verify Image is uploaded
+    await expect(page.getByAltText("After image")).toBeVisible({
+        timeout: 70000
+    });
+
+    // Verify Download
+    // Start waiting for download before clicking. Note no await.
+    const downloadPromise = page.waitForEvent("download");
+    await page.getByRole("button", { name: "Download" }).click();
+    const download = await downloadPromise;
+
+    // Wait for the download process to complete and save the downloaded file somewhere.
+    await download.saveAs(`../test-results/${download.suggestedFilename()}`);
+
+    // Verify Downloaded file
+    expect(
+        (await fs.promises.stat((await download.path()) as string)).size
+    ).toBeGreaterThan(1);
 
     // Logout
     await logout(page);
