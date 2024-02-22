@@ -112,7 +112,7 @@ test("Get All Services", async ({ page }) => {
     await expect(page.getByText("Services")).toBeVisible();
 });
 
-test("Create Services", async ({ page }) => {
+test("Create Service", async ({ page }) => {
     // Login
     await login(page);
 
@@ -146,7 +146,7 @@ test("Create Services", async ({ page }) => {
     await logout(page);
 });
 
-test("Update Services", async ({ page }) => {
+test("Update Service", async ({ page }) => {
     // Login
     await login(page);
 
@@ -197,7 +197,7 @@ test("Update Services", async ({ page }) => {
     await logout(page);
 });
 
-test("Delete Services", async ({ page }) => {
+test("Delete Service", async ({ page }) => {
     // Login
     await login(page);
 
@@ -239,7 +239,7 @@ test("Get All Staffs", async ({ page }) => {
     await expect(page.getByText("Our Staff")).toBeVisible();
 });
 
-test("Create Staffs", async ({ page }) => {
+test("Create Staff", async ({ page }) => {
     // Login
     await login(page);
 
@@ -269,7 +269,7 @@ test("Create Staffs", async ({ page }) => {
     await logout(page);
 });
 
-test("Update Staffs", async ({ page }) => {
+test("Update Staff", async ({ page }) => {
     // Login
     await login(page);
 
@@ -310,7 +310,7 @@ test("Update Staffs", async ({ page }) => {
     await logout(page);
 });
 
-test("Delete Staffs", async ({ page }) => {
+test("Delete Staff", async ({ page }) => {
     // Login
     await login(page);
 
