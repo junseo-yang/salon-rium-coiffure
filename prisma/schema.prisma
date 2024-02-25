@@ -92,3 +92,11 @@ model Staff {
   description String? 
   role        Roles
 }
+
+model PopUp {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  startDate   DateTime
+  endDate     DateTime?
+}

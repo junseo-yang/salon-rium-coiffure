@@ -2,12 +2,28 @@ import Balancer from "react-wrap-balancer";
 import { BOOKING_PAGE_URL } from "@/lib/constants";
 import prisma from "@/lib/prisma";
 import { ServiceCategory } from "@prisma/client";
+import PopUpsClientComponent from "@/components/PopUps/PopUpsClientComponent";
+
+
 
 export default async function Home() {
     // "use server";
 
     const services = await prisma.service.findMany();
     const staffs = await prisma.staff.findMany();
+    const popUps = await prisma.popUp.findMany();
+
+    const currentDate = new Date();
+
+    // Filter pop-ups that should be currently displayed
+    const activePopUps = popUps.filter(popUp => {
+        const startDate = new Date(popUp.startDate);
+        const endDate = popUp.endDate ? new Date(popUp.endDate) : null;
+        return startDate <= currentDate && (!endDate || currentDate <= endDate);
+    }).map(popUp => ({
+        ...popUp,
+        countdown: 5
+    }));
 
     const menServices = services.filter(
         (s) => s.category === ServiceCategory.Men
@@ -21,6 +37,9 @@ export default async function Home() {
 
     return (
         <>
+            {/* Display active pop-ups */}
+            <PopUpsClientComponent initialPopUps={activePopUps} />
+
             <div className="z-10 w-full max-w-xl px-5 xl:px-0">
                 <h1
                     className="animate-fade-up bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-4xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm md:text-7xl md:leading-[5rem]"
