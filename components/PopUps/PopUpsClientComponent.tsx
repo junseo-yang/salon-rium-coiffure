@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 type PopUp = {
     id: string;
@@ -17,10 +17,30 @@ const PopUpsClientComponent: React.FC<PopUpsClientComponentProps> = ({ initialPo
     // Initialize each pop-up with a countdown
     const initializedPopUps = initialPopUps.map(popUp => ({ ...popUp, countdown: 5 }));
     const [activePopUps, setActivePopUps] = useState<PopUp[]>(initializedPopUps);
+    const popUpContainerRef = useRef<HTMLDivElement | null>(null); 
+
 
     const handleClose = useCallback((id: string) => {
         setActivePopUps(activePopUps.filter(popUp => popUp.id !== id));
     }, [activePopUps]);
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (popUpContainerRef.current && !popUpContainerRef.current.contains(event.target as Node)) {
+                // If click is outside the pop-up container, close the top-most pop-up
+                if (activePopUps.length > 0) {
+                    handleClose(activePopUps[0].id);
+                }
+            }
+        };
+
+        // Add event listener
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            // Clean up event listener
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [activePopUps, handleClose]);
 
     useEffect(() => {
         let timer: NodeJS.Timeout;
@@ -49,7 +69,7 @@ const PopUpsClientComponent: React.FC<PopUpsClientComponentProps> = ({ initialPo
     return (
         <div className={`fixed inset-0 ${activePopUps.length > 0 ? 'z-50' : 'z-0'} flex items-center justify-center px-4 py-8`}>
             {activePopUps.length > 0 && <div className="absolute inset-0 bg-black opacity-50"></div>}
-            <div className="flex flex-col items-center justify-start space-y-4">
+            <div ref={popUpContainerRef} className="flex flex-col items-center justify-start space-y-4">
                 {activePopUps.map((popUp, index) => (
                     <div 
                         key={popUp.id} 
