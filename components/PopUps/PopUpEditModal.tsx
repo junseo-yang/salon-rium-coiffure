@@ -210,7 +210,8 @@ const PopUpEditModal = ({
                                         timeCaption="Time"
                                         dateFormat="MMMM d, yyyy h:mm aa"
                                         showTimeSelect
-                                        className="Input"
+                                        className="Input cursor-not-allowed"
+                                        readOnly
                                     />
                                     <div>
                                         <button
@@ -265,7 +266,8 @@ const PopUpEditModal = ({
                                         timeCaption="Time"
                                         dateFormat="MMMM d, yyyy h:mm aa"
                                         showTimeSelect
-                                        className="Input"
+                                        className="Input cursor-not-allowed"
+                                        readOnly
                                     />
                                     <div>
                                         <button
