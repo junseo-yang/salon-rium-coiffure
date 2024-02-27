@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
+import "@/components/PopUps/PopUp.module.css";
 
 type PopUp = {
     id: string;
@@ -13,83 +14,105 @@ type PopUpsClientComponentProps = {
     initialPopUps: PopUp[];
 };
 
-const PopUpsClientComponent: React.FC<PopUpsClientComponentProps> = ({ initialPopUps }) => {
-    // Initialize each pop-up with a countdown
-    const initializedPopUps = initialPopUps.map(popUp => ({ ...popUp, countdown: 5 }));
-    const [activePopUps, setActivePopUps] = useState<PopUp[]>(initializedPopUps);
-    const popUpContainerRef = useRef<HTMLDivElement | null>(null); 
-
+const PopUpsClientComponent: React.FC<PopUpsClientComponentProps> = ({
+    initialPopUps
+}) => {
+    const [activePopUps, setActivePopUps] = useState<PopUp[]>(initialPopUps);
 
     const handleClose = useCallback((id: string) => {
-        setActivePopUps(activePopUps.filter(popUp => popUp.id !== id));
-    }, [activePopUps]);
+        setActivePopUps((prev) => prev.filter((popUp) => popUp.id !== id));
+    }, []);
 
+    // Adjust body scroll based on active pop-ups
     useEffect(() => {
-        const handleClickOutside = (event: MouseEvent) => {
-            if (popUpContainerRef.current && !popUpContainerRef.current.contains(event.target as Node)) {
-                // If click is outside the pop-up container, close the top-most pop-up
-                if (activePopUps.length > 0) {
-                    handleClose(activePopUps[0].id);
-                }
-            }
-        };
-
-        // Add event listener
-        document.addEventListener('mousedown', handleClickOutside);
+        document.body.style.overflow =
+            activePopUps.length > 0 ? "hidden" : "auto";
         return () => {
-            // Clean up event listener
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.body.style.overflow = "auto";
         };
-    }, [activePopUps, handleClose]);
+    }, [activePopUps.length]);
 
+    // Countdown
     useEffect(() => {
-        let timer: NodeJS.Timeout;
-        if (activePopUps.length > 0) {
-            timer = setInterval(() => {
-                setActivePopUps(currentPopUps =>
-                    currentPopUps.map((popUp, index) => 
-                        index === 0 ? { ...popUp, countdown: popUp.countdown > 0 ? popUp.countdown - 1 : 0 } : popUp
-                    )
+        if (activePopUps.length > 0 && activePopUps[0].countdown > 0) {
+            const timer = setTimeout(() => {
+                setActivePopUps((current) =>
+                    current
+                        .map((popUp, index) =>
+                            index === 0
+                                ? { ...popUp, countdown: popUp.countdown - 1 }
+                                : popUp
+                        )
+                        .filter((popUp, index) =>
+                            index === 0 ? popUp.countdown > 0 : true
+                        )
                 );
             }, 1000);
 
-            const autoCloseTimer = setTimeout(() => {
-                if (activePopUps.length > 0) {
-                    handleClose(activePopUps[0].id);
-                }
-            }, (activePopUps[0]?.countdown ?? 0) * 1000); // Use the countdown of the top-most pop-up
-
-            return () => {
-                clearTimeout(autoCloseTimer);
-                clearInterval(timer);
-            };
+            return () => clearTimeout(timer);
         }
-    }, [activePopUps, handleClose]);
+    }, [activePopUps]);
 
     return (
-        <div className={`fixed inset-0 ${activePopUps.length > 0 ? 'z-50' : 'z-0'} flex items-center justify-center px-4 py-8`}>
-            {activePopUps.length > 0 && <div className="absolute inset-0 bg-black opacity-50"></div>}
-            <div ref={popUpContainerRef} className="flex flex-col items-center justify-start space-y-4">
-                {activePopUps.map((popUp, index) => (
-                    <div 
-                        key={popUp.id} 
-                        className={`min-w-[300px] min-h-[150px] max-w-lg w-full bg-white rounded-lg shadow-lg p-8 relative flex flex-col items-center ${
-                            index !== 0 ? 'mt-4' : ''
-                        }`}
-                        style={{ zIndex: 1000 - index }}
-                    >
-                        {index === 0 && <div className="absolute top-0 left-0 p-2 text-xs">Closing in {popUp.countdown}...</div>}
-                        <h2 className="text-xl font-bold text-center mb-4">{popUp.title}</h2>
-                        <p className="text-center">{popUp.description}</p>
-                        <button
-                            onClick={() => handleClose(popUp.id)}
-                            className="absolute top-0 right-0 m-2 text-2xl p-2"
-                            style={{ cursor: 'pointer', lineHeight: '1' }}
+        <div
+            className={`fixed inset-0 ${activePopUps.length > 0 ? "z-40" : "z-0"}`}
+        >
+            {activePopUps.length > 0 && (
+                <div className="absolute inset-0 z-30 bg-black opacity-50"></div>
+            )}
+            <div
+                className="custom-scrollbar relative z-50 overflow-auto"
+                style={{ maxHeight: "100vh" }}
+            >
+                <div
+                    className="flex flex-col items-center justify-center space-y-4 p-4"
+                    style={{ minHeight: "100vh" }}
+                >
+                    {activePopUps.map((popUp) => (
+                        <div
+                            key={popUp.id}
+                            className="custom-scrollbar-content flex flex-col items-center rounded-lg bg-white shadow-lg"
+                            style={{
+                                minWidth: "300px",
+                                maxWidth: "500px",
+                                padding: "20px",
+                                position: "relative"
+                            }}
                         >
-                            &times;
-                        </button>
-                    </div>
-                ))}
+                            <h2
+                                className="mb-4 break-all text-center text-xl font-bold"
+                                style={{
+                                    maxHeight: "80px",
+                                    overflowY: "auto",
+                                    margin: "20px 0"
+                                }}
+                            >
+                                {popUp.title}
+                            </h2>
+                            <p
+                                className="break-all text-center"
+                                style={{
+                                    maxHeight: "200px",
+                                    overflowY: "auto",
+                                    margin: "0 0 20px 0"
+                                }}
+                            >
+                                {popUp.description}
+                            </p>
+                            <button
+                                onClick={() => handleClose(popUp.id)}
+                                className="absolute right-1 top-1 m-2 p-1 text-2xl"
+                                style={{
+                                    cursor: "pointer",
+                                    lineHeight: "1",
+                                    zIndex: 10
+                                }}
+                            >
+                                &times; {/* Close Icon */}
+                            </button>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     );

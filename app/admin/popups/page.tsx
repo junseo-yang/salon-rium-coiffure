@@ -36,8 +36,8 @@ export default async function Page() {
                                 <li className="mt-5" key={popUp.id}>
                                     <div className="mt-5 grid grid-cols-3">
                                         <div></div>
-                                        <p>
-                                            {popUp.title} <br />
+                                        <p className="break-all">
+                                            <strong>{popUp.title}</strong> <br />
                                             {popUp.description} <br />
                                             {new Date(popUp.startDate).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })} - {popUp.endDate ? new Date(popUp.endDate).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }) : "Ongoing"}
                                         </p>

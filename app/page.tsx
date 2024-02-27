@@ -4,8 +4,6 @@ import prisma from "@/lib/prisma";
 import { ServiceCategory } from "@prisma/client";
 import PopUpsClientComponent from "@/components/PopUps/PopUpsClientComponent";
 
-
-
 export default async function Home() {
     // "use server";
 
@@ -16,14 +14,18 @@ export default async function Home() {
     const currentDate = new Date();
 
     // Filter pop-ups that should be currently displayed
-    const activePopUps = popUps.filter(popUp => {
-        const startDate = new Date(popUp.startDate);
-        const endDate = popUp.endDate ? new Date(popUp.endDate) : null;
-        return startDate <= currentDate && (!endDate || currentDate <= endDate);
-    }).map(popUp => ({
-        ...popUp,
-        countdown: 5
-    }));
+    const activePopUps = popUps
+        .filter((popUp) => {
+            const startDate = new Date(popUp.startDate);
+            const endDate = popUp.endDate ? new Date(popUp.endDate) : null;
+            return (
+                startDate <= currentDate && (!endDate || currentDate <= endDate)
+            );
+        })
+        .map((popUp) => ({
+            ...popUp,
+            countdown: 5
+        }));
 
     const menServices = services.filter(
         (s) => s.category === ServiceCategory.Men
