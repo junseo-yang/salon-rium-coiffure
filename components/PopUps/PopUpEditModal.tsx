@@ -215,6 +215,7 @@ const PopUpEditModal = ({
                                     />
                                     <div>
                                         <button
+                                            id="start-date-button"
                                             type="button"
                                             onClick={toggleStartDatePicker}
                                         >
@@ -271,6 +272,7 @@ const PopUpEditModal = ({
                                     />
                                     <div>
                                         <button
+                                            id="end-date-button"
                                             type="button"
                                             onClick={toggleEndDatePicker}
                                         >

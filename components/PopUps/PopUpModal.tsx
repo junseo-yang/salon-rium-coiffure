@@ -206,6 +206,7 @@ const PopUpModalComponent = ({
                                         <button
                                             type="button"
                                             onClick={toggleStartDatePicker}
+                                            id="start-date-button"
                                         >
                                             Choose Start Date
                                         </button>
@@ -260,6 +261,7 @@ const PopUpModalComponent = ({
                                     />
                                     <div>
                                         <button
+                                            id="end-date-button"
                                             type="button"
                                             onClick={toggleEndDatePicker}
                                         >
