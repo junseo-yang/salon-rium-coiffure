@@ -37,9 +37,35 @@ export default async function Page() {
                                     <div className="mt-5 grid grid-cols-3">
                                         <div></div>
                                         <p className="break-all">
-                                            <strong>{popUp.title}</strong> <br />
+                                            <strong>{popUp.title}</strong>{" "}
+                                            <br />
                                             {popUp.description} <br />
-                                            {new Date(popUp.startDate).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true })} - {popUp.endDate ? new Date(popUp.endDate).toLocaleString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true }) : "Ongoing"}
+                                            {new Date(
+                                                popUp.startDate
+                                            ).toLocaleString("en-US", {
+                                                timeZone: "America/New_York",
+                                                year: "numeric",
+                                                month: "short",
+                                                day: "numeric",
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                                hour12: true
+                                            })}{" "}
+                                            -{" "}
+                                            {popUp.endDate
+                                                ? new Date(
+                                                      popUp.endDate
+                                                  ).toLocaleString("en-US", {
+                                                      timeZone:
+                                                          "America/New_York",
+                                                      year: "numeric",
+                                                      month: "short",
+                                                      day: "numeric",
+                                                      hour: "2-digit",
+                                                      minute: "2-digit",
+                                                      hour12: true
+                                                  })
+                                                : "Ongoing"}
                                         </p>
                                         <div className="flex items-stretch">
                                             <PopUpEditDialog popUp={popUp} />
