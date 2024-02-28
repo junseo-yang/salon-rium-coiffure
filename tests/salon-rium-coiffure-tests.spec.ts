@@ -435,3 +435,153 @@ test("Download Image", async ({ page }) => {
     // Logout
     await logout(page);
 });
+
+test("Create Pop-up", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Create a pop-up
+    await page.goto("/admin/popups");
+    await page.locator("#btnAddPopUp").click();
+    await page.locator("#title-input").fill("Holiday Sale");
+    await page.locator("#description-input").fill("Up to 50% off!");
+    await page.locator("#start-date-button").click();
+
+    await page.locator('role=option[name="00:15"]').click();
+    await page.locator("#create-pop-up-button").click();
+
+    await page.waitForTimeout(1000);
+
+    // Assert
+    await page.goto("/");
+    await expect(page.getByText("Holiday SaleUp to 50% off!")).toBeVisible();
+
+    // Cleanup: Delete the pop-up
+    await page.goto("/admin/popups");
+    page.on("dialog", (dialog) => dialog.accept());
+    await page
+        .locator("li")
+        .filter({ hasText: "Holiday Sale" })
+        .getByLabel("Delete Pop-Up")
+        .click();
+    await page.waitForTimeout(1000);
+
+    // Logout
+    await logout(page);
+});
+
+test("Update Pop-up", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Create a pop-up
+    await page.goto("/admin/popups");
+    await page.locator("#btnAddPopUp").click();
+    await page.locator("#title-input").fill("Holiday Sale");
+    await page.locator("#description-input").fill("Up to 50% off!");
+    await page.locator("#start-date-button").click();
+
+    await page.locator('role=option[name="00:15"]').click();
+    await page.locator("#create-pop-up-button").click();
+
+    await page.waitForTimeout(1000);
+
+    // Update the pop-up
+    await page
+        .locator("li")
+        .filter({ hasText: "Holiday Sale" })
+        .getByRole("button")
+        .first()
+        .click();
+    await page.locator("#title-input").fill("Holiday Sale Updated");
+    await page.locator("#description-input").fill("Now up to 60% off!");
+    await page.locator("#update-pop-up-button").click();
+    await page.waitForTimeout(1000);
+
+    // Assert
+    await page.goto("/");
+    await expect(
+        page.getByText("Holiday Sale UpdatedNow up to 60% off!")
+    ).toBeVisible();
+
+    // Cleanup: Delete the pop-up
+    await page.goto("/admin/popups");
+    page.on("dialog", (dialog) => dialog.accept());
+    await page
+        .locator("li")
+        .filter({ hasText: "Holiday Sale Updated" })
+        .getByLabel("Delete Pop-Up")
+        .click();
+    await page.waitForTimeout(1000);
+
+    // Logout
+    await logout(page);
+});
+
+test("Delete Pop-up", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Create a pop-up to delete
+    await page.goto("/admin/popups");
+    await page.locator("#btnAddPopUp").click();
+    await page.locator("#title-input").fill("Holiday Sale");
+    await page.locator("#description-input").fill("Up to 50% off!");
+    await page.locator("#start-date-button").click();
+
+    await page.locator('role=option[name="00:15"]').click();
+    await page.locator("#create-pop-up-button").click();
+
+    await page.waitForTimeout(1000);
+
+    // Delete the pop-up
+    await page.goto("/admin/popups");
+    page.on("dialog", (dialog) => dialog.accept());
+    await page
+        .locator("li")
+        .filter({ hasText: "Holiday Sale" })
+        .getByLabel("Delete Pop-Up")
+        .click();
+    await page.waitForTimeout(1000);
+
+    // Assert
+    await page.goto("/");
+    await expect(page.getByText("Holiday Sale")).toBeHidden();
+
+    // Logout
+    await logout(page);
+});
+
+test("Display Pop-up", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Create a pop-up to display
+    await page.goto("/admin/popups");
+    await page.locator("#btnAddPopUp").click();
+    await page.locator("#title-input").fill("Holiday Sale");
+    await page.locator("#description-input").fill("Up to 50% off!");
+    await page.locator("#start-date-button").click();
+
+    await page.locator('role=option[name="00:15"]').click();
+    await page.locator("#create-pop-up-button").click();
+
+    await page.waitForTimeout(1000);
+
+    // Assert
+    await page.goto("/");
+    await expect(page.getByText("Holiday SaleUp to 50% off!")).toBeVisible();
+
+    // Cleanup: Delete the pop-up
+    await page.goto("/admin/popups");
+    page.on("dialog", (dialog) => dialog.accept());
+    await page
+        .locator("li")
+        .filter({ hasText: "Holiday Sale" })
+        .getByLabel("Delete Pop-Up")
+        .click();
+    await page.waitForTimeout(1000);
+
+    // Logout
+    await logout(page);
+});
