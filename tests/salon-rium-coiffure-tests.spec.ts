@@ -1,5 +1,8 @@
 import { test, expect, Page } from "@playwright/test";
 import fs from "fs";
+import moment from "moment";
+import prisma from "@/lib/prisma";
+import { Roles, ServiceCategory } from "@prisma/client";
 
 test.describe.configure({ mode: "serial" });
 
@@ -584,4 +587,339 @@ test("Display Pop-up", async ({ page }) => {
 
     // Logout
     await logout(page);
+});
+
+test("Create appointment", async ({ page }) => {
+    // create staff and service
+    const testStaff = await prisma.staff.upsert({
+        where: { name: "Test Staff" },
+        update: {},
+        create: {
+            name: "Test Staff",
+            role: Roles.Designer
+        }
+    });
+    const startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
+    const testService = await prisma.service.upsert({
+        where: { name: "Test Haircut" },
+        update: {},
+        create: {
+            name: "Test Haircut",
+            price: "70",
+            category: ServiceCategory.Women,
+            startDate,
+            startTime: "09:00",
+            endTime: "19:00",
+            staffs: {
+                connect: {
+                    id: testStaff.id
+                }
+            }
+        }
+    });
+
+    // Create a booking
+    await page.goto("/booking");
+    await page.getByText("Select Service").click();
+    await page.getByText(testService.name).click();
+
+    await page.getByText("Select Designer").click();
+    await page.getByText(testStaff.name).click();
+
+    const currentDay = moment().format("ddd");
+    await page.getByText(currentDay).click();
+
+    await page.getByText("09:00 ~ 10:00").click();
+    await page.getByText("Book Now").click();
+
+    await page.locator("#name-input").fill("Customer_test_name");
+    await page.locator("#phone-number-input").fill("123-123-1234");
+    await page.locator("#email-input").fill("test@example.com");
+    await page.locator("#submit-button").click();
+
+    // assert
+    await page.waitForTimeout(1000);
+
+    await expect(page.getByText(testService.name)).toBeVisible();
+    await expect(page.getByText(testStaff.name)).toBeVisible();
+    await expect(page.getByText("9:00")).toBeVisible();
+    await expect(page.getByText("10:00")).toBeVisible();
+
+    // delete appointment, staff and service
+    await prisma.appointment.delete({
+        where: {
+            staffId: testStaff.id
+        }
+    });
+
+    await prisma.service.delete({
+        where: { id: testService.id }
+    });
+
+    await prisma.staff.delete({
+        where: { id: testStaff.id }
+    });
+});
+
+test("Create appointment and check it from admin calendar", async ({
+    page
+}) => {
+    // create staff and service
+    const testStaff = await prisma.staff.upsert({
+        where: { name: "Test Staff" },
+        update: {},
+        create: {
+            name: "Test Staff",
+            role: Roles.Designer
+        }
+    });
+    const startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
+    const testService = await prisma.service.upsert({
+        where: { name: "Test Haircut" },
+        update: {},
+        create: {
+            name: "Test Haircut",
+            price: "70",
+            category: ServiceCategory.Women,
+            startDate,
+            startTime: "09:00",
+            endTime: "19:00",
+            staffs: {
+                connect: {
+                    id: testStaff.id
+                }
+            }
+        }
+    });
+
+    // Create a booking
+    await page.goto("/booking");
+    await page.getByText("Select Service").click();
+    await page.getByText(testService.name).click();
+
+    await page.getByText("Select Designer").click();
+    await page.getByText(testStaff.name).click();
+
+    const currentDay = moment().format("ddd");
+    await page.getByText(currentDay).click();
+
+    await page.getByText("09:00 ~ 10:00").click();
+    await page.getByText("Book Now").click();
+
+    await page.locator("#name-input").fill("Customer_test_name");
+    await page.locator("#phone-number-input").fill("123-123-1234");
+    await page.locator("#email-input").fill("test@example.com");
+    await page.locator("#submit-button").click();
+
+    // assert
+    await login(page);
+    await page.goto("/admin/calendar");
+
+    await expect(page.getByText(testService.name)).toBeVisible();
+    await expect(page.getByText(testStaff.name)).toBeVisible();
+    await expect(page.getByText("9:00")).toBeVisible();
+    await expect(page.getByText("10:00")).toBeVisible();
+
+    await logout(page);
+
+    // delete appointment, staff and service
+    await prisma.appointment.delete({
+        where: {
+            staffId: testStaff.id
+        }
+    });
+
+    await prisma.service.delete({
+        where: { id: testService.id }
+    });
+
+    await prisma.staff.delete({
+        where: { id: testStaff.id }
+    });
+});
+
+test("Block unavailable Time", async ({ page }) => {
+    // create staff and service
+    const testStaff = await prisma.staff.upsert({
+        where: { name: "Test Staff" },
+        update: {},
+        create: {
+            name: "Test Staff",
+            role: Roles.Designer
+        }
+    });
+    const startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
+    startDate.setDate(startDate.getDate() + 1);
+    const testService = await prisma.service.upsert({
+        where: { name: "Test Haircut" },
+        update: {},
+        create: {
+            name: "Test Haircut",
+            price: "70",
+            category: ServiceCategory.Women,
+            startDate,
+            startTime: "09:00",
+            endTime: "19:00",
+            staffs: {
+                connect: {
+                    id: testStaff.id
+                }
+            }
+        }
+    });
+
+    // Create a booking
+    await page.goto("/booking");
+    await page.getByText("Select Service").click();
+    await page.getByText(testService.name).isHidden();
+
+    await prisma.service.delete({
+        where: { id: testService.id }
+    });
+
+    await prisma.staff.delete({
+        where: { id: testStaff.id }
+    });
+});
+
+test("Block unavailable Time from week calendar", async ({ page }) => {
+    // create staff and service
+    const testStaff = await prisma.staff.upsert({
+        where: { name: "Test Staff" },
+        update: {},
+        create: {
+            name: "Test Staff",
+            role: Roles.Designer
+        }
+    });
+    const startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
+    const endDate = new Date();
+    endDate.setDate(startDate.getDate() + 1);
+    endDate.setHours(0, 0, 0, 0);
+
+    const testService = await prisma.service.upsert({
+        where: { name: "Test Haircut" },
+        update: {},
+        create: {
+            name: "Test Haircut",
+            price: "70",
+            category: ServiceCategory.Women,
+            startDate,
+            endDate,
+            startTime: "09:00",
+            endTime: "19:00",
+            staffs: {
+                connect: {
+                    id: testStaff.id
+                }
+            }
+        }
+    });
+
+    // Assert
+    await page.goto("/booking");
+    await page.getByText("Select Service").click();
+    await page.getByText(testService.name).click();
+
+    await page.getByText("Select Designer").click();
+    await page.getByText(testStaff.name).click();
+
+    const dayAfter2 = moment();
+    dayAfter2.add(2, "days");
+    await page.getByText(dayAfter2.format("ddd")).click();
+
+    page.on("dialog", async (d) => {
+        expect(d.message()).toEqual("Service is not available on the date");
+    });
+
+    await prisma.service.delete({
+        where: { id: testService.id }
+    });
+
+    await prisma.staff.delete({
+        where: { id: testStaff.id }
+    });
+});
+
+test("Filter not available time schedule", async ({ page }) => {
+    // create staff and service
+    const testStaff = await prisma.staff.upsert({
+        where: { name: "Test Staff" },
+        update: {},
+        create: {
+            name: "Test Staff",
+            role: Roles.Designer
+        }
+    });
+    const startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
+    const testService = await prisma.service.upsert({
+        where: { name: "Test Haircut" },
+        update: {},
+        create: {
+            name: "Test Haircut",
+            price: "70",
+            category: ServiceCategory.Women,
+            startDate,
+            startTime: "09:00",
+            endTime: "19:00",
+            staffs: {
+                connect: {
+                    id: testStaff.id
+                }
+            }
+        }
+    });
+
+    // Create a booking
+    await page.goto("/booking");
+    await page.getByText("Select Service").click();
+    await page.getByText(testService.name).click();
+
+    await page.getByText("Select Designer").click();
+    await page.getByText(testStaff.name).click();
+
+    const currentDay = moment().format("ddd");
+    await page.getByText(currentDay).click();
+
+    await page.getByText("09:00 ~ 10:00").click();
+    await page.getByText("Book Now").click();
+
+    await page.locator("#name-input").fill("Customer_test_name");
+    await page.locator("#phone-number-input").fill("123-123-1234");
+    await page.locator("#email-input").fill("test@example.com");
+    await page.locator("#submit-button").click();
+
+    // assert
+    await page.waitForTimeout(1000);
+
+    await page.goto("/booking");
+    await page.getByText("Select Service").click();
+    await page.getByText(testService.name).click();
+
+    await page.getByText("Select Designer").click();
+    await page.getByText(testStaff.name).click();
+
+    await page.getByText(currentDay).click();
+
+    await expect(page.getByText("09:00 ~ 10:00")).toBeHidden();
+
+    // delete appointment, staff and service
+    await prisma.appointment.delete({
+        where: {
+            staffId: testStaff.id
+        }
+    });
+
+    await prisma.service.delete({
+        where: { id: testService.id }
+    });
+
+    await prisma.staff.delete({
+        where: { id: testStaff.id }
+    });
 });
