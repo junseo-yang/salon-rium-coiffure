@@ -114,56 +114,61 @@ export default function CustomerCalendar({ service, designer }) {
     return (
         <>
             <div className="rounded-md bg-gray-100 p-6">
-                <div className="mx-auto mb-5 flex justify-start rounded-lg bg-white px-2 py-4 shadow-md  md:mx-12 md:justify-center">
-                    <button
-                        className="mr-5"
-                        aria-label="Save"
-                        onClick={() => clickArrow(false)}
-                    >
-                        <ArrowLeftIcon />
-                    </button>
-                    {targetWeek.map((d) => (
+                <div className="mx-auto mb-5 rounded-lg bg-white shadow-md md:mx-12">
+                    <div className="pt-1 text-center font-bold">
+                        {targetWeek[3].format("MMMM")}
+                    </div>
+                    <div className="flex justify-start px-2 py-4 md:justify-center">
                         <button
-                            onClick={() => {
-                                setSelectedDate(d);
-                            }}
-                            key={d.format("mmdd")}
-                            className={`group mx-1 flex w-16 cursor-pointer justify-center rounded-full ${selectedDate?.format("MMDD") === d.format("MMDD") ? "bg-blue-400" : "hover-dark-shadow transition-all duration-300 hover:bg-blue-300 hover:shadow-lg "}`}
+                            className="mr-5"
+                            aria-label="Save"
+                            onClick={() => clickArrow(false)}
                         >
-                            <div className="flex items-center px-4 py-4">
-                                <div className="text-center">
-                                    <p
-                                        className={`text-sm text-gray-900 transition-all duration-300  ${
-                                            moment().format("MMDD") ===
-                                            d.format("MMDD")
-                                                ? "font-bold"
-                                                : ""
-                                        } `}
-                                    >
-                                        {d.format("ddd")}{" "}
-                                    </p>
-                                    <p
-                                        className={`group-hover:text-gray-100" mt-3 text-gray-900 transition-all duration-300	group-hover:font-bold ${
-                                            moment().format("MMDD") ===
-                                            d.format("MMDD")
-                                                ? "font-bold"
-                                                : ""
-                                        }`}
-                                    >
-                                        {" "}
-                                        {d.date()}{" "}
-                                    </p>
-                                </div>
-                            </div>
+                            <ArrowLeftIcon />
                         </button>
-                    ))}
-                    <button
-                        className="ml-5"
-                        aria-label="Save"
-                        onClick={() => clickArrow(true)}
-                    >
-                        <ArrowRightIcon />
-                    </button>
+                        {targetWeek.map((d) => (
+                            <button
+                                onClick={() => {
+                                    setSelectedDate(d);
+                                }}
+                                key={d.format("mmdd")}
+                                className={`group mx-1 flex w-16 cursor-pointer justify-center rounded-full ${selectedDate?.format("MMDD") === d.format("MMDD") ? "bg-blue-400" : "hover-dark-shadow transition-all duration-300 hover:bg-blue-300 hover:shadow-lg "}`}
+                            >
+                                <div className="flex items-center px-4 py-4">
+                                    <div className="text-center">
+                                        <p
+                                            className={`text-sm text-gray-900 transition-all duration-300  ${
+                                                moment().format("MMDD") ===
+                                                d.format("MMDD")
+                                                    ? "font-bold"
+                                                    : ""
+                                            } `}
+                                        >
+                                            {d.format("ddd")}{" "}
+                                        </p>
+                                        <p
+                                            className={`group-hover:text-gray-100" mt-3 text-gray-900 transition-all duration-300	group-hover:font-bold ${
+                                                moment().format("MMDD") ===
+                                                d.format("MMDD")
+                                                    ? "font-bold"
+                                                    : ""
+                                            }`}
+                                        >
+                                            {" "}
+                                            {d.date()}{" "}
+                                        </p>
+                                    </div>
+                                </div>
+                            </button>
+                        ))}
+                        <button
+                            className="ml-5"
+                            aria-label="Save"
+                            onClick={() => clickArrow(true)}
+                        >
+                            <ArrowRightIcon />
+                        </button>
+                    </div>
                 </div>
                 <div className="mx-auto rounded-lg bg-white px-2 py-4 text-center shadow-md  md:mx-12 md:justify-center">
                     <h3>Time</h3>
