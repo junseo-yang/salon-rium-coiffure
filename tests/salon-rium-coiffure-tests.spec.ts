@@ -662,6 +662,177 @@ test("Create appointment", async ({ page }) => {
     });
 });
 
+test("Delete appointment", async ({ page }) => {
+    // create staff and service
+    const testStaff = await prisma.staff.upsert({
+        where: { name: "Test Staff" },
+        update: {},
+        create: {
+            name: "Test Staff",
+            role: Roles.Designer
+        }
+    });
+    const startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
+    const testService = await prisma.service.upsert({
+        where: { name: "Test Haircut" },
+        update: {},
+        create: {
+            name: "Test Haircut",
+            price: "70",
+            category: ServiceCategory.Women,
+            startDate,
+            startTime: "09:00",
+            endTime: "19:00",
+            staffs: {
+                connect: {
+                    id: testStaff.id
+                }
+            }
+        }
+    });
+
+    // Create a booking
+    await page.goto("/booking");
+    await page.getByText("Select Service").click();
+    await page.getByText(testService.name).click();
+
+    await page.getByText("Select Designer").click();
+    await page.getByText(testStaff.name).click();
+
+    const currentDay = moment().format("ddd");
+    await page.getByText(currentDay).click();
+
+    await page.getByText("09:00 ~ 10:00").click();
+    await page.getByText("Book Now").click();
+
+    await page.locator("#name-input").fill("Customer_test_name");
+    await page.locator("#phone-number-input").fill("123-123-1234");
+    await page.locator("#email-input").fill("test@example.com");
+    await page.locator("#submit-button").click();
+
+    await page.waitForTimeout(1000);
+
+    // assert
+    await login(page);
+
+    // Delete a appointment to delete
+    await page.goto("/admin/appointments");
+
+    page.on("dialog", (dialog) => dialog.accept());
+    await page
+        .locator("li")
+        .filter({ hasText: testService.name })
+        .getByRole("button")
+        .nth(1)
+        .click();
+    await page.waitForTimeout(1000);
+
+    // assert
+    await page.goto("/admin/appointments");
+    await expect(page.getByText(testService.name)).toBeHidden();
+
+    await prisma.service.delete({
+        where: { id: testService.id }
+    });
+
+    await prisma.staff.delete({
+        where: { id: testStaff.id }
+    });
+
+    await logout(page);
+});
+
+test("Update appointment", async ({ page }) => {
+    // create staff and service
+    const testStaff = await prisma.staff.upsert({
+        where: { name: "Test Staff" },
+        update: {},
+        create: {
+            name: "Test Staff",
+            role: Roles.Designer
+        }
+    });
+    const startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
+    const testService = await prisma.service.upsert({
+        where: { name: "Test Haircut" },
+        update: {},
+        create: {
+            name: "Test Haircut",
+            price: "70",
+            category: ServiceCategory.Women,
+            startDate,
+            startTime: "09:00",
+            endTime: "19:00",
+            staffs: {
+                connect: {
+                    id: testStaff.id
+                }
+            }
+        }
+    });
+
+    // Create a booking
+    await page.goto("/booking");
+    await page.getByText("Select Service").click();
+    await page.getByText(testService.name).click();
+
+    await page.getByText("Select Designer").click();
+    await page.getByText(testStaff.name).click();
+
+    const currentDay = moment().format("ddd");
+    await page.getByText(currentDay).click();
+
+    await page.getByText("09:00 ~ 10:00").click();
+    await page.getByText("Book Now").click();
+
+    await page.locator("#name-input").fill("Customer_test_name");
+    await page.locator("#phone-number-input").fill("123-123-1234");
+    await page.locator("#email-input").fill("test@example.com");
+    await page.locator("#submit-button").click();
+    await page.waitForTimeout(1000);
+
+    // update only status on appointment
+    // await login(page);
+
+    await page.goto("admin/appointments");
+    await page
+        .locator("li")
+        .filter({ hasText: testService.name })
+        .getByRole("button")
+        .first()
+        .click();
+    await page.selectOption("select#status", "disapproved");
+    await page.locator("#submit-button").click();
+    await page.waitForTimeout(1000);
+
+    const updatedAppointment = await prisma.appointment.findFirst({
+        where: {
+            staffId: testStaff.id
+        }
+    });
+
+    expect(updatedAppointment?.status).toBe("disapproved");
+
+    // delete appointment, staff and service
+    await prisma.appointment.delete({
+        where: {
+            staffId: testStaff.id
+        }
+    });
+
+    await prisma.service.delete({
+        where: { id: testService.id }
+    });
+
+    await prisma.staff.delete({
+        where: { id: testStaff.id }
+    });
+
+    // await logout(page);
+});
+
 test("Create appointment and check it from admin calendar", async ({
     page
 }) => {
