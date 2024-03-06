@@ -33,16 +33,19 @@ export default function CustomerCalendar({ service, designer }) {
     const [targetWeek, setTargetWeek] = useState(createWeekOnMid(current));
     const [availableTimes, setAvailableTimes] = useState<null | string[]>(null);
 
-    // reset all selected date and selected time once either service or staff is changed
+    // reset all selected date and selected time once either service is changed
     useEffect(() => {
-        if (!service || !designer) {
-            return;
-        }
-
         setSelectedDate(null);
         setSelectedTime(null);
         setAvailableTimes(null);
-    }, [service, designer]);
+    }, [service]);
+
+    // reset all selected date and selected time once staff is changed
+    useEffect(() => {
+        setSelectedDate(null);
+        setSelectedTime(null);
+        setAvailableTimes(null);
+    }, [designer]);
 
     // check if updated service is available between start date and end date
     // then update available time
