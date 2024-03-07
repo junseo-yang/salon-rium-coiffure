@@ -13,7 +13,7 @@ export async function getImageURL(task_id: String) {
             "ailabapi-api-key": process.env.AI_LAB_TOOLS_API_KEY || ""
         },
         retryOn: async (attempt, error, response) => {
-            if (attempt > 5) return false;
+            if (attempt > 120) return false;
 
             // Check task_status with cloned json
             const json = await response.clone().json();
