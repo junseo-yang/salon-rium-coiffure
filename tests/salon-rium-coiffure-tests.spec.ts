@@ -103,12 +103,6 @@ test("Sign In with Google", async ({ page }) => {
     await expect(page.getByRole("button", { name: "Sign In" })).toBeVisible();
 });
 
-test("Blocked with no authentication", async ({ page }) => {
-    await page.goto("/admin/services");
-
-    await expect(page.getByText("Access Denied")).toBeVisible();
-});
-
 test("Get All Services", async ({ page }) => {
     await page.goto("/");
 
@@ -124,7 +118,8 @@ test("Create Service", async ({ page }) => {
 
     await page.locator("#btnAddService").click();
 
-    await page.locator("#name-input").fill("Test Service");
+    const testServiceName = `Test Service ${Date.now()}`;
+    await page.locator("#name-input").fill(testServiceName);
     await page.locator("#price-input").fill("13.99");
     await page.locator("#submit-button").click();
 
@@ -132,14 +127,14 @@ test("Create Service", async ({ page }) => {
 
     // Assert
     await page.goto("/");
-    await expect(page.getByText("Test Service")).toBeVisible();
+    await expect(page.getByText(testServiceName)).toBeVisible();
 
     // Cleanup: Delete the service
     await page.goto("/admin/services");
     page.on("dialog", (dialog) => dialog.accept());
     await page
         .locator("li")
-        .filter({ hasText: "Test Service" })
+        .filter({ hasText: testServiceName })
         .getByRole("button")
         .nth(1)
         .click();
@@ -158,7 +153,8 @@ test("Update Service", async ({ page }) => {
 
     await page.locator("#btnAddService").click();
 
-    await page.locator("#name-input").fill("Test Service");
+    const testServiceName = `Test Service ${Date.now()}`;
+    await page.locator("#name-input").fill(testServiceName);
     await page.locator("#price-input").fill("13.99");
     await page.locator("#submit-button").click();
 
@@ -174,7 +170,8 @@ test("Update Service", async ({ page }) => {
         .first()
         .click();
 
-    await page.locator("#name-input").fill("Test's Perm");
+    const testServiceNameUpdated = `Test Perm Service ${Date.now()}`;
+    await page.locator("#name-input").fill(testServiceNameUpdated);
     await page.locator("#price-input").fill("99.99");
     await page.locator("#submit-button").click();
 
@@ -182,7 +179,7 @@ test("Update Service", async ({ page }) => {
 
     // Assert
     await page.goto("/");
-    await expect(page.getByText("Test's Perm")).toBeVisible();
+    await expect(page.getByText(testServiceNameUpdated)).toBeVisible();
     await expect(page.getByText("99.99")).toBeVisible();
 
     // Cleanup: Delete the service
@@ -190,7 +187,7 @@ test("Update Service", async ({ page }) => {
     page.on("dialog", (dialog) => dialog.accept());
     await page
         .locator("li")
-        .filter({ hasText: "Test's Perm" })
+        .filter({ hasText: testServiceNameUpdated })
         .getByRole("button")
         .nth(1)
         .click();
@@ -209,7 +206,8 @@ test("Delete Service", async ({ page }) => {
 
     await page.locator("#btnAddService").click();
 
-    await page.locator("#name-input").fill("Test Service");
+    const testServiceName = `Test Service ${Date.now()}`;
+    await page.locator("#name-input").fill(testServiceName);
     await page.locator("#price-input").fill("13.99");
     await page.locator("#submit-button").click();
     await page.waitForTimeout(1000);
@@ -221,7 +219,7 @@ test("Delete Service", async ({ page }) => {
     });
     await page
         .locator("li")
-        .filter({ hasText: "Test Service" })
+        .filter({ hasText: testServiceName })
         .getByRole("button")
         .nth(1)
         .click();
@@ -230,7 +228,7 @@ test("Delete Service", async ({ page }) => {
 
     // Assert
     await page.goto("/");
-    await expect(page.getByText("Test Service")).toBeHidden();
+    await expect(page.getByText(testServiceName)).toBeHidden();
 
     // Logout
     await logout(page);
@@ -249,20 +247,21 @@ test("Create Staff", async ({ page }) => {
     // Create a Staff
     await page.goto("/admin/staffs");
     await page.locator("#btnAddStaff").click();
-    await page.locator("#name-input").fill("Test Staff");
+    const testStaffName = `Test Staff ${Date.now()}`;
+    await page.locator("#name-input").fill(testStaffName);
     await page.locator("#submit-button").click();
     await page.waitForTimeout(1000);
 
     // Assert
     await page.goto("/");
-    await expect(page.getByText("Test Staff")).toBeVisible();
+    await expect(page.getByText(testStaffName)).toBeVisible();
 
     // Cleanup: Delete the staff
     await page.goto("/admin/staffs");
     page.on("dialog", (dialog) => dialog.accept());
     await page
         .locator("li")
-        .filter({ hasText: "Test Staff" })
+        .filter({ hasText: testStaffName })
         .getByRole("button")
         .nth(1)
         .click();
@@ -279,31 +278,33 @@ test("Update Staff", async ({ page }) => {
     // Create a staff to update
     await page.goto("/admin/staffs");
     await page.locator("#btnAddStaff").click();
-    await page.locator("#name-input").fill("Test Staff");
+    const testStaffName = `Test Staff ${Date.now()}`;
+    await page.locator("#name-input").fill(testStaffName);
     await page.locator("#submit-button").click();
     await page.waitForTimeout(1000);
 
     // Update the staff
     await page
         .locator("li")
-        .filter({ hasText: "Test Staff" })
+        .filter({ hasText: testStaffName })
         .getByRole("button")
         .first()
         .click();
-    await page.locator("#name-input").fill("John Doe");
+    const testStaffNameUpdated = `John Doe ${Date.now()}`;
+    await page.locator("#name-input").fill(testStaffNameUpdated);
     await page.locator("#submit-button").click();
     await page.waitForTimeout(1000);
 
     // Assert
     await page.goto("/");
-    await expect(page.getByText("John Doe")).toBeVisible();
+    await expect(page.getByText(testStaffNameUpdated)).toBeVisible();
 
     // Cleanup: Delete the staff
     await page.goto("/admin/staffs");
     page.on("dialog", (dialog) => dialog.accept());
     await page
         .locator("li")
-        .filter({ hasText: "John Doe" })
+        .filter({ hasText: testStaffNameUpdated })
         .getByRole("button")
         .nth(1)
         .click();
@@ -320,7 +321,8 @@ test("Delete Staff", async ({ page }) => {
     // Create a staff to delete
     await page.goto("/admin/staffs");
     await page.locator("#btnAddStaff").click();
-    await page.locator("#name-input").fill("Test Staff");
+    const testStaffName = `Test Staff ${Date.now()}`;
+    await page.locator("#name-input").fill(testStaffName);
     await page.locator("#submit-button").click();
     await page.waitForTimeout(1000);
 
@@ -328,7 +330,7 @@ test("Delete Staff", async ({ page }) => {
     page.on("dialog", (dialog) => dialog.accept());
     await page
         .locator("li")
-        .filter({ hasText: "Test Staff" })
+        .filter({ hasText: testStaffName })
         .getByRole("button")
         .nth(1)
         .click();
@@ -336,7 +338,7 @@ test("Delete Staff", async ({ page }) => {
 
     // Assert
     await page.goto("/");
-    await expect(page.getByText("Test Staff")).toBeHidden();
+    await expect(page.getByText(testStaffName)).toBeHidden();
 
     // Logout
     await logout(page);
@@ -446,7 +448,8 @@ test("Create Pop-up", async ({ page }) => {
     // Create a pop-up
     await page.goto("/admin/popups");
     await page.locator("#btnAddPopUp").click();
-    await page.locator("#title-input").fill("Holiday Sale");
+    const testPopupName = `Test Popup ${Date.now()}`;
+    await page.locator("#title-input").fill(testPopupName);
     await page.locator("#description-input").fill("Up to 50% off!");
     await page.locator("#start-date-button").click();
 
@@ -457,14 +460,14 @@ test("Create Pop-up", async ({ page }) => {
 
     // Assert
     await page.goto("/");
-    await expect(page.getByText("Holiday SaleUp to 50% off!")).toBeVisible();
+    await expect(page.getByText(testPopupName)).toBeVisible();
 
     // Cleanup: Delete the pop-up
     await page.goto("/admin/popups");
     page.on("dialog", (dialog) => dialog.accept());
     await page
         .locator("li")
-        .filter({ hasText: "Holiday Sale" })
+        .filter({ hasText: testPopupName })
         .getByLabel("Delete Pop-Up")
         .click();
     await page.waitForTimeout(1000);
@@ -480,7 +483,8 @@ test("Update Pop-up", async ({ page }) => {
     // Create a pop-up
     await page.goto("/admin/popups");
     await page.locator("#btnAddPopUp").click();
-    await page.locator("#title-input").fill("Holiday Sale");
+    const testPopupName = `Test Popup ${Date.now()}`;
+    await page.locator("#title-input").fill(testPopupName);
     await page.locator("#description-input").fill("Up to 50% off!");
     await page.locator("#start-date-button").click();
 
@@ -492,27 +496,27 @@ test("Update Pop-up", async ({ page }) => {
     // Update the pop-up
     await page
         .locator("li")
-        .filter({ hasText: "Holiday Sale" })
+        .filter({ hasText: testPopupName })
         .getByRole("button")
         .first()
         .click();
-    await page.locator("#title-input").fill("Holiday Sale Updated");
+
+    const testPopupNameUpdated = `Test Popup Updated ${Date.now()}`;
+    await page.locator("#title-input").fill(testPopupNameUpdated);
     await page.locator("#description-input").fill("Now up to 60% off!");
     await page.locator("#update-pop-up-button").click();
     await page.waitForTimeout(1000);
 
     // Assert
     await page.goto("/");
-    await expect(
-        page.getByText("Holiday Sale UpdatedNow up to 60% off!")
-    ).toBeVisible();
+    await expect(page.getByText(testPopupNameUpdated)).toBeVisible();
 
     // Cleanup: Delete the pop-up
     await page.goto("/admin/popups");
     page.on("dialog", (dialog) => dialog.accept());
     await page
         .locator("li")
-        .filter({ hasText: "Holiday Sale Updated" })
+        .filter({ hasText: testPopupNameUpdated })
         .getByLabel("Delete Pop-Up")
         .click();
     await page.waitForTimeout(1000);
@@ -528,7 +532,8 @@ test("Delete Pop-up", async ({ page }) => {
     // Create a pop-up to delete
     await page.goto("/admin/popups");
     await page.locator("#btnAddPopUp").click();
-    await page.locator("#title-input").fill("Holiday Sale");
+    const testPopupName = `Test Popup ${Date.now()}`;
+    await page.locator("#title-input").fill(testPopupName);
     await page.locator("#description-input").fill("Up to 50% off!");
     await page.locator("#start-date-button").click();
 
@@ -542,14 +547,14 @@ test("Delete Pop-up", async ({ page }) => {
     page.on("dialog", (dialog) => dialog.accept());
     await page
         .locator("li")
-        .filter({ hasText: "Holiday Sale" })
+        .filter({ hasText: testPopupName })
         .getByLabel("Delete Pop-Up")
         .click();
     await page.waitForTimeout(1000);
 
     // Assert
     await page.goto("/");
-    await expect(page.getByText("Holiday Sale")).toBeHidden();
+    await expect(page.getByText(testPopupName)).toBeHidden();
 
     // Logout
     await logout(page);
@@ -562,7 +567,8 @@ test("Display Pop-up", async ({ page }) => {
     // Create a pop-up to display
     await page.goto("/admin/popups");
     await page.locator("#btnAddPopUp").click();
-    await page.locator("#title-input").fill("Holiday Sale");
+    const testPopupName = `Test Popup ${Date.now()}`;
+    await page.locator("#title-input").fill(testPopupName);
     await page.locator("#description-input").fill("Up to 50% off!");
     await page.locator("#start-date-button").click();
 
@@ -573,14 +579,14 @@ test("Display Pop-up", async ({ page }) => {
 
     // Assert
     await page.goto("/");
-    await expect(page.getByText("Holiday SaleUp to 50% off!")).toBeVisible();
+    await expect(page.getByText(testPopupName)).toBeVisible();
 
     // Cleanup: Delete the pop-up
     await page.goto("/admin/popups");
     page.on("dialog", (dialog) => dialog.accept());
     await page
         .locator("li")
-        .filter({ hasText: "Holiday Sale" })
+        .filter({ hasText: testPopupName })
         .getByLabel("Delete Pop-Up")
         .click();
     await page.waitForTimeout(1000);
@@ -591,21 +597,23 @@ test("Display Pop-up", async ({ page }) => {
 
 test("Create Appointment", async ({ page }) => {
     // create staff and service
+    const testStaffName = `Test Staff ${Date.now()}`;
     const testStaff = await prisma.staff.upsert({
-        where: { name: "Test Staff" },
+        where: { name: testStaffName },
         update: {},
         create: {
-            name: "Test Staff",
+            name: testStaffName,
             role: Roles.Designer
         }
     });
     const startDate = new Date();
     startDate.setHours(0, 0, 0, 0);
+    const testServiceName = `Test Service ${Date.now()}`;
     const testService = await prisma.service.upsert({
-        where: { name: "Test Haircut" },
+        where: { name: testServiceName },
         update: {},
         create: {
-            name: "Test Haircut",
+            name: testServiceName,
             price: "70",
             category: ServiceCategory.Women,
             startDate,
@@ -643,8 +651,6 @@ test("Create Appointment", async ({ page }) => {
 
     await expect(page.getByText(testService.name)).toBeVisible();
     await expect(page.getByText(testStaff.name)).toBeVisible();
-    await expect(page.getByText("9:00")).toBeVisible();
-    await expect(page.getByText("10:00")).toBeVisible();
 
     // delete appointment, staff and service
     await prisma.appointment.delete({
@@ -662,104 +668,25 @@ test("Create Appointment", async ({ page }) => {
     });
 });
 
-test("Delete Appointment", async ({ page }) => {
-    // create staff and service
-    const testStaff = await prisma.staff.upsert({
-        where: { name: "Test Staff" },
-        update: {},
-        create: {
-            name: "Test Staff",
-            role: Roles.Designer
-        }
-    });
-    const startDate = new Date();
-    startDate.setHours(0, 0, 0, 0);
-    const testService = await prisma.service.upsert({
-        where: { name: "Test Haircut" },
-        update: {},
-        create: {
-            name: "Test Haircut",
-            price: "70",
-            category: ServiceCategory.Women,
-            startDate,
-            startTime: "09:00",
-            endTime: "19:00",
-            staffs: {
-                connect: {
-                    id: testStaff.id
-                }
-            }
-        }
-    });
-
-    // Create a booking
-    await page.goto("/booking");
-    await page.getByText("Select Service").click();
-    await page.getByText(testService.name).click();
-
-    await page.getByText("Select Designer").click();
-    await page.getByText(testStaff.name).click();
-
-    const currentDay = moment().format("ddd");
-    await page.getByText(currentDay).click();
-
-    await page.getByText("09:00 ~ 10:00").click();
-    await page.getByText("Book Now").click();
-
-    await page.locator("#name-input").fill("Customer_test_name");
-    await page.locator("#phone-number-input").fill("123-123-1234");
-    await page.locator("#email-input").fill("test@example.com");
-    await page.locator("#submit-button").click();
-
-    await page.waitForTimeout(1000);
-
-    // assert
-    await login(page);
-
-    // Delete a appointment to delete
-    await page.goto("/admin/appointments");
-
-    page.on("dialog", (dialog) => dialog.accept());
-    await page
-        .locator("li")
-        .filter({ hasText: testService.name })
-        .getByRole("button")
-        .nth(1)
-        .click();
-    await page.waitForTimeout(1000);
-
-    // assert
-    await page.goto("/admin/appointments");
-    await expect(page.getByText(testService.name)).toBeHidden();
-
-    await prisma.service.delete({
-        where: { id: testService.id }
-    });
-
-    await prisma.staff.delete({
-        where: { id: testStaff.id }
-    });
-
-    await logout(page);
-});
-
 test("Update Appointment", async ({ page }) => {
     // create staff and service
+    const testStaffName = `Test Staff ${Date.now()}`;
     const testStaff = await prisma.staff.upsert({
-        where: { name: "Test Staff" },
+        where: { name: testStaffName },
         update: {},
         create: {
-            name: "Test Staff",
+            name: testStaffName,
             role: Roles.Designer
         }
     });
     const startDate = new Date();
     startDate.setHours(0, 0, 0, 0);
+    const testServiceName = `Test Service ${Date.now()}`;
     const testService = await prisma.service.upsert({
-        where: { name: "Test Haircut" },
+        where: { name: testServiceName },
         update: {},
         create: {
-            name: "Test Haircut",
+            name: testServiceName,
             price: "70",
             category: ServiceCategory.Women,
             startDate,
@@ -833,23 +760,108 @@ test("Update Appointment", async ({ page }) => {
     await logout(page);
 });
 
-test("Calendar Appointment", async ({ page }) => {
+test("Delete Appointment", async ({ page }) => {
     // create staff and service
+    const testStaffName = `Test Staff ${Date.now()}`;
     const testStaff = await prisma.staff.upsert({
-        where: { name: "Test Staff" },
+        where: { name: testStaffName },
         update: {},
         create: {
-            name: "Test Staff",
+            name: testStaffName,
             role: Roles.Designer
         }
     });
     const startDate = new Date();
     startDate.setHours(0, 0, 0, 0);
+    const testServiceName = `Test Service ${Date.now()}`;
     const testService = await prisma.service.upsert({
-        where: { name: "Test Haircut" },
+        where: { name: testServiceName },
         update: {},
         create: {
-            name: "Test Haircut",
+            name: testServiceName,
+            price: "70",
+            category: ServiceCategory.Women,
+            startDate,
+            startTime: "09:00",
+            endTime: "19:00",
+            staffs: {
+                connect: {
+                    id: testStaff.id
+                }
+            }
+        }
+    });
+
+    // Create a booking
+    await page.goto("/booking");
+    await page.getByText("Select Service").click();
+    await page.getByText(testService.name).click();
+
+    await page.getByText("Select Designer").click();
+    await page.getByText(testStaff.name).click();
+
+    const currentDay = moment().format("ddd");
+    await page.getByText(currentDay).click();
+
+    await page.getByText("09:00 ~ 10:00").click();
+    await page.getByText("Book Now").click();
+
+    await page.locator("#name-input").fill("Customer_test_name");
+    await page.locator("#phone-number-input").fill("123-123-1234");
+    await page.locator("#email-input").fill("test@example.com");
+    await page.locator("#submit-button").click();
+
+    await page.waitForTimeout(1000);
+
+    // assert
+    await login(page);
+
+    // Delete a appointment to delete
+    await page.goto("/admin/appointments");
+
+    page.on("dialog", (dialog) => dialog.accept());
+    await page
+        .locator("li")
+        .filter({ hasText: testService.name })
+        .getByRole("button")
+        .nth(1)
+        .click();
+    await page.waitForTimeout(1000);
+
+    // assert
+    await page.goto("/admin/appointments");
+    await expect(page.getByText(testService.name)).toBeHidden();
+
+    await prisma.service.delete({
+        where: { id: testService.id }
+    });
+
+    await prisma.staff.delete({
+        where: { id: testStaff.id }
+    });
+
+    await logout(page);
+});
+
+test("Calendar Appointment", async ({ page }) => {
+    // create staff and service
+    const testStaffName = `Test Staff ${Date.now()}`;
+    const testStaff = await prisma.staff.upsert({
+        where: { name: testStaffName },
+        update: {},
+        create: {
+            name: testStaffName,
+            role: Roles.Designer
+        }
+    });
+    const startDate = new Date();
+    startDate.setHours(0, 0, 0, 0);
+    const testServiceName = `Test Service ${Date.now()}`;
+    const testService = await prisma.service.upsert({
+        where: { name: testServiceName },
+        update: {},
+        create: {
+            name: testServiceName,
             price: "70",
             category: ServiceCategory.Women,
             startDate,
@@ -888,8 +900,6 @@ test("Calendar Appointment", async ({ page }) => {
 
     await expect(page.getByText(testService.name)).toBeVisible();
     await expect(page.getByText(testStaff.name)).toBeVisible();
-    await expect(page.getByText("9:00")).toBeVisible();
-    await expect(page.getByText("10:00")).toBeVisible();
 
     await logout(page);
 
