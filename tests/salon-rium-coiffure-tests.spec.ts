@@ -794,7 +794,7 @@ test("Update appointment", async ({ page }) => {
     await page.waitForTimeout(1000);
 
     // update only status on appointment
-    // await login(page);
+    await login(page);
 
     await page.goto("admin/appointments");
     await page
@@ -830,7 +830,7 @@ test("Update appointment", async ({ page }) => {
         where: { id: testStaff.id }
     });
 
-    // await logout(page);
+    await logout(page);
 });
 
 test("Create appointment and check it from admin calendar", async ({

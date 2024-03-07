@@ -1,3 +1,7 @@
+import { getServerSession } from "next-auth";
+import AccessDenied from "@/components/Shared/AccessDenied";
+import AuthOptions from "@/app/api/auth/[...nextauth]/options";
+
 import Balancer from "react-wrap-balancer";
 import prisma from "@/lib/prisma";
 import AppointmentEditDialog from "../../../components/Appointments/AppointmentEditDialog";
@@ -6,12 +10,12 @@ import AppointmentDelete from "../../../components/Appointments/AppointmentDelet
 export default async function Page() {
     const appointments = await prisma.appointment.findMany();
 
-    // const session = await getServerSession(AuthOptions);
+    const session = await getServerSession(AuthOptions);
 
-    // // Admin Auth
-    // if (session?.user.role !== "admin") {
-    //     return AccessDenied();
-    // }
+    // Admin Auth
+    if (session?.user.role !== "admin") {
+        return AccessDenied();
+    }
 
     return (
         <>
