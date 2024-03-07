@@ -803,7 +803,7 @@ test("Update appointment", async ({ page }) => {
         .getByRole("button")
         .first()
         .click();
-    await page.selectOption("select#status", "disapproved");
+    await page.selectOption("select#status", "pending");
     await page.locator("#submit-button").click();
     await page.waitForTimeout(1000);
 
@@ -813,7 +813,7 @@ test("Update appointment", async ({ page }) => {
         }
     });
 
-    expect(updatedAppointment?.status).toBe("disapproved");
+    expect(updatedAppointment?.status).toBe("pending");
 
     // delete appointment, staff and service
     await prisma.appointment.delete({

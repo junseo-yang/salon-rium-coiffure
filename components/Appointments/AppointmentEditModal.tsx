@@ -92,9 +92,7 @@ const AppointmentEditModal = ({
                                     }}
                                 >
                                     <option value="approved">approved</option>
-                                    <option value="disapproved">
-                                        disapproved
-                                    </option>
+                                    <option value="pending">pending</option>
                                 </select>
                             </div>
                         </Form.Field>

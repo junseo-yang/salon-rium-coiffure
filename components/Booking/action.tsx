@@ -50,7 +50,7 @@ export async function createAppointment(
     const appointment = await prisma.appointment.create({
         data: {
             price: service.price,
-            status: "approved",
+            status: "pending",
 
             from_date: fromDatetime,
             to_date: toDatetime,
