@@ -66,17 +66,23 @@ model Service {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String    @unique
 
-  // staff or designer
-
   description   String?
   
   startDate     DateTime
   endDate       DateTime?
-  
-  price         String
-  image         String?
   duration      String?
   
+  startTime     String
+  endTime       String
+
+  price         String
+  image         String?
+
+  staffIds       String[]  @db.ObjectId
+  staffs         Staff[]   @relation(fields: [staffIds], references: [id])
+
+  appointments  Appointment[]
+
   category      ServiceCategory
 }
 
@@ -90,6 +96,12 @@ model Staff {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String   @unique
   description String? 
+
+  serviceIds       String[]  @db.ObjectId
+  services         Service[]   @relation(fields: [serviceIds], references: [id])
+
+  appointments  Appointment[]
+
   role        Roles
 }
 
@@ -99,4 +111,27 @@ model PopUp {
   description String
   startDate   DateTime
   endDate     DateTime?
+}
+
+model Appointment {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  price       String
+  status      String
+
+  from_date   DateTime
+  to_date     DateTime
+  duration    String
+
+  customer_name   String
+  customer_number String
+  customer_email  String
+
+  service_name String
+  staff_name   String
+  
+  service         Service   @relation(fields: [serviceId], references: [id])
+  serviceId       String  @unique @db.ObjectId
+
+  staff         Staff   @relation(fields: [staffId], references: [id])
+  staffId       String  @unique @db.ObjectId
 }

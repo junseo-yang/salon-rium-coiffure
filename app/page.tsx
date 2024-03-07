@@ -1,13 +1,13 @@
 import Balancer from "react-wrap-balancer";
-import { BOOKING_PAGE_URL } from "@/lib/constants";
 import prisma from "@/lib/prisma";
 import { ServiceCategory } from "@prisma/client";
 import PopUpsClientComponent from "@/components/PopUps/PopUpsClientComponent";
+import { getAvailableService } from "./admin/services/actions";
 
 export default async function Home() {
     // "use server";
 
-    const services = await prisma.service.findMany();
+    const services = await getAvailableService();
     const staffs = await prisma.staff.findMany();
     const popUps = await prisma.popUp.findMany();
 
@@ -75,8 +75,9 @@ export default async function Home() {
                 >
                     <a
                         className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-sm text-white transition-colors hover:bg-white hover:text-black"
-                        href={BOOKING_PAGE_URL}
-                        target="_blank"
+                        // href={BOOKING_PAGE_URL}
+                        // target="_blank"
+                        href="/booking"
                         rel="noopener noreferrer"
                     >
                         <p>Book Now</p>
