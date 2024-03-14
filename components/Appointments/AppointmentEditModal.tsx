@@ -17,6 +17,7 @@ import { Appointment } from "@prisma/client";
 import moment from "moment";
 import {
     putAppointment,
+    sendEmailAppointmentCancellation,
     sendEmailAppointmentConfirmation
 } from "../../app/admin/appointments/actions";
 
@@ -50,9 +51,25 @@ const AppointmentEditModal = ({
 
                                 if (
                                     appointment.status === "pending" &&
-                                    updatedAppointment.status === "approved"
+                                    updatedAppointment.status === "confirmed"
                                 ) {
                                     sendEmailAppointmentConfirmation(
+                                        updatedAppointment.id,
+                                        updatedAppointment.price,
+                                        updatedAppointment.status,
+                                        updatedAppointment.from_date,
+                                        updatedAppointment.to_date,
+                                        updatedAppointment.duration,
+                                        updatedAppointment.customer_name,
+                                        updatedAppointment.customer_number,
+                                        updatedAppointment.customer_email,
+                                        updatedAppointment.service_name,
+                                        updatedAppointment.staff_name
+                                    );
+                                } else if (
+                                    updatedAppointment.status === "cancelled"
+                                ) {
+                                    sendEmailAppointmentCancellation(
                                         updatedAppointment.id,
                                         updatedAppointment.price,
                                         updatedAppointment.status,
@@ -117,8 +134,9 @@ const AppointmentEditModal = ({
                                         setStatus(event.target.value);
                                     }}
                                 >
-                                    <option value="approved">approved</option>
                                     <option value="pending">pending</option>
+                                    <option value="confirmed">confirmed</option>
+                                    <option value="cancelled">cancelled</option>
                                 </select>
                             </div>
                         </Form.Field>

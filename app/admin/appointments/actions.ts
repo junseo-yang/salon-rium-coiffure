@@ -83,3 +83,59 @@ export async function sendEmailAppointmentConfirmation(
         )
     });
 }
+
+// Send Appointment Cancellation Email to Admin and Customer
+export async function sendEmailAppointmentCancellation(
+    id: string,
+    price: string,
+    status: string,
+    from_date: Date,
+    to_date: Date,
+    duration: string,
+    customer_name: string,
+    customer_number: string,
+    customer_email: string,
+    service_name: string,
+    staff_name: string
+) {
+    const current = new Date();
+    // Send Appointment Cancellation Email to Admin
+    sendMail({
+        to: process.env.ADMIN_EMAIL!,
+        subject: "[Salon Rium Coiffure] A Customer Appointment is Cancelled.",
+        body: compileAppointmentConfirmationAdminTemplate(
+            id,
+            price,
+            status,
+            from_date,
+            to_date,
+            duration,
+            customer_name,
+            customer_number,
+            customer_email,
+            service_name,
+            staff_name,
+            current
+        )
+    });
+
+    // Send Appointment Cancellation Email to Customer
+    sendMail({
+        to: customer_email,
+        subject: "[Salon Rium Coiffure] Your Appointment is Cancelled.",
+        body: compileAppointmentConfirmationCustomerTemplate(
+            id,
+            price,
+            status,
+            from_date,
+            to_date,
+            duration,
+            customer_name,
+            customer_number,
+            customer_email,
+            service_name,
+            staff_name,
+            current
+        )
+    });
+}
