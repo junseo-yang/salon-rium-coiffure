@@ -1,17 +1,41 @@
-export function compileAppointmentCancellationCustomerTemplate(
-    id: string,
-    price: string,
-    status: string,
-    from_date: Date,
-    to_date: Date,
-    duration: string,
-    customer_name: string,
-    customer_number: string,
-    customer_email: string,
-    service_name: string,
-    staff_name: string,
-    current: Date
-) {
+/* eslint-disable @typescript-eslint/no-unused-vars */
+type Params = {
+    id: string;
+    price: string;
+    status: string;
+    from_date: Date;
+    to_date: Date;
+    duration: string;
+    customer_name: string;
+    customer_number: string;
+    customer_email: string;
+    service_name: string;
+    staff_name: string;
+    current: Date;
+    isAdmin: boolean;
+    title: string;
+    message?: string;
+    action: string;
+};
+
+export function compileAppointmentEmailTemplate({
+    id,
+    price,
+    status,
+    from_date,
+    to_date,
+    duration,
+    customer_name,
+    customer_number,
+    customer_email,
+    service_name,
+    staff_name,
+    current,
+    isAdmin,
+    title,
+    message,
+    action
+}: Params) {
     return `<!DOCTYPE html>
 	<html xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office" lang="en">
 	
@@ -182,7 +206,7 @@ export function compileAppointmentCancellationCustomerTemplate(
 															<tr>
 																<td class="pad" style="padding-bottom:25px;padding-left:20px;padding-right:20px;padding-top:10px;">
 																	<div style="color:#2f2f2f;font-family:Georgia,Times,'Times New Roman',serif;font-size:30px;line-height:120%;text-align:center;mso-line-height-alt:36px;">
-																		<p style="margin: 0; word-break: break-word;"><span>Appointment Cancellation</span></p>
+																		<p style="margin: 0; word-break: break-word;"><span>${title}</span></p>
 																	</div>
 																</td>
 															</tr>
@@ -220,9 +244,9 @@ export function compileAppointmentCancellationCustomerTemplate(
 															<tr>
 																<td class="pad" style="padding-bottom:10px;padding-left:30px;padding-right:30px;padding-top:10px;">
 																	<div style="color:#393d47;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;font-size:16px;line-height:150%;text-align:left;mso-line-height-alt:24px;">
-																		<p style="margin: 0; word-break: break-word;"><span>Hi <u><strong>${customer_name}</strong></u>,</span></p>
+																		<p style="margin: 0; word-break: break-word;"><span>Hi <u><strong>${isAdmin ? "Admin" : customer_name}</strong></u>,</span></p>
 																		<p style="margin: 0; word-break: break-word;">&nbsp;</p>
-																		<p style="margin: 0; word-break: break-word;"><span>Your appointment has been cancelled in our Salon Rium Coiffure </span><span>on ${current.toLocaleString(
+																		<p style="margin: 0; word-break: break-word;"><span>${isAdmin ? "A customer" : "Your"} appointment has been ${action} in our Salon Rium Coiffure </span><span>on ${current.toLocaleString(
                                                                             "en-US",
                                                                             {
                                                                                 timeZone:
@@ -234,7 +258,7 @@ export function compileAppointmentCancellationCustomerTemplate(
                                                                                 minute: "2-digit",
                                                                                 hour12: true
                                                                             }
-                                                                        )}. </span><span>Please find the details below:</span></p>
+                                                                        )}. </span>${message ? `<span>${message} </span>` : ""}<span>Please find the details below:</span></p>
 																	</div>
 																</td>
 															</tr>
@@ -262,7 +286,7 @@ export function compileAppointmentCancellationCustomerTemplate(
 															<tr>
 																<td class="pad">
 																	<div style="color:#ffffff;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;font-size:18px;line-height:120%;text-align:center;mso-line-height-alt:21.599999999999998px;">
-																		<p style="margin: 0; word-break: break-word;"><span>Appointment Request</span></p>
+																		<p style="margin: 0; word-break: break-word;"><span>Details</span></p>
 																	</div>
 																</td>
 															</tr>
@@ -293,7 +317,32 @@ export function compileAppointmentCancellationCustomerTemplate(
 															<tr>
 																<td class="pad" style="padding-bottom:10px;padding-left:20px;padding-right:20px;padding-top:10px;">
 																	<div style="color:#393d47;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;font-size:16px;line-height:150%;text-align:left;mso-line-height-alt:24px;">
-																		<p style="margin: 0; word-break: break-word;"><span><strong><span style="color: #5d77a9;">From:</span></strong> ${from_date.toLocaleString()}</span></p>
+																		<p style="margin: 0; word-break: break-word;"><span><strong><span style="color: #5d77a9;">From:</span></strong> ${from_date.toLocaleString(
+                                                                            "en-US",
+                                                                            {
+                                                                                timeZone:
+                                                                                    "America/New_York",
+                                                                                year: "numeric",
+                                                                                month: "short",
+                                                                                day: "numeric",
+                                                                                hour: "2-digit",
+                                                                                minute: "2-digit",
+                                                                                hour12: true
+                                                                            }
+                                                                        )}</span></p>
+																		<p style="margin: 0; word-break: break-word;"><span><strong><span style="color: #5d77a9;">To:</span></strong> ${to_date.toLocaleString(
+                                                                            "en-US",
+                                                                            {
+                                                                                timeZone:
+                                                                                    "America/New_York",
+                                                                                year: "numeric",
+                                                                                month: "short",
+                                                                                day: "numeric",
+                                                                                hour: "2-digit",
+                                                                                minute: "2-digit",
+                                                                                hour12: true
+                                                                            }
+                                                                        )}</span></p>
 																		<p style="margin: 0; word-break: break-word;"><span><strong><span style="color: #5d77a9;">Duration:</span></strong> ${duration}min</span></p>
 																		<p style="margin: 0; word-break: break-word;"><span><strong><span style="color: #5d77a9;">Service:</span></strong> ${service_name}</span></p>
 																		<p style="margin: 0; word-break: break-word;"><span><strong><span style="color: #5d77a9;">Designer:</span></strong> ${staff_name}</span></p>
@@ -351,8 +400,13 @@ export function compileAppointmentCancellationCustomerTemplate(
 															<tr>
 																<td class="pad" style="padding-bottom:10px;padding-left:30px;padding-right:30px;padding-top:10px;">
 																	<div style="color:#2f2f2f;font-family:Arial, Helvetica Neue, Helvetica, sans-serif;font-size:16px;line-height:150%;text-align:left;mso-line-height-alt:24px;">
-																		<p style="margin: 0; word-break: break-word;"><span style="color: #5d77a9;">Need to make changes on this appointment?</span></p>
-																		<p style="margin: 0; word-break: break-word;">Please, contact to the salon 📞 514-953-5603 or 📧 salonriumcoiffure@gmail.com</p>
+																	<p style="margin: 0; word-break: break-word;"><span style="color: #5d77a9;">Need to make changes on this appointment?</span></p>
+																	<p style="margin: 0; word-break: break-word;">
+																	${
+                                                                        isAdmin
+                                                                            ? `<a href="https://salon-rium-coiffure.vercel.app/admin/appointments" target="_blank">Go to Admin Dashboard</a>`
+                                                                            : `Please, contact to the salon 📞 514-953-5603 or 📧 salonriumcoiffure@gmail.com`
+                                                                    }</p>
 																	</div>
 																</td>
 															</tr>

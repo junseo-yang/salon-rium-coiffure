@@ -1,8 +1,7 @@
 "use server";
 
 import { sendMail } from "@/lib/mails/mail";
-import { compileAppointmentConfirmationAdminTemplate } from "@/lib/mails/templates/appointmentConfirmationAdminTemplate";
-import { compileAppointmentConfirmationCustomerTemplate } from "@/lib/mails/templates/appointmentConfirmationCustomerTemplate";
+import { compileAppointmentEmailTemplate } from "@/lib/mails/templates/appointmentEmailTemplate";
 import prisma from "@/lib/prisma";
 
 export async function putAppointment(appointMentId: string, status: string) {
@@ -47,7 +46,7 @@ export async function sendEmailAppointmentConfirmation(
     sendMail({
         to: process.env.ADMIN_EMAIL!,
         subject: "[Salon Rium Coiffure] A Customer Appointment is Confirmed.",
-        body: compileAppointmentConfirmationAdminTemplate(
+        body: compileAppointmentEmailTemplate({
             id,
             price,
             status,
@@ -59,15 +58,19 @@ export async function sendEmailAppointmentConfirmation(
             customer_email,
             service_name,
             staff_name,
-            current
-        )
+            // additional params
+            current,
+            isAdmin: true,
+            title: "Appointment Confirmation",
+            action: "confirmed"
+        })
     });
 
     // Send Appointment Confirmation Email to Customer
     sendMail({
         to: customer_email,
         subject: "[Salon Rium Coiffure] Your Appointment is Confirmed.",
-        body: compileAppointmentConfirmationCustomerTemplate(
+        body: compileAppointmentEmailTemplate({
             id,
             price,
             status,
@@ -79,8 +82,12 @@ export async function sendEmailAppointmentConfirmation(
             customer_email,
             service_name,
             staff_name,
-            current
-        )
+            // additional params
+            current,
+            isAdmin: false,
+            title: "Appointment Confirmation",
+            action: "confirmed"
+        })
     });
 }
 
@@ -103,7 +110,7 @@ export async function sendEmailAppointmentCancellation(
     sendMail({
         to: process.env.ADMIN_EMAIL!,
         subject: "[Salon Rium Coiffure] A Customer Appointment is Cancelled.",
-        body: compileAppointmentConfirmationAdminTemplate(
+        body: compileAppointmentEmailTemplate({
             id,
             price,
             status,
@@ -115,15 +122,19 @@ export async function sendEmailAppointmentCancellation(
             customer_email,
             service_name,
             staff_name,
-            current
-        )
+            // additional params
+            current,
+            isAdmin: true,
+            title: "Appointment Cancellation",
+            action: "cancelled"
+        })
     });
 
     // Send Appointment Cancellation Email to Customer
     sendMail({
         to: customer_email,
         subject: "[Salon Rium Coiffure] Your Appointment is Cancelled.",
-        body: compileAppointmentConfirmationCustomerTemplate(
+        body: compileAppointmentEmailTemplate({
             id,
             price,
             status,
@@ -135,7 +146,11 @@ export async function sendEmailAppointmentCancellation(
             customer_email,
             service_name,
             staff_name,
-            current
-        )
+            // additional params
+            current,
+            isAdmin: false,
+            title: "Appointment Cancellation",
+            action: "cancelled"
+        })
     });
 }

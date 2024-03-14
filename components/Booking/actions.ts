@@ -4,8 +4,7 @@ import { Service, Staff } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import moment from "moment";
 import { sendMail } from "@/lib/mails/mail";
-import { compileAppointmentRequestAdminTemplate } from "@/lib/mails/templates/appointmentRequestAdminTemplate";
-import { compileAppointmentRequestCustomerTemplate } from "@/lib/mails/templates/appointmentRequestCustomerTemplate";
+import { compileAppointmentEmailTemplate } from "@/lib/mails/templates/appointmentEmailTemplate";
 
 export async function getAppointment(id: string) {
     const appointment = await prisma.appointment.findUnique({
@@ -156,7 +155,7 @@ export async function sendEmailAppointmentRequest(
     sendMail({
         to: process.env.ADMIN_EMAIL!,
         subject: "[Salon Rium Coiffure] A Customer Appointment is Requested.",
-        body: compileAppointmentRequestAdminTemplate(
+        body: compileAppointmentEmailTemplate({
             id,
             price,
             status,
@@ -168,15 +167,19 @@ export async function sendEmailAppointmentRequest(
             customer_email,
             service_name,
             staff_name,
-            current
-        )
+            // additional params
+            current,
+            isAdmin: true,
+            title: "Appointment Request",
+            action: "requested"
+        })
     });
 
     // Send Appointment Request Email to Customer
     sendMail({
         to: customer_email,
         subject: "[Salon Rium Coiffure] Your Appointment is Requested.",
-        body: compileAppointmentRequestCustomerTemplate(
+        body: compileAppointmentEmailTemplate({
             id,
             price,
             status,
@@ -188,7 +191,12 @@ export async function sendEmailAppointmentRequest(
             customer_email,
             service_name,
             staff_name,
-            current
-        )
+            // additional params
+            current,
+            isAdmin: false,
+            title: "Appointment Request",
+            message: "Your appointment will be reviewed by the Admin shortly.",
+            action: "requested"
+        })
     });
 }
