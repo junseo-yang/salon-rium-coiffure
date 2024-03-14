@@ -5,6 +5,8 @@ import prisma from "@/lib/prisma";
 import moment from "moment";
 import { sendMail } from "@/lib/mails/mail";
 import { compileAppointmentEmailTemplate } from "@/lib/mails/templates/appointmentEmailTemplate";
+import { sendTwilio } from "@/lib/twilio/twilio";
+import { compileAppointmentTwilioTemplate } from "@/lib/twilio/templates/appointmentTwilioTemplate";
 
 export async function getAppointment(id: string) {
     const appointment = await prisma.appointment.findUnique({
@@ -196,6 +198,41 @@ export async function sendEmailAppointmentRequest(
             isAdmin: false,
             title: "Appointment Request",
             message: "Your appointment will be reviewed by the Admin shortly.",
+            action: "requested"
+        })
+    });
+}
+
+export async function sendTwilioAppointmentRequest(
+    id: string,
+    price: string,
+    status: string,
+    from_date: Date,
+    to_date: Date,
+    duration: string,
+    customer_name: string,
+    customer_number: string,
+    customer_email: string,
+    service_name: string,
+    staff_name: string
+) {
+    const current = new Date();
+    sendTwilio({
+        to: customer_number,
+        body: compileAppointmentTwilioTemplate({
+            id,
+            price,
+            status,
+            from_date,
+            to_date,
+            duration,
+            customer_name,
+            customer_number,
+            customer_email,
+            service_name,
+            staff_name,
+            // additional params
+            current,
             action: "requested"
         })
     });

@@ -11,7 +11,11 @@ import {
 } from "react";
 import { Service, Staff } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { createAppointment, sendEmailAppointmentRequest } from "./actions";
+import {
+    createAppointment,
+    sendEmailAppointmentRequest,
+    sendTwilioAppointmentRequest
+} from "./actions";
 
 const BookingModal = ({
     showDemoModal,
@@ -54,9 +58,25 @@ const BookingModal = ({
                                     email
                                 );
 
-                                // If appointment is created successfully, send the appointment request emails.
+                                // If appointment is created successfully, send the appointment request notification.
                                 if (appointment) {
+                                    // Send Email Notification
                                     sendEmailAppointmentRequest(
+                                        appointment.id,
+                                        appointment.price,
+                                        appointment.status,
+                                        appointment.from_date,
+                                        appointment.to_date,
+                                        appointment.duration,
+                                        appointment.customer_name,
+                                        appointment.customer_number,
+                                        appointment.customer_email,
+                                        appointment.service_name,
+                                        appointment.staff_name
+                                    );
+
+                                    // Send SMS Notification
+                                    sendTwilioAppointmentRequest(
                                         appointment.id,
                                         appointment.price,
                                         appointment.status,
