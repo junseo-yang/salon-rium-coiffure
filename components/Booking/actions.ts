@@ -3,6 +3,9 @@
 import { Service, Staff } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import moment from "moment";
+import { sendMail } from "@/lib/mails/mail";
+import { compileAppointmentRequestAdminTemplate } from "@/lib/mails/templates/appointmentRequestAdminTemplate";
+import { compileAppointmentRequestCustomerTemplate } from "@/lib/mails/templates/appointmentRequestCustomerTemplate";
 
 export async function getAppointment(id: string) {
     const appointment = await prisma.appointment.findUnique({
@@ -132,4 +135,60 @@ export async function getAvailableTimes(
     });
 
     return availableTimes;
+}
+
+// Send Appointment Request Email to Admin and Customer
+export async function sendEmailAppointmentRequest(
+    id: string,
+    price: string,
+    status: string,
+    from_date: Date,
+    to_date: Date,
+    duration: string,
+    customer_name: string,
+    customer_number: string,
+    customer_email: string,
+    service_name: string,
+    staff_name: string
+) {
+    const current = new Date();
+    // Send Appointment Request Email to Admin
+    sendMail({
+        to: process.env.ADMIN_EMAIL!,
+        subject: "[Salon Rium Coiffure] A Customer Appointment is Requested.",
+        body: compileAppointmentRequestAdminTemplate(
+            id,
+            price,
+            status,
+            from_date,
+            to_date,
+            duration,
+            customer_name,
+            customer_number,
+            customer_email,
+            service_name,
+            staff_name,
+            current
+        )
+    });
+
+    // Send Appointment Request Email to Customer
+    sendMail({
+        to: customer_email,
+        subject: "[Salon Rium Coiffure] Your Appointment is Requested.",
+        body: compileAppointmentRequestCustomerTemplate(
+            id,
+            price,
+            status,
+            from_date,
+            to_date,
+            duration,
+            customer_name,
+            customer_number,
+            customer_email,
+            service_name,
+            staff_name,
+            current
+        )
+    });
 }
