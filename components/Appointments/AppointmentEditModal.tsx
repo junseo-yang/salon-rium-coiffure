@@ -15,7 +15,10 @@ import {
 import { useRouter } from "next/navigation";
 import { Appointment } from "@prisma/client";
 import moment from "moment";
-import { putAppointment } from "../../app/admin/appointments/actions";
+import {
+    putAppointment,
+    sendEmailAppointmentConfirmation
+} from "../../app/admin/appointments/actions";
 
 const AppointmentEditModal = ({
     showDemoModal,
@@ -40,7 +43,30 @@ const AppointmentEditModal = ({
                             event.preventDefault();
 
                             try {
-                                await putAppointment(appointment.id, status);
+                                const updatedAppointment = await putAppointment(
+                                    appointment.id,
+                                    status
+                                );
+
+                                if (
+                                    appointment.status === "pending" &&
+                                    updatedAppointment.status === "approved"
+                                ) {
+                                    sendEmailAppointmentConfirmation(
+                                        updatedAppointment.id,
+                                        updatedAppointment.price,
+                                        updatedAppointment.status,
+                                        updatedAppointment.from_date,
+                                        updatedAppointment.to_date,
+                                        updatedAppointment.duration,
+                                        updatedAppointment.customer_name,
+                                        updatedAppointment.customer_number,
+                                        updatedAppointment.customer_email,
+                                        updatedAppointment.service_name,
+                                        updatedAppointment.staff_name
+                                    );
+                                }
+
                                 setShowDemoModal(false);
                                 alert("Appointment has been updated!");
 
