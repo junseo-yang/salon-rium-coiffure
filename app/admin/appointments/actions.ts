@@ -3,6 +3,8 @@
 import { sendMail } from "@/lib/mails/mail";
 import { compileAppointmentEmailTemplate } from "@/lib/mails/templates/appointmentEmailTemplate";
 import prisma from "@/lib/prisma";
+import { compileAppointmentTwilioTemplate } from "@/lib/twilio/templates/appointmentTwilioTemplate";
+import { sendTwilio } from "@/lib/twilio/twilio";
 
 export async function putAppointment(appointMentId: string, status: string) {
     const result = await prisma.appointment.update({
@@ -91,6 +93,42 @@ export async function sendEmailAppointmentConfirmation(
     });
 }
 
+// Send Appointment Confirmation Twilio to Customer
+export async function sendTwilioAppointmentConfirmation(
+    id: string,
+    price: string,
+    status: string,
+    from_date: Date,
+    to_date: Date,
+    duration: string,
+    customer_name: string,
+    customer_number: string,
+    customer_email: string,
+    service_name: string,
+    staff_name: string
+) {
+    const current = new Date();
+    sendTwilio({
+        to: customer_number,
+        body: compileAppointmentTwilioTemplate({
+            id,
+            price,
+            status,
+            from_date,
+            to_date,
+            duration,
+            customer_name,
+            customer_number,
+            customer_email,
+            service_name,
+            staff_name,
+            // additional params
+            current,
+            action: "confirmed"
+        })
+    });
+}
+
 // Send Appointment Cancellation Email to Admin and Customer
 export async function sendEmailAppointmentCancellation(
     id: string,
@@ -150,6 +188,42 @@ export async function sendEmailAppointmentCancellation(
             current,
             isAdmin: false,
             title: "Appointment Cancellation",
+            action: "cancelled"
+        })
+    });
+}
+
+// Send Appointment Cancellation Twilio to Customer
+export async function sendTwilioAppointmentCancellation(
+    id: string,
+    price: string,
+    status: string,
+    from_date: Date,
+    to_date: Date,
+    duration: string,
+    customer_name: string,
+    customer_number: string,
+    customer_email: string,
+    service_name: string,
+    staff_name: string
+) {
+    const current = new Date();
+    sendTwilio({
+        to: customer_number,
+        body: compileAppointmentTwilioTemplate({
+            id,
+            price,
+            status,
+            from_date,
+            to_date,
+            duration,
+            customer_name,
+            customer_number,
+            customer_email,
+            service_name,
+            staff_name,
+            // additional params
+            current,
             action: "cancelled"
         })
     });

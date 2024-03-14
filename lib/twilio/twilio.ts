@@ -1,5 +1,6 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable global-require */
+/* eslint-disable no-console */
 export async function sendTwilio({ to, body }: { to: string; body: string }) {
     const client = require("twilio")(
         process.env.TWILIO_ACCOUNT_SID,
@@ -7,12 +8,11 @@ export async function sendTwilio({ to, body }: { to: string; body: string }) {
     );
 
     try {
-        const resp = await client.messages.create({
+        await client.messages.create({
             to, // Destination Number
             from: process.env.TWILIO_PHONE_NUMBER, // From a valid Twilio number
             body
         });
-        console.log(resp);
     } catch (e) {
         console.error(e);
     }

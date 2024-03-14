@@ -18,7 +18,9 @@ import moment from "moment";
 import {
     putAppointment,
     sendEmailAppointmentCancellation,
-    sendEmailAppointmentConfirmation
+    sendEmailAppointmentConfirmation,
+    sendTwilioAppointmentCancellation,
+    sendTwilioAppointmentConfirmation
 } from "../../app/admin/appointments/actions";
 
 const AppointmentEditModal = ({
@@ -49,11 +51,28 @@ const AppointmentEditModal = ({
                                     status
                                 );
 
+                                // If appointment is updated successfully, send the appointment request notification.
                                 if (
                                     appointment.status === "pending" &&
                                     updatedAppointment.status === "confirmed"
                                 ) {
+                                    // Send Email Notification
                                     sendEmailAppointmentConfirmation(
+                                        updatedAppointment.id,
+                                        updatedAppointment.price,
+                                        updatedAppointment.status,
+                                        updatedAppointment.from_date,
+                                        updatedAppointment.to_date,
+                                        updatedAppointment.duration,
+                                        updatedAppointment.customer_name,
+                                        updatedAppointment.customer_number,
+                                        updatedAppointment.customer_email,
+                                        updatedAppointment.service_name,
+                                        updatedAppointment.staff_name
+                                    );
+
+                                    // Send SMS Notification
+                                    sendTwilioAppointmentConfirmation(
                                         updatedAppointment.id,
                                         updatedAppointment.price,
                                         updatedAppointment.status,
@@ -69,7 +88,23 @@ const AppointmentEditModal = ({
                                 } else if (
                                     updatedAppointment.status === "cancelled"
                                 ) {
+                                    // Send Email Notification
                                     sendEmailAppointmentCancellation(
+                                        updatedAppointment.id,
+                                        updatedAppointment.price,
+                                        updatedAppointment.status,
+                                        updatedAppointment.from_date,
+                                        updatedAppointment.to_date,
+                                        updatedAppointment.duration,
+                                        updatedAppointment.customer_name,
+                                        updatedAppointment.customer_number,
+                                        updatedAppointment.customer_email,
+                                        updatedAppointment.service_name,
+                                        updatedAppointment.staff_name
+                                    );
+
+                                    // Send SMS Notification
+                                    sendTwilioAppointmentCancellation(
                                         updatedAppointment.id,
                                         updatedAppointment.price,
                                         updatedAppointment.status,
