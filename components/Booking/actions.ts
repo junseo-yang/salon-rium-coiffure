@@ -3,6 +3,10 @@
 import { Service, Staff } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import moment from "moment";
+import { sendMail } from "@/lib/mails/mail";
+import { compileAppointmentEmailTemplate } from "@/lib/mails/templates/appointmentEmailTemplate";
+import { sendTwilio } from "@/lib/twilio/twilio";
+import { compileAppointmentTwilioTemplate } from "@/lib/twilio/templates/appointmentTwilioTemplate";
 
 export async function getAppointment(id: string) {
     const appointment = await prisma.appointment.findUnique({
@@ -132,4 +136,105 @@ export async function getAvailableTimes(
     });
 
     return availableTimes;
+}
+
+// Send Appointment Request Email to Admin and Customer
+export async function sendEmailAppointmentRequest(
+    id: string,
+    price: string,
+    status: string,
+    from_date: Date,
+    to_date: Date,
+    duration: string,
+    customer_name: string,
+    customer_number: string,
+    customer_email: string,
+    service_name: string,
+    staff_name: string
+) {
+    const current = new Date();
+    // Send Appointment Request Email to Admin
+    await sendMail({
+        to: process.env.ADMIN_EMAIL!,
+        subject: "[Salon Rium Coiffure] A Customer Appointment is Requested.",
+        body: compileAppointmentEmailTemplate({
+            id,
+            price,
+            status,
+            from_date,
+            to_date,
+            duration,
+            customer_name,
+            customer_number,
+            customer_email,
+            service_name,
+            staff_name,
+            // additional params
+            current,
+            isAdmin: true,
+            title: "Appointment Request",
+            action: "requested"
+        })
+    });
+
+    // Send Appointment Request Email to Customer
+    await sendMail({
+        to: customer_email,
+        subject: "[Salon Rium Coiffure] Your Appointment is Requested.",
+        body: compileAppointmentEmailTemplate({
+            id,
+            price,
+            status,
+            from_date,
+            to_date,
+            duration,
+            customer_name,
+            customer_number,
+            customer_email,
+            service_name,
+            staff_name,
+            // additional params
+            current,
+            isAdmin: false,
+            title: "Appointment Request",
+            message: "Your appointment will be reviewed by the Admin shortly.",
+            action: "requested"
+        })
+    });
+}
+
+// Send Appointment Request Twilio to Customer
+export async function sendTwilioAppointmentRequest(
+    id: string,
+    price: string,
+    status: string,
+    from_date: Date,
+    to_date: Date,
+    duration: string,
+    customer_name: string,
+    customer_number: string,
+    customer_email: string,
+    service_name: string,
+    staff_name: string
+) {
+    const current = new Date();
+    await sendTwilio({
+        to: customer_number,
+        body: compileAppointmentTwilioTemplate({
+            id,
+            price,
+            status,
+            from_date,
+            to_date,
+            duration,
+            customer_name,
+            customer_number,
+            customer_email,
+            service_name,
+            staff_name,
+            // additional params
+            current,
+            action: "requested"
+        })
+    });
 }

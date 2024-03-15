@@ -15,7 +15,13 @@ import {
 import { useRouter } from "next/navigation";
 import { Appointment } from "@prisma/client";
 import moment from "moment";
-import { putAppointment } from "../../app/admin/appointments/actions";
+import {
+    putAppointment,
+    sendEmailAppointmentCancellation,
+    sendEmailAppointmentConfirmation,
+    sendTwilioAppointmentCancellation,
+    sendTwilioAppointmentConfirmation
+} from "../../app/admin/appointments/actions";
 
 const AppointmentEditModal = ({
     showDemoModal,
@@ -40,7 +46,79 @@ const AppointmentEditModal = ({
                             event.preventDefault();
 
                             try {
-                                await putAppointment(appointment.id, status);
+                                const updatedAppointment = await putAppointment(
+                                    appointment.id,
+                                    status
+                                );
+
+                                // If appointment is updated successfully, send the appointment request notification.
+                                if (
+                                    appointment.status === "pending" &&
+                                    updatedAppointment.status === "confirmed"
+                                ) {
+                                    // Send Email Notification
+                                    await sendEmailAppointmentConfirmation(
+                                        updatedAppointment.id,
+                                        updatedAppointment.price,
+                                        updatedAppointment.status,
+                                        updatedAppointment.from_date,
+                                        updatedAppointment.to_date,
+                                        updatedAppointment.duration,
+                                        updatedAppointment.customer_name,
+                                        updatedAppointment.customer_number,
+                                        updatedAppointment.customer_email,
+                                        updatedAppointment.service_name,
+                                        updatedAppointment.staff_name
+                                    );
+
+                                    // Send SMS Notification
+                                    await sendTwilioAppointmentConfirmation(
+                                        updatedAppointment.id,
+                                        updatedAppointment.price,
+                                        updatedAppointment.status,
+                                        updatedAppointment.from_date,
+                                        updatedAppointment.to_date,
+                                        updatedAppointment.duration,
+                                        updatedAppointment.customer_name,
+                                        updatedAppointment.customer_number,
+                                        updatedAppointment.customer_email,
+                                        updatedAppointment.service_name,
+                                        updatedAppointment.staff_name
+                                    );
+                                } else if (
+                                    updatedAppointment.status === "cancelled"
+                                ) {
+                                    // Send Email Notification
+                                    await sendEmailAppointmentCancellation(
+                                        updatedAppointment.id,
+                                        updatedAppointment.price,
+                                        updatedAppointment.status,
+                                        updatedAppointment.from_date,
+                                        updatedAppointment.to_date,
+                                        updatedAppointment.duration,
+                                        updatedAppointment.customer_name,
+                                        updatedAppointment.customer_number,
+                                        updatedAppointment.customer_email,
+                                        updatedAppointment.service_name,
+                                        updatedAppointment.staff_name
+                                    );
+
+                                    // Send SMS Notification
+                                    await sendTwilioAppointmentCancellation(
+                                        updatedAppointment.id,
+                                        updatedAppointment.price,
+                                        updatedAppointment.status,
+                                        updatedAppointment.from_date,
+                                        updatedAppointment.to_date,
+                                        updatedAppointment.duration,
+                                        updatedAppointment.customer_name,
+                                        updatedAppointment.customer_number,
+                                        updatedAppointment.customer_email,
+                                        updatedAppointment.service_name,
+                                        updatedAppointment.staff_name
+                                    );
+                                }
+
                                 setShowDemoModal(false);
                                 alert("Appointment has been updated!");
 
@@ -91,8 +169,9 @@ const AppointmentEditModal = ({
                                         setStatus(event.target.value);
                                     }}
                                 >
-                                    <option value="approved">approved</option>
                                     <option value="pending">pending</option>
+                                    <option value="confirmed">confirmed</option>
+                                    <option value="cancelled">cancelled</option>
                                 </select>
                             </div>
                         </Form.Field>

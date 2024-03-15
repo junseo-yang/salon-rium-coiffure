@@ -1,6 +1,10 @@
 "use server";
 
+import { sendMail } from "@/lib/mails/mail";
+import { compileAppointmentEmailTemplate } from "@/lib/mails/templates/appointmentEmailTemplate";
 import prisma from "@/lib/prisma";
+import { compileAppointmentTwilioTemplate } from "@/lib/twilio/templates/appointmentTwilioTemplate";
+import { sendTwilio } from "@/lib/twilio/twilio";
 
 export async function putAppointment(appointMentId: string, status: string) {
     const result = await prisma.appointment.update({
@@ -23,4 +27,204 @@ export async function deleteAppointment(appointmentId: string) {
     });
 
     return result;
+}
+
+// Send Appointment Confirmation Email to Admin and Customer
+export async function sendEmailAppointmentConfirmation(
+    id: string,
+    price: string,
+    status: string,
+    from_date: Date,
+    to_date: Date,
+    duration: string,
+    customer_name: string,
+    customer_number: string,
+    customer_email: string,
+    service_name: string,
+    staff_name: string
+) {
+    const current = new Date();
+    // Send Appointment Confirmation Email to Admin
+    await sendMail({
+        to: process.env.ADMIN_EMAIL!,
+        subject: "[Salon Rium Coiffure] A Customer Appointment is Confirmed.",
+        body: compileAppointmentEmailTemplate({
+            id,
+            price,
+            status,
+            from_date,
+            to_date,
+            duration,
+            customer_name,
+            customer_number,
+            customer_email,
+            service_name,
+            staff_name,
+            // additional params
+            current,
+            isAdmin: true,
+            title: "Appointment Confirmation",
+            action: "confirmed"
+        })
+    });
+
+    // Send Appointment Confirmation Email to Customer
+    await sendMail({
+        to: customer_email,
+        subject: "[Salon Rium Coiffure] Your Appointment is Confirmed.",
+        body: compileAppointmentEmailTemplate({
+            id,
+            price,
+            status,
+            from_date,
+            to_date,
+            duration,
+            customer_name,
+            customer_number,
+            customer_email,
+            service_name,
+            staff_name,
+            // additional params
+            current,
+            isAdmin: false,
+            title: "Appointment Confirmation",
+            action: "confirmed"
+        })
+    });
+}
+
+// Send Appointment Confirmation Twilio to Customer
+export async function sendTwilioAppointmentConfirmation(
+    id: string,
+    price: string,
+    status: string,
+    from_date: Date,
+    to_date: Date,
+    duration: string,
+    customer_name: string,
+    customer_number: string,
+    customer_email: string,
+    service_name: string,
+    staff_name: string
+) {
+    const current = new Date();
+    await sendTwilio({
+        to: customer_number,
+        body: compileAppointmentTwilioTemplate({
+            id,
+            price,
+            status,
+            from_date,
+            to_date,
+            duration,
+            customer_name,
+            customer_number,
+            customer_email,
+            service_name,
+            staff_name,
+            // additional params
+            current,
+            action: "confirmed"
+        })
+    });
+}
+
+// Send Appointment Cancellation Email to Admin and Customer
+export async function sendEmailAppointmentCancellation(
+    id: string,
+    price: string,
+    status: string,
+    from_date: Date,
+    to_date: Date,
+    duration: string,
+    customer_name: string,
+    customer_number: string,
+    customer_email: string,
+    service_name: string,
+    staff_name: string
+) {
+    const current = new Date();
+    // Send Appointment Cancellation Email to Admin
+    await sendMail({
+        to: process.env.ADMIN_EMAIL!,
+        subject: "[Salon Rium Coiffure] A Customer Appointment is Cancelled.",
+        body: compileAppointmentEmailTemplate({
+            id,
+            price,
+            status,
+            from_date,
+            to_date,
+            duration,
+            customer_name,
+            customer_number,
+            customer_email,
+            service_name,
+            staff_name,
+            // additional params
+            current,
+            isAdmin: true,
+            title: "Appointment Cancellation",
+            action: "cancelled"
+        })
+    });
+
+    // Send Appointment Cancellation Email to Customer
+    await sendMail({
+        to: customer_email,
+        subject: "[Salon Rium Coiffure] Your Appointment is Cancelled.",
+        body: compileAppointmentEmailTemplate({
+            id,
+            price,
+            status,
+            from_date,
+            to_date,
+            duration,
+            customer_name,
+            customer_number,
+            customer_email,
+            service_name,
+            staff_name,
+            // additional params
+            current,
+            isAdmin: false,
+            title: "Appointment Cancellation",
+            action: "cancelled"
+        })
+    });
+}
+
+// Send Appointment Cancellation Twilio to Customer
+export async function sendTwilioAppointmentCancellation(
+    id: string,
+    price: string,
+    status: string,
+    from_date: Date,
+    to_date: Date,
+    duration: string,
+    customer_name: string,
+    customer_number: string,
+    customer_email: string,
+    service_name: string,
+    staff_name: string
+) {
+    const current = new Date();
+    await sendTwilio({
+        to: customer_number,
+        body: compileAppointmentTwilioTemplate({
+            id,
+            price,
+            status,
+            from_date,
+            to_date,
+            duration,
+            customer_name,
+            customer_number,
+            customer_email,
+            service_name,
+            staff_name,
+            // additional params
+            current,
+            action: "cancelled"
+        })
+    });
 }
