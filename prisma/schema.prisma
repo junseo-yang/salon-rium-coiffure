@@ -135,3 +135,12 @@ model Appointment {
   staff         Staff   @relation(fields: [staffId], references: [id])
   staffId       String  @unique @db.ObjectId
 }
+
+model Blocking {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  name        String
+
+  from_datetime   DateTime
+  to_datetime     DateTime
+}
