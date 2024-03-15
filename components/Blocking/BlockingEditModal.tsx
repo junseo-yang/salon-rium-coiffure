@@ -108,12 +108,17 @@ const BlockingEditModal = ({
                             }
 
                             try {
-                                await putBlocking(
+                                const editedBlocking = await putBlocking(
                                     blocking.id,
                                     name,
                                     new Date(startDate),
                                     new Date(endDate)
                                 );
+
+                                if (!editedBlocking) {
+                                    alert("The start and end are unavailable");
+                                    return;
+                                }
 
                                 alert("Blocking has been updated!");
                                 setShowDemoModal(false);
