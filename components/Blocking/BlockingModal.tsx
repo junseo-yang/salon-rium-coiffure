@@ -99,11 +99,16 @@ const BlockingModal = ({
                             }
 
                             try {
-                                await createBlocking(
+                                const newBlocking = await createBlocking(
                                     name,
                                     new Date(startDate),
                                     new Date(endDate)
                                 );
+
+                                if (!newBlocking) {
+                                    alert("The start and end are unavailable");
+                                    return;
+                                }
 
                                 alert("Blocking created!");
                                 setShowDemoModal(false);
