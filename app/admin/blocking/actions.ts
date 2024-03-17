@@ -1,6 +1,7 @@
 "use server";
 
 import prisma from "@/lib/prisma";
+import { Staff } from "@prisma/client";
 
 async function isAvailableBlocking(b_from_datetime: Date, b_to_datetime: Date) {
     const appointments = await prisma.appointment.findMany({
@@ -24,6 +25,7 @@ async function isAvailableBlocking(b_from_datetime: Date, b_to_datetime: Date) {
 
 export async function createBlocking(
     name: string,
+    staff: Staff,
     from_datetime: Date,
     to_datetime: Date
 ) {
@@ -39,7 +41,9 @@ export async function createBlocking(
         data: {
             name,
             from_datetime,
-            to_datetime
+            to_datetime,
+
+            staffId: staff.id
         }
     });
 
@@ -48,6 +52,7 @@ export async function createBlocking(
 
 export async function putBlocking(
     blockingId: string,
+    staff: Staff,
     name: string,
     from_datetime: Date,
     to_datetime: Date
@@ -66,6 +71,7 @@ export async function putBlocking(
         },
         data: {
             name,
+            staffId: staff.id,
             from_datetime,
             to_datetime
         }

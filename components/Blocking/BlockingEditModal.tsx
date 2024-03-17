@@ -13,20 +13,26 @@ import {
     useMemo
 } from "react";
 import { useRouter } from "next/navigation";
-import { Blocking } from "@prisma/client";
+import { Blocking, Staff } from "@prisma/client";
 import DatePicker from "react-datepicker";
 import { putBlocking } from "@/app/admin/blocking/actions";
 
 const BlockingEditModal = ({
     showDemoModal,
     setShowDemoModal,
-    blocking
+    blocking,
+    staffs
 }: {
     showDemoModal: boolean;
     setShowDemoModal: Dispatch<SetStateAction<boolean>>;
-    blocking: Blocking;
+    blocking: Blocking & {
+        staff: Staff;
+    };
+    staffs: Staff[];
 }) => {
     const [name, setName] = useState(blocking.name);
+    const [staffName, setStaffName] = useState(blocking.staff.name);
+
     const [startDate, setStartDate] = useState(
         blocking.from_datetime ? new Date(blocking.from_datetime) : ""
     );
@@ -107,9 +113,19 @@ const BlockingEditModal = ({
                                 return;
                             }
 
+                            const selectStaff = staffs.find(
+                                (s) => s.name === staffName
+                            );
+
+                            if (!selectStaff) {
+                                alert("Select staff please");
+                                return;
+                            }
+
                             try {
                                 const editedBlocking = await putBlocking(
                                     blocking.id,
+                                    selectStaff,
                                     name,
                                     new Date(startDate),
                                     new Date(endDate)
@@ -157,6 +173,32 @@ const BlockingEditModal = ({
                                     required
                                 />
                             </Form.Control>
+                        </Form.Field>
+
+                        <Form.Field className="grid" name="staff">
+                            <div
+                                style={{
+                                    display: "flex",
+                                    alignItems: "baseline",
+                                    justifyContent: "space-between"
+                                }}
+                            >
+                                <Form.Label className="FormLabel">
+                                    Staff
+                                </Form.Label>
+                            </div>
+                            <select
+                                value={staffName}
+                                onChange={(e) => {
+                                    setStaffName(e.target.value);
+                                }}
+                            >
+                                {staffs.map((s) => (
+                                    <option key={s.id} value={s.name}>
+                                        {s.name}
+                                    </option>
+                                ))}
+                            </select>
                         </Form.Field>
 
                         <Form.Field className="grid" name="startDate">
@@ -299,7 +341,7 @@ const BlockingEditModal = ({
     );
 };
 
-export function useBlockingEditModal(blocking) {
+export function useBlockingEditModal(blocking, staffs) {
     const [showDemoModal, setShowDemoModal] = useState(false);
 
     const DemoModalCallback = useCallback(
@@ -308,9 +350,10 @@ export function useBlockingEditModal(blocking) {
                 showDemoModal={showDemoModal}
                 setShowDemoModal={setShowDemoModal}
                 blocking={blocking}
+                staffs={staffs}
             />
         ),
-        [showDemoModal, setShowDemoModal, blocking]
+        [showDemoModal, setShowDemoModal, blocking, staffs]
     );
 
     return useMemo(

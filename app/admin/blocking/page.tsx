@@ -9,7 +9,13 @@ import BlockingEditModal from "@/components/Blocking/BlockingEditDialog";
 import BlockingDelete from "@/components/Blocking/BlockingDelete";
 
 export default async function Page() {
-    const blockings = await prisma.blocking.findMany();
+    const blockings = await prisma.blocking.findMany({
+        include: {
+            staff: true
+        }
+    });
+
+    const staffs = await prisma.staff.findMany();
 
     const session = await getServerSession(AuthOptions);
 
@@ -28,7 +34,7 @@ export default async function Page() {
                             <Balancer>Blocking</Balancer>
                         </h2>
                         <div>
-                            <BlockingDialog />
+                            <BlockingDialog staffs={staffs} />
                         </div>
                     </div>
                     <div className="text-center">
@@ -38,7 +44,9 @@ export default async function Page() {
                                     <div className="mt-5 grid grid-cols-3">
                                         <div></div>
                                         <div>
-                                            <p>{b.name}: </p>
+                                            <p>
+                                                {b.staff.name} - {b.name}:{" "}
+                                            </p>
                                             <p>
                                                 {moment(b.from_datetime)
                                                     .local()
@@ -53,7 +61,10 @@ export default async function Page() {
                                         </div>
 
                                         <div className="flex items-stretch">
-                                            <BlockingEditModal blocking={b} />
+                                            <BlockingEditModal
+                                                blocking={b}
+                                                staffs={staffs}
+                                            />
                                             <BlockingDelete blockingId={b.id} />
                                         </div>
                                     </div>
