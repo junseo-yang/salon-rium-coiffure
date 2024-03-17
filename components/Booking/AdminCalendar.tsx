@@ -4,7 +4,7 @@
 
 import FullCalendar from "@fullcalendar/react";
 import timeGridPlugin from "@fullcalendar/timegrid";
-import { Appointment, Blocking } from "@prisma/client";
+import { Appointment } from "@prisma/client";
 import interactionPlugin from "@fullcalendar/interaction";
 import { EventInput } from "@fullcalendar/core";
 
@@ -23,9 +23,9 @@ export default function AdminCalendar({ appointments, blockings }) {
     );
 
     events.push(
-        ...blockings.map((b: Blocking) => {
+        ...blockings.map((b) => {
             const r: EventInput = {
-                title: `${b.name}`,
+                title: `${b.staff.name} - ${b.name}`,
                 start: b.from_datetime,
                 end: b.to_datetime,
                 backgroundColor: "green"

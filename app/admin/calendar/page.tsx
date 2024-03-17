@@ -14,7 +14,11 @@ export default async function Page() {
 
     const appointments = await prisma.appointment.findMany();
 
-    const blockings = await prisma.blocking.findMany();
+    const blockings = await prisma.blocking.findMany({
+        include: {
+            staff: true
+        }
+    });
 
     return (
         <>
