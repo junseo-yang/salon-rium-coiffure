@@ -112,9 +112,14 @@ export async function getAvailableTimes(
     const blockings = await prisma.blocking.findMany({
         where: {
             from_datetime: {
-                gte: targetDate,
+                gt: new Date(targetDate.getTime() - 24 * 60 * 60 * 1000)
+            },
+
+            to_datetime: {
                 lt: new Date(targetDate.getTime() + 24 * 60 * 60 * 1000)
-            }
+            },
+
+            staffId: designer.id
         }
     });
 
