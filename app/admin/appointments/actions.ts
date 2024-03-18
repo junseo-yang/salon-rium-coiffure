@@ -1,5 +1,8 @@
+/* eslint-disable no-console */
+
 "use server";
 
+import { deleteGoogleCalendar } from "@/lib/google-calendar/google-calendar";
 import { sendMail } from "@/lib/mails/mail";
 import { compileAppointmentEmailTemplate } from "@/lib/mails/templates/appointmentEmailTemplate";
 import prisma from "@/lib/prisma";
@@ -20,6 +23,21 @@ export async function putAppointment(appointMentId: string, status: string) {
 }
 
 export async function deleteAppointment(appointmentId: string) {
+    // Delete Google Calendar Event if it exists
+    const appointment = await prisma.appointment.findUnique({
+        where: {
+            id: appointmentId
+        }
+    });
+
+    if (appointment?.google_calendar_event_id) {
+        try {
+            await deleteGoogleCalendar(appointment.google_calendar_event_id);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     const result = await prisma.appointment.delete({
         where: {
             id: appointmentId

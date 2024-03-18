@@ -134,4 +134,6 @@ model Appointment {
 
   staff         Staff   @relation(fields: [staffId], references: [id])
   staffId       String  @unique @db.ObjectId
+
+  google_calendar_event_id  String?
 }

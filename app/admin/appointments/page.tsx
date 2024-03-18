@@ -1,7 +1,6 @@
 import { getServerSession } from "next-auth";
 import AccessDenied from "@/components/Shared/AccessDenied";
 import AuthOptions from "@/app/api/auth/[...nextauth]/options";
-
 import Balancer from "react-wrap-balancer";
 import prisma from "@/lib/prisma";
 import AppointmentEditDialog from "../../../components/Appointments/AppointmentEditDialog";

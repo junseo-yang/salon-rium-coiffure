@@ -22,6 +22,10 @@ import {
     sendTwilioAppointmentCancellation,
     sendTwilioAppointmentConfirmation
 } from "../../app/admin/appointments/actions";
+import {
+    deleteGoogleCalendarEvent,
+    insertGoogleCalendarEvent
+} from "../Booking/actions";
 
 const AppointmentEditModal = ({
     showDemoModal,
@@ -52,10 +56,7 @@ const AppointmentEditModal = ({
                                 );
 
                                 // If appointment is updated successfully, send the appointment request notification.
-                                if (
-                                    appointment.status === "pending" &&
-                                    updatedAppointment.status === "confirmed"
-                                ) {
+                                if (updatedAppointment.status === "confirmed") {
                                     // Send Email Notification
                                     await sendEmailAppointmentConfirmation(
                                         updatedAppointment.id,
@@ -79,6 +80,18 @@ const AppointmentEditModal = ({
                                         updatedAppointment.from_date,
                                         updatedAppointment.to_date,
                                         updatedAppointment.duration,
+                                        updatedAppointment.customer_name,
+                                        updatedAppointment.customer_number,
+                                        updatedAppointment.customer_email,
+                                        updatedAppointment.service_name,
+                                        updatedAppointment.staff_name
+                                    );
+
+                                    // Insert Google Calendar Event
+                                    await insertGoogleCalendarEvent(
+                                        updatedAppointment.id,
+                                        updatedAppointment.from_date,
+                                        updatedAppointment.to_date,
                                         updatedAppointment.customer_name,
                                         updatedAppointment.customer_number,
                                         updatedAppointment.customer_email,
@@ -116,6 +129,12 @@ const AppointmentEditModal = ({
                                         updatedAppointment.customer_email,
                                         updatedAppointment.service_name,
                                         updatedAppointment.staff_name
+                                    );
+
+                                    // Insert Google Calendar Event
+                                    await deleteGoogleCalendarEvent(
+                                        updatedAppointment.id,
+                                        updatedAppointment.google_calendar_event_id
                                     );
                                 }
 

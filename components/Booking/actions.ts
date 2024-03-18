@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 "use server";
 
 import { Service, Staff } from "@prisma/client";
@@ -7,6 +9,10 @@ import { sendMail } from "@/lib/mails/mail";
 import { compileAppointmentEmailTemplate } from "@/lib/mails/templates/appointmentEmailTemplate";
 import { sendTwilio } from "@/lib/twilio/twilio";
 import { compileAppointmentTwilioTemplate } from "@/lib/twilio/templates/appointmentTwilioTemplate";
+import {
+    deleteGoogleCalendar,
+    insertGoogleCalendar
+} from "@/lib/google-calendar/google-calendar";
 
 export async function getAppointment(id: string) {
     const appointment = await prisma.appointment.findUnique({
@@ -237,4 +243,57 @@ export async function sendTwilioAppointmentRequest(
             action: "requested"
         })
     });
+}
+
+export async function insertGoogleCalendarEvent(
+    id: string,
+    from_date: Date,
+    to_date: Date,
+    customer_name: string,
+    customer_number: string,
+    customer_email: string,
+    service_name: string,
+    staff_name: string
+) {
+    const summary = `${staff_name} | ${service_name} | ${customer_name}`;
+    const description = `${customer_name} | ${customer_email} | ${customer_number}`;
+    try {
+        const googleCalendarEventID = await insertGoogleCalendar({
+            summary,
+            description,
+            from_date,
+            to_date
+        });
+
+        await prisma.appointment.update({
+            where: {
+                id
+            },
+            data: {
+                google_calendar_event_id: googleCalendarEventID
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export async function deleteGoogleCalendarEvent(
+    id: string,
+    google_calendar_event_id: string | null
+) {
+    try {
+        await deleteGoogleCalendar(google_calendar_event_id);
+
+        await prisma.appointment.update({
+            where: {
+                id
+            },
+            data: {
+                google_calendar_event_id: null
+            }
+        });
+    } catch (error) {
+        console.error(error);
+    }
 }
