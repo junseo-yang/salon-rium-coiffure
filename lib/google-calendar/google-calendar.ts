@@ -34,12 +34,10 @@ export async function getCalendarEvent() {
 // Insert Google Calendar Event and return inserted event id or raise exception
 export async function insertGoogleCalendar({
     summary,
-    description,
     from_date,
     to_date
 }: {
     summary: string;
-    description: string;
     from_date: Date;
     to_date: Date;
 }) {
@@ -65,14 +63,11 @@ export async function insertGoogleCalendar({
         method: "POST",
         body: JSON.stringify({
             summary,
-            description,
             start: {
-                dateTime: from_date,
-                timeZone: "America/New_York"
+                dateTime: from_date
             },
             end: {
-                dateTime: to_date,
-                timeZone: "America/New_York"
+                dateTime: to_date
             }
         })
     });

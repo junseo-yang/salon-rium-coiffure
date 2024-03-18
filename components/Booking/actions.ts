@@ -35,13 +35,18 @@ export async function createAppointment(
     customerNumber: string,
     customerEmail: string
 ) {
+    const current = new Date();
+    // offset with EDT
+    const offset = 4 - current.getTimezoneOffset() / 60;
+
     // 12 25
     // 10:00 ~ 11:00
     const fromDatetime = new Date();
     fromDatetime.setMonth(Number(selectedDate.split(" ")[0]) - 1);
     fromDatetime.setDate(Number(selectedDate.split(" ")[1]));
     fromDatetime.setHours(
-        Number(selectedTime.split(" ~ ")[0].replace(":00", "")),
+        // Add Timezone Offset
+        Number(selectedTime.split(" ~ ")[0].replace(":00", "")) + offset,
         0,
         0,
         0
@@ -51,7 +56,8 @@ export async function createAppointment(
     toDatetime.setMonth(Number(selectedDate.split(" ")[0]) - 1);
     toDatetime.setDate(Number(selectedDate.split(" ")[1]));
     toDatetime.setHours(
-        Number(selectedTime.split(" ~ ")[1].replace(":00", "")),
+        // Add Timezone Offset
+        Number(selectedTime.split(" ~ ")[1].replace(":00", "")) + offset,
         0,
         0,
         0
@@ -255,12 +261,10 @@ export async function insertGoogleCalendarEvent(
     service_name: string,
     staff_name: string
 ) {
-    const summary = `${staff_name} | ${service_name} | ${customer_name}`;
-    const description = `${customer_name} | ${customer_email} | ${customer_number}`;
+    const summary = `${staff_name} | ${service_name} | ${customer_name} | ${customer_email} | ${customer_number}`;
     try {
         const googleCalendarEventID = await insertGoogleCalendar({
             summary,
-            description,
             from_date,
             to_date
         });
