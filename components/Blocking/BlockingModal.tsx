@@ -175,6 +175,7 @@ const BlockingModal = ({
                                 </Form.Label>
                             </div>
                             <select
+                                id="staff"
                                 value={staffName}
                                 onChange={(e) => {
                                     setStaffName(e.target.value);
