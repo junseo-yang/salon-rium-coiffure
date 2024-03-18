@@ -918,3 +918,134 @@ test("Calendar Appointment", async ({ page }) => {
         where: { id: testStaff.id }
     });
 });
+
+test("Create Blocking", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Create a blocking
+    await page.goto("/admin/blocking");
+    await page.locator("#btnAddBlocking").click();
+    const testBlockingName = `Test Blocking ${Date.now()}`;
+    await page.locator("#name-input").fill(testBlockingName);
+
+    await page.selectOption("select#staff", "Test Staff 1");
+    await page.locator("#start-date-button").click();
+    await page.locator('role=option[name="00:00"]').click();
+    await page.locator("#end-date-button").click();
+    await page.locator('role=option[name="03:00"]').click();
+
+    await page.locator("#submit-button").click();
+
+    await page.waitForTimeout(1000);
+
+    // Assert
+    await page.goto("/admin/blocking");
+    await expect(page.getByText(testBlockingName)).toBeVisible();
+
+    // Cleanup: Delete the blocking
+    await page.goto("/admin/blocking");
+    page.on("dialog", (dialog) => dialog.accept());
+    await page
+        .locator("li")
+        .filter({ hasText: testBlockingName })
+        .getByRole("button")
+        .nth(1)
+        .click();
+    await page.waitForTimeout(1000);
+
+    // Logout
+    await logout(page);
+});
+
+test("Update Blocking", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Create a blocking
+    await page.goto("/admin/blocking");
+    await page.locator("#btnAddBlocking").click();
+    const testBlockingName = `Test Blocking ${Date.now()}`;
+    await page.locator("#name-input").fill(testBlockingName);
+
+    await page.selectOption("select#staff", "Test Staff 1");
+    await page.locator("#start-date-button").click();
+    await page.locator('role=option[name="00:00"]').click();
+    await page.locator("#end-date-button").click();
+    await page.locator('role=option[name="03:00"]').click();
+
+    await page.locator("#submit-button").click();
+
+    await page.waitForTimeout(1000);
+
+    // Update the blocking
+    await page
+        .locator("li")
+        .filter({ hasText: testBlockingName })
+        .getByRole("button")
+        .first()
+        .click();
+
+    const testBookingNameUpdated = `Test Blocking Updated ${Date.now()}`;
+    await page.locator("#name-input").fill(testBookingNameUpdated);
+    await page.locator("#submit-button").click();
+
+    await page.waitForTimeout(1000);
+
+    // Assert
+    await page.goto("/admin/blocking");
+    await expect(page.getByText(testBookingNameUpdated)).toBeVisible();
+
+    // Cleanup: Delete the blocking
+    await page.goto("/admin/blocking");
+    page.on("dialog", (dialog) => dialog.accept());
+    await page
+        .locator("li")
+        .filter({ hasText: testBookingNameUpdated })
+        .getByRole("button")
+        .nth(1)
+        .click();
+    await page.waitForTimeout(1000);
+
+    // Logout
+    await logout(page);
+});
+
+test("Delete Blocking", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Create a blocking
+    await page.goto("/admin/blocking");
+    await page.locator("#btnAddBlocking").click();
+    const testBlockingName = `Test Blocking ${Date.now()}`;
+    await page.locator("#name-input").fill(testBlockingName);
+
+    await page.selectOption("select#staff", "Test Staff 1");
+    await page.locator("#start-date-button").click();
+    await page.locator('role=option[name="00:00"]').click();
+    await page.locator("#end-date-button").click();
+    await page.locator('role=option[name="03:00"]').click();
+
+    await page.locator("#submit-button").click();
+
+    await page.waitForTimeout(1000);
+
+    // Delete blocking
+    await page.goto("/admin/blocking");
+    page.on("dialog", (dialog) => dialog.accept());
+    await page
+        .locator("li")
+        .filter({ hasText: testBlockingName })
+        .getByRole("button")
+        .nth(1)
+        .click();
+    await page.waitForTimeout(1000);
+
+    // Assert
+    await page.goto("/admin/blocking");
+    await expect(page.getByText(testBlockingName)).toBeHidden();
+
+    // Logout
+    await logout(page);
+});
