@@ -920,132 +920,186 @@ test("Calendar Appointment", async ({ page }) => {
 });
 
 test("Create Blocking", async ({ page }) => {
-    // Login
-    await login(page);
+    // Put default staff on the db
+    const testStaffName = `Test Staff ${Date.now()}`;
+    const createdStaff = await prisma.staff.create({
+        data: {
+            name: testStaffName,
+            role: Roles.Designer
+        }
+    });
 
-    // Create a blocking
-    await page.goto("/admin/blocking");
-    await page.locator("#btnAddBlocking").click();
-    const testBlockingName = `Test Blocking ${Date.now()}`;
-    await page.locator("#name-input").fill(testBlockingName);
+    try {
+        // Login
+        await login(page);
 
-    await page.selectOption("select#staff", "Test Staff 1");
-    await page.locator("#start-date-button").click();
-    await page.locator('role=option[name="00:00"]').click();
-    await page.locator("#end-date-button").click();
-    await page.locator('role=option[name="03:00"]').click();
+        // Create a blocking
+        await page.goto("/admin/blocking");
+        await page.locator("#btnAddBlocking").click();
+        const testBlockingName = `Test Blocking ${Date.now()}`;
+        await page.locator("#name-input").fill(testBlockingName);
 
-    await page.locator("#submit-button").click();
+        await page.selectOption("select#staff", testStaffName);
+        await page.locator("#start-date-button").click();
+        await page.locator('role=option[name="00:00"]').click();
+        await page.locator("#end-date-button").click();
+        await page.locator('role=option[name="03:00"]').click();
 
-    await page.waitForTimeout(1000);
+        await page.locator("#submit-button").click();
 
-    // Assert
-    await page.goto("/admin/blocking");
-    await expect(page.getByText(testBlockingName)).toBeVisible();
+        await page.waitForTimeout(1000);
 
-    // Cleanup: Delete the blocking
-    await page.goto("/admin/blocking");
-    page.on("dialog", (dialog) => dialog.accept());
-    await page
-        .locator("li")
-        .filter({ hasText: testBlockingName })
-        .getByRole("button")
-        .nth(1)
-        .click();
-    await page.waitForTimeout(1000);
+        // Assert
+        await page.goto("/admin/blocking");
+        await expect(page.getByText(testBlockingName)).toBeVisible();
 
-    // Logout
-    await logout(page);
+        // Cleanup: Delete the blocking
+        await page.goto("/admin/blocking");
+        page.on("dialog", (dialog) => dialog.accept());
+        await page
+            .locator("li")
+            .filter({ hasText: testBlockingName })
+            .getByRole("button")
+            .nth(1)
+            .click();
+        await page.waitForTimeout(1000);
+
+        // Logout
+        await logout(page);
+    } finally {
+        // delete the created test staff
+        await prisma.staff.delete({
+            where: {
+                id: createdStaff.id
+            }
+        });
+    }
 });
 
 test("Update Blocking", async ({ page }) => {
-    // Login
-    await login(page);
+    // Put default staff on the db
+    const testStaffName = `Test Staff ${Date.now()}`;
+    const createdStaff = await prisma.staff.create({
+        data: {
+            name: testStaffName,
+            role: Roles.Designer
+        }
+    });
 
-    // Create a blocking
-    await page.goto("/admin/blocking");
-    await page.locator("#btnAddBlocking").click();
-    const testBlockingName = `Test Blocking ${Date.now()}`;
-    await page.locator("#name-input").fill(testBlockingName);
+    try {
+        // Login
+        await login(page);
 
-    await page.selectOption("select#staff", "Test Staff 1");
-    await page.locator("#start-date-button").click();
-    await page.locator('role=option[name="00:00"]').click();
-    await page.locator("#end-date-button").click();
-    await page.locator('role=option[name="03:00"]').click();
+        // Create a blocking
+        await page.goto("/admin/blocking");
+        await page.locator("#btnAddBlocking").click();
+        const testBlockingName = `Test Blocking ${Date.now()}`;
+        await page.locator("#name-input").fill(testBlockingName);
 
-    await page.locator("#submit-button").click();
+        await page.selectOption("select#staff", testStaffName);
+        await page.locator("#start-date-button").click();
+        await page.locator('role=option[name="00:00"]').click();
+        await page.locator("#end-date-button").click();
+        await page.locator('role=option[name="03:00"]').click();
 
-    await page.waitForTimeout(1000);
+        await page.locator("#submit-button").click();
 
-    // Update the blocking
-    await page
-        .locator("li")
-        .filter({ hasText: testBlockingName })
-        .getByRole("button")
-        .first()
-        .click();
+        await page.waitForTimeout(1000);
 
-    const testBookingNameUpdated = `Test Blocking Updated ${Date.now()}`;
-    await page.locator("#name-input").fill(testBookingNameUpdated);
-    await page.locator("#submit-button").click();
+        // Update the blocking
+        await page
+            .locator("li")
+            .filter({ hasText: testBlockingName })
+            .getByRole("button")
+            .first()
+            .click();
 
-    await page.waitForTimeout(1000);
+        const testBookingNameUpdated = `Test Blocking Updated ${Date.now()}`;
+        await page.locator("#name-input").fill(testBookingNameUpdated);
+        await page.locator("#submit-button").click();
 
-    // Assert
-    await page.goto("/admin/blocking");
-    await expect(page.getByText(testBookingNameUpdated)).toBeVisible();
+        await page.waitForTimeout(1000);
 
-    // Cleanup: Delete the blocking
-    await page.goto("/admin/blocking");
-    page.on("dialog", (dialog) => dialog.accept());
-    await page
-        .locator("li")
-        .filter({ hasText: testBookingNameUpdated })
-        .getByRole("button")
-        .nth(1)
-        .click();
-    await page.waitForTimeout(1000);
+        // Assert
+        await page.goto("/admin/blocking");
+        await expect(page.getByText(testBookingNameUpdated)).toBeVisible();
 
-    // Logout
-    await logout(page);
+        // Cleanup: Delete the blocking
+        await page.goto("/admin/blocking");
+        page.on("dialog", (dialog) => dialog.accept());
+        await page
+            .locator("li")
+            .filter({ hasText: testBookingNameUpdated })
+            .getByRole("button")
+            .nth(1)
+            .click();
+        await page.waitForTimeout(1000);
+
+        // Logout
+        await logout(page);
+    } finally {
+        // delete the created test staff
+        await prisma.staff.delete({
+            where: {
+                id: createdStaff.id
+            }
+        });
+    }
 });
 
 test("Delete Blocking", async ({ page }) => {
-    // Login
-    await login(page);
+    // Put default staff on the db
+    const testStaffName = `Test Staff ${Date.now()}`;
+    const createdStaff = await prisma.staff.create({
+        data: {
+            name: testStaffName,
+            role: Roles.Designer
+        }
+    });
 
-    // Create a blocking
-    await page.goto("/admin/blocking");
-    await page.locator("#btnAddBlocking").click();
-    const testBlockingName = `Test Blocking ${Date.now()}`;
-    await page.locator("#name-input").fill(testBlockingName);
+    try {
+        // Login
+        await login(page);
 
-    await page.selectOption("select#staff", "Test Staff 1");
-    await page.locator("#start-date-button").click();
-    await page.locator('role=option[name="00:00"]').click();
-    await page.locator("#end-date-button").click();
-    await page.locator('role=option[name="03:00"]').click();
+        // Create a blocking
+        await page.goto("/admin/blocking");
+        await page.locator("#btnAddBlocking").click();
+        const testBlockingName = `Test Blocking ${Date.now()}`;
+        await page.locator("#name-input").fill(testBlockingName);
 
-    await page.locator("#submit-button").click();
+        await page.selectOption("select#staff", testStaffName);
+        await page.locator("#start-date-button").click();
+        await page.locator('role=option[name="00:00"]').click();
+        await page.locator("#end-date-button").click();
+        await page.locator('role=option[name="03:00"]').click();
 
-    await page.waitForTimeout(1000);
+        await page.locator("#submit-button").click();
 
-    // Delete blocking
-    await page.goto("/admin/blocking");
-    page.on("dialog", (dialog) => dialog.accept());
-    await page
-        .locator("li")
-        .filter({ hasText: testBlockingName })
-        .getByRole("button")
-        .nth(1)
-        .click();
-    await page.waitForTimeout(1000);
+        await page.waitForTimeout(1000);
 
-    // Assert
-    await page.goto("/admin/blocking");
-    await expect(page.getByText(testBlockingName)).toBeHidden();
+        // Delete blocking
+        await page.goto("/admin/blocking");
+        page.on("dialog", (dialog) => dialog.accept());
+        await page
+            .locator("li")
+            .filter({ hasText: testBlockingName })
+            .getByRole("button")
+            .nth(1)
+            .click();
+        await page.waitForTimeout(1000);
 
-    // Logout
-    await logout(page);
+        // Assert
+        await page.goto("/admin/blocking");
+        await expect(page.getByText(testBlockingName)).toBeHidden();
+
+        // Logout
+        await logout(page);
+    } finally {
+        // delete the created test staff
+        await prisma.staff.delete({
+            where: {
+                id: createdStaff.id
+            }
+        });
+    }
 });
