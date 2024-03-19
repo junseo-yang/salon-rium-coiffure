@@ -14,12 +14,21 @@ export default async function Page() {
 
     const appointments = await prisma.appointment.findMany();
 
+    const breaks = await prisma.break.findMany({
+        include: {
+            staff: true
+        }
+    });
+
     return (
         <>
             <div className="w-full max-w-screen-xl animate-fade-up grid-cols-1 gap-5 px-5 md:grid-cols-3 xl:px-0">
                 <div className="relative col-span-1 flex-1 items-center overflow-hidden rounded-xl border border-gray-200 bg-white p-5 shadow-md md:col-span-3">
                     <div>
-                        <AdminCalendar appointments={appointments} />
+                        <AdminCalendar
+                            appointments={appointments}
+                            breaks={breaks}
+                        />
                     </div>
                 </div>
             </div>

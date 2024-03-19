@@ -102,6 +102,8 @@ model Staff {
 
   appointments  Appointment[]
 
+  breaks Break[]
+
   role        Roles
 }
 
@@ -136,4 +138,16 @@ model Appointment {
   staffId       String  @unique @db.ObjectId
 
   google_calendar_event_id  String?
+}
+
+model Break {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  name        String
+
+  from_datetime   DateTime
+  to_datetime     DateTime
+
+  staff         Staff   @relation(fields: [staffId], references: [id])
+  staffId       String  @unique @db.ObjectId
 }
