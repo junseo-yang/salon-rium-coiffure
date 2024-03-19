@@ -8,7 +8,7 @@ import { Appointment } from "@prisma/client";
 import interactionPlugin from "@fullcalendar/interaction";
 import { EventInput } from "@fullcalendar/core";
 
-export default function AdminCalendar({ appointments, blockings }) {
+export default function AdminCalendar({ appointments, breaks }) {
     const events: EventInput = [];
     events.push(
         ...appointments.map((a: Appointment) => {
@@ -23,7 +23,7 @@ export default function AdminCalendar({ appointments, blockings }) {
     );
 
     events.push(
-        ...blockings.map((b) => {
+        ...breaks.map((b) => {
             const r: EventInput = {
                 title: `${b.staff.name} - ${b.name}`,
                 start: b.from_datetime,

@@ -14,7 +14,7 @@ export default async function Page() {
 
     const appointments = await prisma.appointment.findMany();
 
-    const blockings = await prisma.blocking.findMany({
+    const breaks = await prisma.break.findMany({
         include: {
             staff: true
         }
@@ -27,7 +27,7 @@ export default async function Page() {
                     <div>
                         <AdminCalendar
                             appointments={appointments}
-                            blockings={blockings}
+                            breaks={breaks}
                         />
                     </div>
                 </div>

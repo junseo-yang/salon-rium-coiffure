@@ -102,7 +102,7 @@ model Staff {
 
   appointments  Appointment[]
 
-  blockings Blocking[]
+  breaks Break[]
 
   role        Roles
 }
@@ -138,7 +138,7 @@ model Appointment {
   staffId       String  @unique @db.ObjectId
 }
 
-model Blocking {
+model Break {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
 
   name        String

@@ -1,15 +1,15 @@
 "use client";
 
 import { PlusCircledIcon } from "@radix-ui/react-icons";
-import { useBlockingModal } from "./BlockingModal";
+import { useBreakModal } from "./BreakModal";
 
-export default function BlockingDialog({ staffs }) {
-    const { DemoModal, setShowDemoModal } = useBlockingModal(staffs);
+export default function BreakDialog({ staffs }) {
+    const { DemoModal, setShowDemoModal } = useBreakModal(staffs);
     return (
         <div className="flex h-full items-center">
             <DemoModal />
             <button
-                id="btnAddBlocking"
+                id="btnAddBreak"
                 onClick={() => setShowDemoModal(true)}
                 aria-label="Save"
             >

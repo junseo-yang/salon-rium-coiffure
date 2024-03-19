@@ -97,10 +97,10 @@ export default async function Page() {
                     animationFillMode: "forwards",
                     cursor: "pointer"
                 }}
-                href="/admin/blocking"
+                href="/admin/breaks"
             >
                 <p>
-                    <Balancer>Go to Blocking Management</Balancer>
+                    <Balancer>Go to Break Management</Balancer>
                 </p>
             </a>
         </>
