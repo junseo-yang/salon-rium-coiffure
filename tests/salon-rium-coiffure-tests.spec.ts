@@ -918,3 +918,199 @@ test("Calendar Appointment", async ({ page }) => {
         where: { id: testStaff.id }
     });
 });
+
+test("Get All Breaks", async ({ page }) => {
+    // login
+    await login(page);
+    await page.goto("/admin/breaks");
+
+    await expect(page.getByText("Break")).toBeVisible();
+
+    // Logout
+    await logout(page);
+});
+
+test("Create Break", async ({ page }) => {
+    // Put default staff on the db
+    const testStaffName = `Test Staff ${Date.now()}`;
+    const createdStaff = await prisma.staff.create({
+        data: {
+            name: testStaffName,
+            role: Roles.Designer
+        }
+    });
+
+    try {
+        // Login
+        await login(page);
+
+        // Create a Break
+        await page.goto("/admin/breaks");
+        await page.locator("#btnAddBreak").click();
+        const testBreakName = `Test break ${Date.now()}`;
+        await page.locator("#name-input").fill(testBreakName);
+
+        await page.selectOption("select#staff", testStaffName);
+        await page.locator("#start-date-button").click();
+        await page.locator('role=option[name="00:00"]').click();
+        await page.locator("#end-date-button").click();
+        await page.locator('role=option[name="03:00"]').click();
+
+        await page.locator("#submit-button").click();
+
+        await page.waitForTimeout(1000);
+
+        // Assert
+        await page.goto("/admin/breaks");
+        await expect(page.getByText(testBreakName)).toBeVisible();
+
+        // Cleanup: Delete the break
+        await page.goto("/admin/breaks");
+        page.on("dialog", (dialog) => dialog.accept());
+        await page
+            .locator("li")
+            .filter({ hasText: testBreakName })
+            .getByRole("button")
+            .nth(1)
+            .click();
+        await page.waitForTimeout(1000);
+
+        // Logout
+        await logout(page);
+    } finally {
+        // delete the created test staff
+        await prisma.staff.delete({
+            where: {
+                id: createdStaff.id
+            }
+        });
+    }
+});
+
+test("Update Break", async ({ page }) => {
+    // Put default staff on the db
+    const testStaffName = `Test Staff ${Date.now()}`;
+    const createdStaff = await prisma.staff.create({
+        data: {
+            name: testStaffName,
+            role: Roles.Designer
+        }
+    });
+
+    try {
+        // Login
+        await login(page);
+
+        // Create a Break
+        await page.goto("/admin/breaks");
+        await page.locator("#btnAddBreak").click();
+        const testBreakName = `Test Break ${Date.now()}`;
+        await page.locator("#name-input").fill(testBreakName);
+
+        await page.selectOption("select#staff", testStaffName);
+        await page.locator("#start-date-button").click();
+        await page.locator('role=option[name="00:00"]').click();
+        await page.locator("#end-date-button").click();
+        await page.locator('role=option[name="03:00"]').click();
+
+        await page.locator("#submit-button").click();
+
+        await page.waitForTimeout(1000);
+
+        // Update the break
+        await page
+            .locator("li")
+            .filter({ hasText: testBreakName })
+            .getByRole("button")
+            .first()
+            .click();
+
+        const testBreakNameUpdated = `Test Break Updated ${Date.now()}`;
+        await page.locator("#name-input").fill(testBreakNameUpdated);
+        await page.locator("#submit-button").click();
+
+        await page.waitForTimeout(1000);
+
+        // Assert
+        await page.goto("/admin/breaks");
+        await expect(page.getByText(testBreakNameUpdated)).toBeVisible();
+
+        // Cleanup: Delete the break
+        await page.goto("/admin/breaks");
+        page.on("dialog", (dialog) => dialog.accept());
+        await page
+            .locator("li")
+            .filter({ hasText: testBreakNameUpdated })
+            .getByRole("button")
+            .nth(1)
+            .click();
+        await page.waitForTimeout(1000);
+
+        // Logout
+        await logout(page);
+    } finally {
+        // delete the created test staff
+        await prisma.staff.delete({
+            where: {
+                id: createdStaff.id
+            }
+        });
+    }
+});
+
+test("Delete Break", async ({ page }) => {
+    // Put default staff on the db
+    const testStaffName = `Test Staff ${Date.now()}`;
+    const createdStaff = await prisma.staff.create({
+        data: {
+            name: testStaffName,
+            role: Roles.Designer
+        }
+    });
+
+    try {
+        // Login
+        await login(page);
+
+        // Create a break
+        await page.goto("/admin/breaks");
+        await page.locator("#btnAddBreak").click();
+        const testBreakName = `Test Break ${Date.now()}`;
+        await page.locator("#name-input").fill(testBreakName);
+
+        await page.selectOption("select#staff", testStaffName);
+        await page.locator("#start-date-button").click();
+        await page.locator('role=option[name="00:00"]').click();
+        await page.locator("#end-date-button").click();
+        await page.locator('role=option[name="03:00"]').click();
+
+        await page.locator("#submit-button").click();
+
+        await page.waitForTimeout(1000);
+
+        // Delete break
+        await page.goto("/admin/breaks");
+        page.on("dialog", (dialog) => dialog.accept());
+        await page
+            .locator("li")
+            .filter({ hasText: testBreakName })
+            .getByRole("button")
+            .nth(1)
+            .click();
+        await page.waitForTimeout(1000);
+
+        // Assert
+        await page.goto("/admin/breaks");
+        await expect(page.getByText(testBreakName)).toBeHidden();
+
+        // Logout
+        await logout(page);
+    } finally {
+        // delete the created test staff
+        await prisma.staff.delete({
+            where: {
+                id: createdStaff.id
+            }
+        });
+    }
+});
