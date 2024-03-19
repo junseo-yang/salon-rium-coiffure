@@ -108,8 +108,8 @@ export async function getAvailableTimes(
         }
     });
 
-    // get all blocking
-    const blockings = await prisma.blocking.findMany({
+    // get all breaks
+    const breaks = await prisma.break.findMany({
         where: {
             from_datetime: {
                 gt: new Date(targetDate.getTime() - 24 * 60 * 60 * 1000)
@@ -143,7 +143,7 @@ export async function getAvailableTimes(
             }
         });
 
-        blockings.forEach((b) => {
+        breaks.forEach((b) => {
             const aStartTime = moment(b.from_datetime);
             const aEndTime = moment(b.to_datetime);
 

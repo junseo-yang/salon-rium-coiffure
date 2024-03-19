@@ -1,9 +1,9 @@
 /* eslint-disable no-alert */
-
-"use client";
-
 import Modal from "@/components/Shared/Modal";
 import * as Form from "@radix-ui/react-form";
+import "react-datepicker/dist/react-datepicker.css";
+
+import DatePicker from "react-datepicker";
 
 import {
     useState,
@@ -13,33 +13,22 @@ import {
     useMemo
 } from "react";
 import { useRouter } from "next/navigation";
-import { Blocking, Staff } from "@prisma/client";
-import DatePicker from "react-datepicker";
-import { putBlocking } from "@/app/admin/blocking/actions";
+import { createBreak } from "@/app/admin/breaks/actions";
+import { Staff } from "@prisma/client";
 
-const BlockingEditModal = ({
+const BreakModal = ({
     showDemoModal,
     setShowDemoModal,
-    blocking,
     staffs
 }: {
     showDemoModal: boolean;
     setShowDemoModal: Dispatch<SetStateAction<boolean>>;
-    blocking: Blocking & {
-        staff: Staff;
-    };
     staffs: Staff[];
 }) => {
-    const [name, setName] = useState(blocking.name);
-    const [staffName, setStaffName] = useState(blocking.staff.name);
-
-    const [startDate, setStartDate] = useState(
-        blocking.from_datetime ? new Date(blocking.from_datetime) : ""
-    );
-    const [endDate, setEndDate] = useState(
-        blocking.to_datetime ? new Date(blocking.to_datetime) : ""
-    );
-
+    const [name, setName] = useState("");
+    const [staffName, setStaffName] = useState(staffs[0]?.name);
+    const [startDate, setStartDate] = useState("");
+    const [endDate, setEndDate] = useState("");
     const [startIsOpen, setStartIsOpen] = useState(false);
     const [endIsOpen, setEndIsOpen] = useState(false);
     const [startDateError, setStartDateError] = useState(false);
@@ -123,25 +112,23 @@ const BlockingEditModal = ({
                             }
 
                             try {
-                                const editedBlocking = await putBlocking(
-                                    blocking.id,
-                                    selectStaff,
+                                const newBreak = await createBreak(
                                     name,
+                                    selectStaff,
                                     new Date(startDate),
                                     new Date(endDate)
                                 );
 
-                                if (!editedBlocking) {
+                                if (!newBreak) {
                                     alert("The start and end are unavailable");
                                     return;
                                 }
 
-                                alert("Blocking has been updated!");
+                                alert("Break created!");
                                 setShowDemoModal(false);
-
                                 router.refresh();
                             } catch (error) {
-                                alert("Blocking update failed!");
+                                alert("Break created failed!");
                             }
                         }}
                     >
@@ -160,7 +147,7 @@ const BlockingEditModal = ({
                                     className="FormMessage"
                                     match="valueMissing"
                                 >
-                                    Please enter blocking name
+                                    Please enter break name
                                 </Form.Message>
                             </div>
                             <Form.Control asChild>
@@ -188,6 +175,7 @@ const BlockingEditModal = ({
                                 </Form.Label>
                             </div>
                             <select
+                                id="staff"
                                 value={staffName}
                                 onChange={(e) => {
                                     setStaffName(e.target.value);
@@ -341,19 +329,18 @@ const BlockingEditModal = ({
     );
 };
 
-export function useBlockingEditModal(blocking, staffs) {
+export function useBreakModal(staffs: Staff[]) {
     const [showDemoModal, setShowDemoModal] = useState(false);
 
     const DemoModalCallback = useCallback(
         () => (
-            <BlockingEditModal
+            <BreakModal
                 showDemoModal={showDemoModal}
                 setShowDemoModal={setShowDemoModal}
-                blocking={blocking}
                 staffs={staffs}
             />
         ),
-        [showDemoModal, setShowDemoModal, blocking, staffs]
+        [showDemoModal, setShowDemoModal, staffs]
     );
 
     return useMemo(

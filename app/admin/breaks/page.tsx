@@ -2,14 +2,14 @@ import Balancer from "react-wrap-balancer";
 import { getServerSession } from "next-auth";
 import AuthOptions from "@/app/api/auth/[...nextauth]/options";
 import AccessDenied from "@/components/Shared/AccessDenied";
-import BlockingDialog from "@/components/Blocking/BlockingDialog";
+import BreakDialog from "@/components/Breaks/BreakDialog";
 import prisma from "@/lib/prisma";
 import moment from "moment";
-import BlockingEditModal from "@/components/Blocking/BlockingEditDialog";
-import BlockingDelete from "@/components/Blocking/BlockingDelete";
+import BreakEditModal from "@/components/Breaks/BreakEditDialog";
+import BreakDelete from "@/components/Breaks/BreakDelete";
 
 export default async function Page() {
-    const blockings = await prisma.blocking.findMany({
+    const breaks = await prisma.break.findMany({
         include: {
             staff: true
         }
@@ -31,15 +31,15 @@ export default async function Page() {
                     <div className="mt-5 grid grid-cols-3">
                         <div className=""></div>
                         <h2 className="bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-xl font-bold text-transparent md:text-3xl md:font-normal">
-                            <Balancer>Blocking</Balancer>
+                            <Balancer>Break</Balancer>
                         </h2>
                         <div>
-                            <BlockingDialog staffs={staffs} />
+                            <BreakDialog staffs={staffs} />
                         </div>
                     </div>
                     <div className="text-center">
                         <ul>
-                            {blockings?.map((b) => (
+                            {breaks?.map((b) => (
                                 <li className="mt-5" key={b.id}>
                                     <div className="mt-5 grid grid-cols-3">
                                         <div></div>
@@ -61,11 +61,11 @@ export default async function Page() {
                                         </div>
 
                                         <div className="flex items-stretch">
-                                            <BlockingEditModal
-                                                blocking={b}
+                                            <BreakEditModal
+                                                aBreak={b}
                                                 staffs={staffs}
                                             />
-                                            <BlockingDelete blockingId={b.id} />
+                                            <BreakDelete breakId={b.id} />
                                         </div>
                                     </div>
                                 </li>

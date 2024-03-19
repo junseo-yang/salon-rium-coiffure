@@ -919,7 +919,7 @@ test("Calendar Appointment", async ({ page }) => {
     });
 });
 
-test("Create Blocking", async ({ page }) => {
+test("Create Break", async ({ page }) => {
     // Put default staff on the db
     const testStaffName = `Test Staff ${Date.now()}`;
     const createdStaff = await prisma.staff.create({
@@ -933,11 +933,11 @@ test("Create Blocking", async ({ page }) => {
         // Login
         await login(page);
 
-        // Create a blocking
-        await page.goto("/admin/blocking");
-        await page.locator("#btnAddBlocking").click();
-        const testBlockingName = `Test Blocking ${Date.now()}`;
-        await page.locator("#name-input").fill(testBlockingName);
+        // Create a Break
+        await page.goto("/admin/breaks");
+        await page.locator("#btnAddBreak").click();
+        const testBreakName = `Test break ${Date.now()}`;
+        await page.locator("#name-input").fill(testBreakName);
 
         await page.selectOption("select#staff", testStaffName);
         await page.locator("#start-date-button").click();
@@ -950,15 +950,15 @@ test("Create Blocking", async ({ page }) => {
         await page.waitForTimeout(1000);
 
         // Assert
-        await page.goto("/admin/blocking");
-        await expect(page.getByText(testBlockingName)).toBeVisible();
+        await page.goto("/admin/breaks");
+        await expect(page.getByText(testBreakName)).toBeVisible();
 
-        // Cleanup: Delete the blocking
-        await page.goto("/admin/blocking");
+        // Cleanup: Delete the break
+        await page.goto("/admin/breaks");
         page.on("dialog", (dialog) => dialog.accept());
         await page
             .locator("li")
-            .filter({ hasText: testBlockingName })
+            .filter({ hasText: testBreakName })
             .getByRole("button")
             .nth(1)
             .click();
@@ -976,7 +976,7 @@ test("Create Blocking", async ({ page }) => {
     }
 });
 
-test("Update Blocking", async ({ page }) => {
+test("Update Break", async ({ page }) => {
     // Put default staff on the db
     const testStaffName = `Test Staff ${Date.now()}`;
     const createdStaff = await prisma.staff.create({
@@ -990,11 +990,11 @@ test("Update Blocking", async ({ page }) => {
         // Login
         await login(page);
 
-        // Create a blocking
-        await page.goto("/admin/blocking");
-        await page.locator("#btnAddBlocking").click();
-        const testBlockingName = `Test Blocking ${Date.now()}`;
-        await page.locator("#name-input").fill(testBlockingName);
+        // Create a Break
+        await page.goto("/admin/breaks");
+        await page.locator("#btnAddBreak").click();
+        const testBreakName = `Test Break ${Date.now()}`;
+        await page.locator("#name-input").fill(testBreakName);
 
         await page.selectOption("select#staff", testStaffName);
         await page.locator("#start-date-button").click();
@@ -1006,30 +1006,30 @@ test("Update Blocking", async ({ page }) => {
 
         await page.waitForTimeout(1000);
 
-        // Update the blocking
+        // Update the break
         await page
             .locator("li")
-            .filter({ hasText: testBlockingName })
+            .filter({ hasText: testBreakName })
             .getByRole("button")
             .first()
             .click();
 
-        const testBookingNameUpdated = `Test Blocking Updated ${Date.now()}`;
-        await page.locator("#name-input").fill(testBookingNameUpdated);
+        const testBreakNameUpdated = `Test Break Updated ${Date.now()}`;
+        await page.locator("#name-input").fill(testBreakNameUpdated);
         await page.locator("#submit-button").click();
 
         await page.waitForTimeout(1000);
 
         // Assert
-        await page.goto("/admin/blocking");
-        await expect(page.getByText(testBookingNameUpdated)).toBeVisible();
+        await page.goto("/admin/breaks");
+        await expect(page.getByText(testBreakNameUpdated)).toBeVisible();
 
-        // Cleanup: Delete the blocking
-        await page.goto("/admin/blocking");
+        // Cleanup: Delete the break
+        await page.goto("/admin/breaks");
         page.on("dialog", (dialog) => dialog.accept());
         await page
             .locator("li")
-            .filter({ hasText: testBookingNameUpdated })
+            .filter({ hasText: testBreakNameUpdated })
             .getByRole("button")
             .nth(1)
             .click();
@@ -1047,7 +1047,7 @@ test("Update Blocking", async ({ page }) => {
     }
 });
 
-test("Delete Blocking", async ({ page }) => {
+test("Delete Break", async ({ page }) => {
     // Put default staff on the db
     const testStaffName = `Test Staff ${Date.now()}`;
     const createdStaff = await prisma.staff.create({
@@ -1061,11 +1061,11 @@ test("Delete Blocking", async ({ page }) => {
         // Login
         await login(page);
 
-        // Create a blocking
-        await page.goto("/admin/blocking");
-        await page.locator("#btnAddBlocking").click();
-        const testBlockingName = `Test Blocking ${Date.now()}`;
-        await page.locator("#name-input").fill(testBlockingName);
+        // Create a break
+        await page.goto("/admin/breaks");
+        await page.locator("#btnAddBreak").click();
+        const testBreakName = `Test Break ${Date.now()}`;
+        await page.locator("#name-input").fill(testBreakName);
 
         await page.selectOption("select#staff", testStaffName);
         await page.locator("#start-date-button").click();
@@ -1077,20 +1077,20 @@ test("Delete Blocking", async ({ page }) => {
 
         await page.waitForTimeout(1000);
 
-        // Delete blocking
-        await page.goto("/admin/blocking");
+        // Delete break
+        await page.goto("/admin/breaks");
         page.on("dialog", (dialog) => dialog.accept());
         await page
             .locator("li")
-            .filter({ hasText: testBlockingName })
+            .filter({ hasText: testBreakName })
             .getByRole("button")
             .nth(1)
             .click();
         await page.waitForTimeout(1000);
 
         // Assert
-        await page.goto("/admin/blocking");
-        await expect(page.getByText(testBlockingName)).toBeHidden();
+        await page.goto("/admin/breaks");
+        await expect(page.getByText(testBreakName)).toBeHidden();
 
         // Logout
         await logout(page);

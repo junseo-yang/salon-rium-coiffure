@@ -3,7 +3,7 @@
 import prisma from "@/lib/prisma";
 import { Staff } from "@prisma/client";
 
-async function isAvailableBlocking(b_from_datetime: Date, b_to_datetime: Date) {
+async function isAvailableBreak(b_from_datetime: Date, b_to_datetime: Date) {
     const appointments = await prisma.appointment.findMany({
         where: {
             from_date: {
@@ -23,21 +23,18 @@ async function isAvailableBlocking(b_from_datetime: Date, b_to_datetime: Date) {
     return true;
 }
 
-export async function createBlocking(
+export async function createBreak(
     name: string,
     staff: Staff,
     from_datetime: Date,
     to_datetime: Date
 ) {
-    const isTimeAvailable = await isAvailableBlocking(
-        from_datetime,
-        to_datetime
-    );
+    const isTimeAvailable = await isAvailableBreak(from_datetime, to_datetime);
     if (!isTimeAvailable) {
         return false;
     }
 
-    const newBlocking = await prisma.blocking.create({
+    const newBreak = await prisma.break.create({
         data: {
             name,
             from_datetime,
@@ -47,27 +44,24 @@ export async function createBlocking(
         }
     });
 
-    return newBlocking;
+    return newBreak;
 }
 
-export async function putBlocking(
-    blockingId: string,
+export async function putBreak(
+    breakId: string,
     staff: Staff,
     name: string,
     from_datetime: Date,
     to_datetime: Date
 ) {
-    const isTimeAvailable = await isAvailableBlocking(
-        from_datetime,
-        to_datetime
-    );
+    const isTimeAvailable = await isAvailableBreak(from_datetime, to_datetime);
     if (!isTimeAvailable) {
         return false;
     }
 
-    const result = await prisma.blocking.update({
+    const result = await prisma.break.update({
         where: {
-            id: blockingId
+            id: breakId
         },
         data: {
             name,
@@ -80,10 +74,10 @@ export async function putBlocking(
     return result;
 }
 
-export async function deleteBlocking(blockingId: string) {
-    const result = await prisma.blocking.delete({
+export async function deleteBreak(breakId: string) {
+    const result = await prisma.break.delete({
         where: {
-            id: blockingId
+            id: breakId
         }
     });
 

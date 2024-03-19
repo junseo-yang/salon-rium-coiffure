@@ -3,11 +3,11 @@
 
 "use client";
 
-import { deleteBlocking } from "@/app/admin/blocking/actions";
+import { deleteBreak } from "@/app/admin/breaks/actions";
 import { TrashIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 
-export default function BlockingDelete({ blockingId }) {
+export default function BreakDelete({ breakId }) {
     const router = useRouter();
 
     return (
@@ -15,12 +15,12 @@ export default function BlockingDelete({ blockingId }) {
             onClick={async () => {
                 if (confirm("Do you want to delete it?")) {
                     try {
-                        await deleteBlocking(blockingId);
-                        alert("Blocking has been deleted!");
+                        await deleteBreak(breakId);
+                        alert("Break has been deleted!");
 
                         router.refresh();
                     } catch (error) {
-                        alert("The Blocking delete failed!");
+                        alert("The Break delete failed!");
                     }
                 }
             }}

@@ -1,13 +1,10 @@
 "use client";
 
 import { Pencil1Icon } from "@radix-ui/react-icons";
-import { useBlockingEditModal } from "./BlockingEditModal";
+import { useBreakEditModal } from "./BreakEditModal";
 
-export default function BlockingEditModal({ blocking, staffs }) {
-    const { DemoModal, setShowDemoModal } = useBlockingEditModal(
-        blocking,
-        staffs
-    );
+export default function BreakEditModal({ aBreak, staffs }) {
+    const { DemoModal, setShowDemoModal } = useBreakEditModal(aBreak, staffs);
     return (
         <>
             <DemoModal />

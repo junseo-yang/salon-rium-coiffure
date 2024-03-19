@@ -102,7 +102,7 @@ model Staff {
 
   appointments  Appointment[]
 
-  blockings Blocking[]
+  breaks Break[]
 
   role        Roles
 }
@@ -140,7 +140,7 @@ model Appointment {
   google_calendar_event_id  String?
 }
 
-model Blocking {
+model Break {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
 
   name        String
