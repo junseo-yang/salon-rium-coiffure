@@ -124,6 +124,21 @@ export async function getAvailableTimes(
         }
     });
 
+    // get all breaks
+    const breaks = await prisma.break.findMany({
+        where: {
+            from_datetime: {
+                gte: new Date(targetDate.getTime() - 24 * 60 * 60 * 1000)
+            },
+
+            to_datetime: {
+                lte: new Date(targetDate.getTime() + 24 * 60 * 60 * 1000)
+            },
+
+            staffId: designer.id
+        }
+    });
+
     const availableTimes = times.filter((t) => {
         let isAvailable = true;
         const fromTime = moment(t.split(" ~ ")[0], "HH:mm");
@@ -138,6 +153,15 @@ export async function getAvailableTimes(
         appointments.forEach((a) => {
             const aStartTime = moment(a.from_date);
             const aEndTime = moment(a.to_date);
+
+            if (aStartTime.isBefore(toTime) && fromTime.isBefore(aEndTime)) {
+                isAvailable = false;
+            }
+        });
+
+        breaks.forEach((b) => {
+            const aStartTime = moment(b.from_datetime);
+            const aEndTime = moment(b.to_datetime);
 
             if (aStartTime.isBefore(toTime) && fromTime.isBefore(aEndTime)) {
                 isAvailable = false;
