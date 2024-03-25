@@ -133,9 +133,9 @@ export default function AiVirtualHairstyle() {
                     animationFillMode: "forwards"
                 }}
             >
-                <div className="relative rounded-xl border border-gray-200 bg-white shadow-md">
+                <div className="relative rounded-xl border border-gray-200 shadow-md">
                     <div className="mx-auto w-full p-6 text-center">
-                        <h2 className="flex items-center justify-center bg-gradient-to-br from-black to-stone-500 bg-clip-text font-display text-xl font-bold text-transparent md:text-3xl md:font-normal">
+                        <h2 className="flex items-center justify-center bg-clip-text font-display text-xl font-bold md:text-3xl md:font-normal">
                             <Balancer>Ai Virtual Hairstyle</Balancer>
                         </h2>
                         <form onSubmit={handleSubmit}>
@@ -244,12 +244,12 @@ export default function AiVirtualHairstyle() {
                                             }
                                             className="w-55 flex items-center justify-between rounded-md border border-gray-300 px-4 py-2 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
                                         >
-                                            <p className="text-gray-600">
+                                            <p>
                                                 {hairstyleDescription ||
                                                     "Select a Hairstyle"}
                                             </p>
                                             <ChevronDown
-                                                className={`ml-2 h-4 w-4 text-gray-600 transition-all ${
+                                                className={`ml-2 h-4 w-4 transition-all ${
                                                     openHairstylePopover
                                                         ? "rotate-180"
                                                         : ""
@@ -332,12 +332,12 @@ export default function AiVirtualHairstyle() {
                                             }
                                             className="w-55 flex items-center justify-between rounded-md border border-gray-300 px-4 py-2 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
                                         >
-                                            <p className="text-gray-600">
+                                            <p>
                                                 {colorDescription ||
                                                     "Select a Color"}
                                             </p>
                                             <ChevronDown
-                                                className={`ml-2 h-4 w-4 text-gray-600 transition-all ${
+                                                className={`ml-2 h-4 w-4 transition-all ${
                                                     openColorPopover
                                                         ? "rotate-180"
                                                         : ""
@@ -357,7 +357,7 @@ export default function AiVirtualHairstyle() {
                                 {/* Image */}
                                 <div>
                                     <input
-                                        className="group relative block w-full min-w-0 max-w-fit flex-auto items-center justify-center space-x-2 rounded-full border border-black bg-clip-padding px-3 py-[0.32rem] text-sm font-normal text-black transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-black file:px-3 file:py-[0.32rem] file:text-white file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:cursor-pointer hover:file:cursor-pointer hover:file:bg-white  hover:file:text-black"
+                                        className="group relative block w-full min-w-0 max-w-fit flex-auto items-center justify-center space-x-2 rounded-full border border-black bg-clip-padding px-3 py-[0.32rem] text-sm font-normal text-black transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-black file:px-3 file:py-[0.32rem] file:text-white file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:cursor-pointer hover:file:cursor-pointer hover:file:bg-white hover:file:text-black dark:border-white dark:text-white"
                                         type="file"
                                         id="image"
                                         name="image"
@@ -376,7 +376,7 @@ export default function AiVirtualHairstyle() {
                                     {generating ? (
                                         <button
                                             disabled
-                                            className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-sm text-white transition-colors"
+                                            className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-sm text-white transition-colors dark:border-white"
                                         >
                                             <svg
                                                 aria-hidden="true"
@@ -400,7 +400,7 @@ export default function AiVirtualHairstyle() {
                                     ) : (
                                         <button
                                             type="submit"
-                                            className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-sm text-white transition-colors hover:bg-white hover:text-black"
+                                            className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-sm text-white transition-colors hover:bg-white hover:text-black dark:border-white"
                                         >
                                             <Upload className="mr-2 h-4 w-4" />
                                             <span>Try the Hairstyle</span>
@@ -412,7 +412,7 @@ export default function AiVirtualHairstyle() {
                                         <button
                                             type="button"
                                             onClick={() => download()}
-                                            className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-sm text-white transition-colors hover:bg-white hover:text-black"
+                                            className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-sm text-white transition-colors hover:bg-white hover:text-black dark:border-white"
                                         >
                                             <Download className="mr-2 h-4 w-4" />
                                             <span>Download</span>

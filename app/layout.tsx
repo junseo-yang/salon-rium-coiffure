@@ -4,6 +4,7 @@ import cx from "classnames";
 import Nav from "@/components/Layout/Nav";
 import Footer from "@/components/Layout/Footer";
 import { Metadata } from "next";
+import { ThemeProvider } from "@/components/DarkMode/theme-provider";
 import { sfPro, inter } from "../fonts";
 
 export const metadata: Metadata = {
@@ -19,12 +20,19 @@ export default async function RootLayout({
     return (
         <html lang="en">
             <body className={cx(sfPro.variable, inter.variable)}>
-                <div className="fixed h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-cyan-100" />
-                <Nav />
-                <main className="flex min-h-screen w-full flex-col items-center py-32">
-                    {children}
-                </main>
-                <Footer />
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    <div className="fixed h-screen w-full " />
+                    <Nav />
+                    <main className="flex min-h-screen w-full flex-col items-center py-32">
+                        {children}
+                    </main>
+                    <Footer />
+                </ThemeProvider>
             </body>
         </html>
     );

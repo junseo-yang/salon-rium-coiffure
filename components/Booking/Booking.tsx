@@ -52,7 +52,7 @@ export default function Booking({ services }) {
                                 <ScrollArea.Viewport className="ScrollAreaViewport">
                                     <div
                                         id="listOfServices"
-                                        className="mr-3 w-full rounded-md bg-white p-2 sm:w-40"
+                                        className="mr-3 w-full rounded-md p-2 sm:w-40"
                                     >
                                         {services
                                             ?.map((s: Service) => (
@@ -93,11 +93,9 @@ export default function Booking({ services }) {
                             }
                             className="flex w-36 items-center justify-between rounded-md border border-gray-300 px-4 py-2 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
                         >
-                            <p className="text-gray-600">
-                                {selectedService?.name ?? "Select Service"}
-                            </p>
+                            <p>{selectedService?.name ?? "Select Service"}</p>
                             <ChevronDown
-                                className={`h-4 w-4 text-gray-600 transition-all ${
+                                className={`h-4 w-4 transition-all ${
                                     openServicePopover ? "rotate-180" : ""
                                 }`}
                             />
@@ -109,7 +107,7 @@ export default function Booking({ services }) {
                         content={
                             <ScrollArea.Root className="ScrollAreaRoot h-1/3">
                                 <ScrollArea.Viewport className="ScrollAreaViewport">
-                                    <div className="w-full rounded-md bg-white p-2 sm:w-40">
+                                    <div className="w-full rounded-md p-2 sm:w-40">
                                         {filteredDesigners ? (
                                             filteredDesigners?.map(
                                                 (staff: Staff) => (
@@ -155,11 +153,9 @@ export default function Booking({ services }) {
                             }}
                             className="flex w-36 items-center justify-between rounded-md border border-gray-300 px-4 py-2 transition-all duration-75 hover:border-gray-800 focus:outline-none active:bg-gray-100"
                         >
-                            <p className="text-gray-600">
-                                {selectedDesigner?.name ?? "Select Designer"}
-                            </p>
+                            <p>{selectedDesigner?.name ?? "Select Designer"}</p>
                             <ChevronDown
-                                className={`h-4 w-4 text-gray-600 transition-all ${
+                                className={`h-4 w-4 transition-all ${
                                     openDesignerPopover ? "rotate-180" : ""
                                 }`}
                             />
