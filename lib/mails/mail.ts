@@ -30,13 +30,16 @@ export async function sendMail({
     }
 
     try {
-        await transport.sendMail({
+        const response = await transport.sendMail({
             from: SMTP_EMAIL,
             to,
             subject,
             html: body
         });
+
         console.log(`Mail sent successfully! - to: ${to}`);
+
+        return response;
     } catch (e) {
         console.error(e);
     }

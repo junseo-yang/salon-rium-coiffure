@@ -1,8 +1,11 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { test, expect, Page } from "@playwright/test";
 import fs from "fs";
 import moment from "moment";
 import prisma from "@/lib/prisma";
 import { Roles, ServiceCategory } from "@prisma/client";
+import { sendMail } from "@/lib/mails/mail";
+import { sendTwilio } from "@/lib/twilio/twilio";
 
 test.describe.configure({ mode: "serial" });
 
@@ -1309,4 +1312,96 @@ test("Toggle Dark Mode", async ({ page }) => {
     // Reset theme to system
     await page.getByRole("button", { name: "Toggle theme" }).click();
     await page.getByRole("menuitem", { name: "System" }).click();
+});
+
+test("Send Gmail Notification", async () => {
+    // Arrange
+    const { TEST_EMAIL } = process.env;
+
+    // Act
+    const response = await sendMail({
+        to: TEST_EMAIL!,
+        subject: `Test Subject ${Date.now()}`,
+        body: `Test Body ${Date.now()}`
+    });
+
+    // Assert
+    expect(response.messageId).toBeDefined();
+});
+
+test("Send Twilio Notification", async () => {
+    // Arrange
+    const { TEST_NUMBER } = process.env;
+
+    // Act
+    const response = await sendTwilio({
+        to: TEST_NUMBER!,
+        body: `Test Body ${Date.now()}`
+    });
+
+    // Assert
+    expect(response.errorCode).toBeNull();
+});
+
+test("Google Calendar Sync", async () => {
+    // Arrange
+    const { TEST_EMAIL } = process.env;
+
+    const GOOGLE_CALENDAR_URL =
+        "https://www.googleapis.com/calendar/v3/calendars/primary/events";
+
+    const user = await prisma.user.findFirst({
+        where: {
+            email: TEST_EMAIL
+        }
+    });
+
+    const account = await prisma.account.findFirst({
+        where: {
+            userId: user!.id
+        }
+    });
+
+    const summary = `Test Summary ${Date.now()}`;
+    const from_date = new Date();
+    from_date.setMinutes(0, 0, 0);
+    const to_date = from_date;
+    to_date.setHours(to_date.getHours() + 1);
+
+    // Act
+    const response = await fetch(GOOGLE_CALENDAR_URL, {
+        headers: {
+            Authorization: `Bearer ${account?.access_token}`
+        },
+        method: "POST",
+        body: JSON.stringify({
+            summary,
+            start: {
+                dateTime: from_date
+            },
+            end: {
+                dateTime: to_date
+            }
+        })
+    });
+
+    const data = await response.json();
+
+    // Assert
+    expect(data.id).toBeTruthy();
+
+    // Cleanup
+    if (data.id) {
+        const resp = await fetch(`${GOOGLE_CALENDAR_URL}/${data.id}`, {
+            headers: {
+                Authorization: `Bearer ${account?.access_token}`
+            },
+            method: "DELETE"
+        });
+
+        if (!resp.ok) {
+            const json = await resp.json();
+            throw new Error(json.error.message);
+        }
+    }
 });

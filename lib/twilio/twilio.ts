@@ -8,12 +8,15 @@ export async function sendTwilio({ to, body }: { to: string; body: string }) {
     );
 
     try {
-        await client.messages.create({
+        const response = await client.messages.create({
             to, // Destination Number
             from: process.env.TWILIO_PHONE_NUMBER, // From a valid Twilio number
             body
         });
+
         console.log(`Message sent successfully! - to: ${to} body: ${body}`);
+
+        return response;
     } catch (e) {
         console.error(e);
     }
