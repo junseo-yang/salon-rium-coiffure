@@ -491,7 +491,7 @@ export default function AiVirtualHairstyle() {
             {/* Error Display Toast */}
             <Toast.Provider swipeDirection="right">
                 <Toast.Root
-                    className="ToastRoot"
+                    className="ToastRoot dark:bg-black dark:text-white"
                     open={openToast}
                     onOpenChange={setOpenToast}
                 >
