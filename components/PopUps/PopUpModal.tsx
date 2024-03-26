@@ -200,8 +200,8 @@ const PopUpModalComponent = ({
                                         timeCaption="Time"
                                         dateFormat="MMMM d, yyyy h:mm aa"
                                         showTimeSelect
-                                        className="Input cursor-not-allowed dark:bg-black"
-                                        readOnly
+                                        className="Input dark:bg-black"
+                                        disabled
                                     />
                                     <div>
                                         <button
@@ -259,8 +259,8 @@ const PopUpModalComponent = ({
                                         timeCaption="Time"
                                         dateFormat="MMMM d, yyyy h:mm aa"
                                         showTimeSelect
-                                        className="Input cursor-not-allowed dark:bg-black"
-                                        readOnly
+                                        className="Input dark:bg-black"
+                                        disabled
                                     />
                                     <div>
                                         <button

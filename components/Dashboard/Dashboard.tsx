@@ -56,49 +56,51 @@ export default function Dashboard() {
 
     const [analyticsSelectedPeriod, setAnalyticsSelectedPeriod] =
         useState("Monthly");
-
     const Period =
         analyticsSelectedPeriod.charAt(0).toLowerCase() +
         analyticsSelectedPeriod.slice(1, -2);
-    const [totalAppointmentsByPeriod, setTotalAppointmentsByPeriod] =
-        useState(0);
-
+    const [totalAppointmentsByPeriod, setTotalAppointmentsByPeriod] = useState<
+        number | undefined
+    >(0);
     const [
         totalAppointmentsComparisonByPeriod,
         setTotalAppointmentsComparisonByPeriod
     ] = useState<string | undefined>("");
 
     const [completedAppointmentsByPeriod, setCompletedAppointmentsByPeriod] =
-        useState(0);
-
+        useState<number | undefined>(0);
     const [
         completedAppointmentsComparisonByPeriod,
         setCompletedAppointmentsComparisonByPeriod
     ] = useState<string | undefined>("");
 
     const [cancelledAppointmentsByPeriod, setCancelledAppointmentsByPeriod] =
-        useState(0);
-
+        useState<number | undefined>(0);
     const [
         cancelledAppointmentsComparisonByPeriod,
         setCancelledAppointmentsComparisonByPeriod
     ] = useState<string | undefined>("");
-
-    const [menRevenueForPeriod, setMenRevenueForPeriod] = useState(0);
+    const [menRevenueForPeriod, setMenRevenueForPeriod] = useState<
+        number | undefined
+    >(0);
     const [menRevenueComparisonByPeriod, setMenRevenueComparisonByPeriod] =
-        useState("");
+        useState<string | undefined>("");
     const [menRevenuePercentageByPeriod, setMenRevenuePercentageByPeriod] =
-        useState("");
-    const [womenRevenueForPeriod, setWomenRevenueForPeriod] = useState(0);
+        useState<string | undefined>("");
+    const [womenRevenueForPeriod, setWomenRevenueForPeriod] = useState<
+        number | undefined
+    >(0);
     const [womenRevenueComparisonByPeriod, setWomenRevenueComparisonByPeriod] =
-        useState("");
+        useState<string | undefined>("");
     const [womenRevenuePercentageByPeriod, setWomenRevenuePercentageByPeriod] =
-        useState("");
-    const [kidRevenueForPeriod, setKidRevenueForPeriod] = useState(0);
+        useState<string | undefined>("");
+    const [kidRevenueForPeriod, setKidRevenueForPeriod] = useState<
+        number | undefined
+    >(0);
     const [kidRevenueComparisonByPeriod, setKidRevenueComparisonByPeriod] =
-        useState("");
+        useState<string | undefined>("");
     const [kidRevenuePercentageByPeriod, setKidRevenuePercentageByPeriod] =
-        useState("");
+        useState<string | undefined>("");
 
     useEffect(() => {
         async function fetchData() {
@@ -190,82 +192,93 @@ export default function Dashboard() {
             );
             setCompletedAppointmentsThisMonth(appointmentsThisMonth.total);
 
-            const {
-                total: totalAppointments,
-                comparison: totalAppointmentsComparison
-            } = await getTotalAppointmentsForPeriod(StartDate, EndDate, true);
-            setTotalAppointmentsByPeriod(totalAppointments);
-            setTotalAppointmentsComparisonByPeriod(totalAppointmentsComparison);
+            try {
+                const {
+                    total: totalAppointments,
+                    comparison: totalAppointmentsComparison
+                } = await getTotalAppointmentsForPeriod(
+                    StartDate,
+                    EndDate,
+                    true
+                );
+                setTotalAppointmentsByPeriod(totalAppointments);
+                setTotalAppointmentsComparisonByPeriod(
+                    totalAppointmentsComparison
+                );
 
-            const {
-                total: completedAppointments,
-                comparison: completedAppointmentsComparison
-            } = await getTotalAppointmentsForPeriod(
-                StartDate,
-                EndDate,
-                true,
-                "confirmed"
-            );
-            setCompletedAppointmentsByPeriod(completedAppointments);
-            setCompletedAppointmentsComparisonByPeriod(
-                completedAppointmentsComparison
-            );
+                const {
+                    total: completedAppointments,
+                    comparison: completedAppointmentsComparison
+                } = await getTotalAppointmentsForPeriod(
+                    StartDate,
+                    EndDate,
+                    true,
+                    "confirmed"
+                );
+                setCompletedAppointmentsByPeriod(completedAppointments);
+                setCompletedAppointmentsComparisonByPeriod(
+                    completedAppointmentsComparison
+                );
 
-            const {
-                total: cancelledAppointments,
-                comparison: cancelledAppointmentsComparison
-            } = await getTotalAppointmentsForPeriod(
-                StartDate,
-                EndDate,
-                true,
-                "cancelled"
-            );
-            setCancelledAppointmentsByPeriod(cancelledAppointments);
-            setCancelledAppointmentsComparisonByPeriod(
-                cancelledAppointmentsComparison
-            );
+                const {
+                    total: cancelledAppointments,
+                    comparison: cancelledAppointmentsComparison
+                } = await getTotalAppointmentsForPeriod(
+                    StartDate,
+                    EndDate,
+                    true,
+                    "cancelled"
+                );
+                setCancelledAppointmentsByPeriod(cancelledAppointments);
+                setCancelledAppointmentsComparisonByPeriod(
+                    cancelledAppointmentsComparison
+                );
 
-            const {
-                revenue: menRevenue,
-                comparison: menRevenueComparison,
-                percentageOfTotal: menRevenuePercentage
-            } = await getServiceRevenueForPeriod(
-                StartDate,
-                EndDate,
-                "Men",
-                true
-            );
-            setMenRevenueForPeriod(menRevenue);
-            setMenRevenueComparisonByPeriod(menRevenueComparison);
-            setMenRevenuePercentageByPeriod(menRevenuePercentage);
+                const {
+                    revenue: menRevenue,
+                    comparison: menRevenueComparison,
+                    percentageOfTotal: menRevenuePercentage
+                } = await getServiceRevenueForPeriod(
+                    StartDate,
+                    EndDate,
+                    "Men",
+                    true
+                );
+                setMenRevenueForPeriod(menRevenue);
+                setMenRevenueComparisonByPeriod(menRevenueComparison);
+                setMenRevenuePercentageByPeriod(menRevenuePercentage);
 
-            const {
-                revenue: womenRevenue,
-                comparison: womenRevenueComparison,
-                percentageOfTotal: womenRevenuePercentage
-            } = await getServiceRevenueForPeriod(
-                StartDate,
-                EndDate,
-                "Women",
-                true
-            );
-            setWomenRevenueForPeriod(womenRevenue);
-            setWomenRevenueComparisonByPeriod(womenRevenueComparison);
-            setWomenRevenuePercentageByPeriod(womenRevenuePercentage);
+                const {
+                    revenue: womenRevenue,
+                    comparison: womenRevenueComparison,
+                    percentageOfTotal: womenRevenuePercentage
+                } = await getServiceRevenueForPeriod(
+                    StartDate,
+                    EndDate,
+                    "Women",
+                    true
+                );
+                setWomenRevenueForPeriod(womenRevenue);
+                setWomenRevenueComparisonByPeriod(womenRevenueComparison);
+                setWomenRevenuePercentageByPeriod(womenRevenuePercentage);
 
-            const {
-                revenue: kidRevenue,
-                comparison: kidRevenueComparison,
-                percentageOfTotal: kidRevenuePercentage
-            } = await getServiceRevenueForPeriod(
-                StartDate,
-                EndDate,
-                "Kid",
-                true
-            );
-            setKidRevenueForPeriod(kidRevenue);
-            setKidRevenueComparisonByPeriod(kidRevenueComparison);
-            setKidRevenuePercentageByPeriod(kidRevenuePercentage);
+                const {
+                    revenue: kidRevenue,
+                    comparison: kidRevenueComparison,
+                    percentageOfTotal: kidRevenuePercentage
+                } = await getServiceRevenueForPeriod(
+                    StartDate,
+                    EndDate,
+                    "Kid",
+                    true
+                );
+                setKidRevenueForPeriod(kidRevenue);
+                setKidRevenueComparisonByPeriod(kidRevenueComparison);
+                setKidRevenuePercentageByPeriod(kidRevenuePercentage);
+            } catch (error) {
+                // eslint-disable-next-line no-console
+                console.error(error);
+            }
 
             setIsLoading(false); // load complete
         }
@@ -685,10 +698,20 @@ export default function Dashboard() {
                                             >
                                                 {cancelledAppointmentsByPeriod}{" "}
                                                 (
-                                                {totalAppointmentsByPeriod > 0
+                                                {(totalAppointmentsByPeriod ===
+                                                undefined
+                                                    ? 0
+                                                    : totalAppointmentsByPeriod) >
+                                                0
                                                     ? (
-                                                          (cancelledAppointmentsByPeriod /
-                                                              totalAppointmentsByPeriod) *
+                                                          (cancelledAppointmentsByPeriod ===
+                                                          undefined
+                                                              ? 0
+                                                              : cancelledAppointmentsByPeriod /
+                                                                (totalAppointmentsByPeriod ===
+                                                                undefined
+                                                                    ? 0
+                                                                    : totalAppointmentsByPeriod)) *
                                                           100
                                                       ).toFixed(2)
                                                     : "0.00"}
