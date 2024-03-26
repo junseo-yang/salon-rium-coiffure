@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
-import Balancer from "react-wrap-balancer";
 import AccessDenied from "@/components/Shared/AccessDenied";
+import Dashboard from "@/components/Dashboard/Dashboard";
 import { authOptions } from "../api/auth/[...nextauth]/options";
 
 export default async function Page() {
@@ -13,96 +13,7 @@ export default async function Page() {
 
     return (
         <>
-            <h1
-                className="animate-fade-up bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-4xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm md:text-7xl md:leading-[5rem]"
-                style={{
-                    animationDelay: "0.15s",
-                    animationFillMode: "forwards"
-                }}
-            >
-                <p>
-                    <Balancer>Admin page</Balancer>
-                </p>
-            </h1>
-            <br />
-            <a
-                className="animate-fade-up bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-2xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm md:text-3xl md:leading-[5rem]"
-                style={{
-                    animationDelay: "0.15s",
-                    animationFillMode: "forwards",
-                    cursor: "pointer"
-                }}
-                href="/admin/services"
-            >
-                <p>
-                    <Balancer>Go to Service Management</Balancer>
-                </p>
-            </a>
-            <a
-                className="animate-fade-up bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-2xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm md:text-3xl md:leading-[5rem]"
-                style={{
-                    animationDelay: "0.15s",
-                    animationFillMode: "forwards",
-                    cursor: "pointer"
-                }}
-                href="/admin/staffs"
-            >
-                <p>
-                    <Balancer>Go to Staff Management</Balancer>
-                </p>
-            </a>
-            <a
-                className="animate-fade-up bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-2xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm md:text-3xl md:leading-[5rem]"
-                style={{
-                    animationDelay: "0.15s",
-                    animationFillMode: "forwards",
-                    cursor: "pointer"
-                }}
-                href="/admin/popups"
-            >
-                <p>
-                    <Balancer>Go to Pop-Up Management</Balancer>
-                </p>
-            </a>
-            <a
-                className="animate-fade-up bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-2xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm md:text-3xl md:leading-[5rem]"
-                style={{
-                    animationDelay: "0.15s",
-                    animationFillMode: "forwards",
-                    cursor: "pointer"
-                }}
-                href="/admin/calendar"
-            >
-                <p>
-                    <Balancer>Go to Booking Calendar</Balancer>
-                </p>
-            </a>
-            <a
-                className="animate-fade-up bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-2xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm md:text-3xl md:leading-[5rem]"
-                style={{
-                    animationDelay: "0.15s",
-                    animationFillMode: "forwards",
-                    cursor: "pointer"
-                }}
-                href="/admin/appointments"
-            >
-                <p>
-                    <Balancer>Go to Appointment Management</Balancer>
-                </p>
-            </a>
-            <a
-                className="animate-fade-up bg-gradient-to-br from-black to-stone-500 bg-clip-text text-center font-display text-2xl font-bold tracking-[-0.02em] text-transparent opacity-0 drop-shadow-sm md:text-3xl md:leading-[5rem]"
-                style={{
-                    animationDelay: "0.15s",
-                    animationFillMode: "forwards",
-                    cursor: "pointer"
-                }}
-                href="/admin/breaks"
-            >
-                <p>
-                    <Balancer>Go to Break Management</Balancer>
-                </p>
-            </a>
+            <Dashboard />
         </>
     );
 }

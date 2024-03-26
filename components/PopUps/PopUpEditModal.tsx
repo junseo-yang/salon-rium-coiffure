@@ -109,7 +109,7 @@ const PopUpEditModal = ({
     return (
         <Modal showModal={showDemoModal} setShowModal={setShowDemoModal}>
             <div className="w-full overflow-hidden md:max-w-md md:rounded-2xl md:border md:border-gray-100 md:shadow-xl">
-                <div className="flex flex-col items-center justify-center space-y-3 bg-white px-4 py-6 pt-8 text-center md:px-16">
+                <div className="flex flex-col items-center justify-center space-y-3 bg-white px-4 py-6 pt-8 text-center dark:bg-black md:px-16">
                     <Form.Root className="FormRoot" onSubmit={handleSubmit}>
                         {/* Title Field */}
                         <Form.Field className="grid" name="title">
@@ -131,7 +131,7 @@ const PopUpEditModal = ({
                             <Form.Control asChild>
                                 <input
                                     id="title-input"
-                                    className="Input"
+                                    className="Input dark:bg-black"
                                     type="text"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
@@ -162,6 +162,7 @@ const PopUpEditModal = ({
                             <Form.Control asChild>
                                 <textarea
                                     id="description-input"
+                                    className="max-h-96 min-h-16 dark:bg-black"
                                     value={description}
                                     onChange={(e) =>
                                         setDescription(e.target.value)
@@ -210,7 +211,7 @@ const PopUpEditModal = ({
                                         timeCaption="Time"
                                         dateFormat="MMMM d, yyyy h:mm aa"
                                         showTimeSelect
-                                        className="Input cursor-not-allowed"
+                                        className="Input cursor-not-allowed dark:bg-black"
                                         readOnly
                                     />
                                     <div>
@@ -218,6 +219,7 @@ const PopUpEditModal = ({
                                             id="start-date-button"
                                             type="button"
                                             onClick={toggleStartDatePicker}
+                                            className="hover:underline"
                                         >
                                             Choose Start Date
                                         </button>
@@ -225,6 +227,7 @@ const PopUpEditModal = ({
                                         <button
                                             type="button"
                                             onClick={clearStartDate}
+                                            className="hover:underline"
                                         >
                                             Clear Start Date
                                         </button>
@@ -267,7 +270,7 @@ const PopUpEditModal = ({
                                         timeCaption="Time"
                                         dateFormat="MMMM d, yyyy h:mm aa"
                                         showTimeSelect
-                                        className="Input cursor-not-allowed"
+                                        className="Input cursor-not-allowed dark:bg-black"
                                         readOnly
                                     />
                                     <div>
@@ -275,6 +278,7 @@ const PopUpEditModal = ({
                                             id="end-date-button"
                                             type="button"
                                             onClick={toggleEndDatePicker}
+                                            className="hover:underline"
                                         >
                                             Choose End Date
                                         </button>
@@ -282,6 +286,7 @@ const PopUpEditModal = ({
                                         <button
                                             type="button"
                                             onClick={clearEndDate}
+                                            className="hover:underline"
                                         >
                                             Clear End Date
                                         </button>
@@ -294,7 +299,7 @@ const PopUpEditModal = ({
                             <button
                                 id="update-pop-up-button"
                                 type="submit"
-                                className="Button"
+                                className="Button hover:underline"
                                 style={{ marginTop: 10 }}
                             >
                                 Update Pop-up

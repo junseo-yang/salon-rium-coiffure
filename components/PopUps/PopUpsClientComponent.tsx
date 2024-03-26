@@ -58,7 +58,7 @@ const PopUpsClientComponent: React.FC<PopUpsClientComponentProps> = ({
             className={`fixed inset-0 ${activePopUps.length > 0 ? "z-40" : "z-0"}`}
         >
             {activePopUps.length > 0 && (
-                <div className="absolute inset-0 z-30 bg-black opacity-50"></div>
+                <div className="absolute inset-0 z-30 bg-black opacity-50 dark:bg-gray-900"></div>
             )}
             <div
                 className="custom-scrollbar relative z-50 overflow-auto"
@@ -71,7 +71,7 @@ const PopUpsClientComponent: React.FC<PopUpsClientComponentProps> = ({
                     {activePopUps.map((popUp) => (
                         <div
                             key={popUp.id}
-                            className="custom-scrollbar-content flex flex-col items-center rounded-lg bg-white shadow-lg"
+                            className="custom-scrollbar-content flex flex-col items-center rounded-lg border bg-white shadow-lg dark:bg-black dark:text-white"
                             style={{
                                 minWidth: "300px",
                                 maxWidth: "500px",

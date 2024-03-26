@@ -43,7 +43,7 @@ const AppointmentEditModal = ({
     return (
         <Modal showModal={showDemoModal} setShowModal={setShowDemoModal}>
             <div className="w-full overflow-hidden md:max-w-md md:rounded-2xl md:border md:border-gray-100 md:shadow-xl">
-                <div className="flex flex-col items-center justify-center space-y-3 bg-white px-4 py-6 pt-8 text-center md:px-16">
+                <div className="flex flex-col items-center justify-center space-y-3 bg-white px-4 py-6 pt-8 text-center dark:bg-black md:px-16">
                     <Form.Root
                         className="FormRoot"
                         onSubmit={async (event) => {
@@ -161,7 +161,7 @@ const AppointmentEditModal = ({
                             </div>
                             <Form.Control asChild>
                                 <input
-                                    className="Input"
+                                    className="Input dark:bg-black"
                                     type="text"
                                     disabled
                                     value={appointment.price}
@@ -187,6 +187,7 @@ const AppointmentEditModal = ({
                                     onChange={(event) => {
                                         setStatus(event.target.value);
                                     }}
+                                    className="dark:bg-black"
                                 >
                                     <option value="pending">pending</option>
                                     <option value="confirmed">confirmed</option>
@@ -209,7 +210,7 @@ const AppointmentEditModal = ({
                             </div>
                             <Form.Control asChild>
                                 <input
-                                    className="Input"
+                                    className="Input dark:bg-black"
                                     type="text"
                                     disabled
                                     value={moment(
@@ -234,7 +235,7 @@ const AppointmentEditModal = ({
                             </div>
                             <Form.Control asChild>
                                 <input
-                                    className="Input"
+                                    className="Input dark:bg-black"
                                     type="text"
                                     disabled
                                     value={moment(
@@ -259,7 +260,7 @@ const AppointmentEditModal = ({
                             </div>
                             <Form.Control asChild>
                                 <input
-                                    className="Input"
+                                    className="Input dark:bg-black"
                                     type="text"
                                     disabled
                                     value={appointment.duration}
@@ -282,7 +283,7 @@ const AppointmentEditModal = ({
                             </div>
                             <Form.Control asChild>
                                 <input
-                                    className="Input"
+                                    className="Input dark:bg-black"
                                     type="text"
                                     disabled
                                     value={appointment.customer_name}
@@ -305,7 +306,7 @@ const AppointmentEditModal = ({
                             </div>
                             <Form.Control asChild>
                                 <input
-                                    className="Input"
+                                    className="Input dark:bg-black"
                                     type="text"
                                     disabled
                                     value={appointment.customer_number}
@@ -328,7 +329,7 @@ const AppointmentEditModal = ({
                             </div>
                             <Form.Control asChild>
                                 <input
-                                    className="Input"
+                                    className="Input dark:bg-black"
                                     type="text"
                                     disabled
                                     value={appointment.customer_email}
@@ -351,7 +352,7 @@ const AppointmentEditModal = ({
                             </div>
                             <Form.Control asChild>
                                 <input
-                                    className="Input"
+                                    className="Input dark:bg-black"
                                     type="text"
                                     disabled
                                     value={appointment.service_name}
@@ -374,7 +375,7 @@ const AppointmentEditModal = ({
                             </div>
                             <Form.Control asChild>
                                 <input
-                                    className="Input"
+                                    className="Input dark:bg-black"
                                     type="text"
                                     disabled
                                     value={appointment.staff_name}
@@ -387,7 +388,7 @@ const AppointmentEditModal = ({
                             <button
                                 id="submit-button"
                                 type="submit"
-                                className="Button"
+                                className="Button hover:underline"
                                 style={{ marginTop: 10 }}
                             >
                                 Submit

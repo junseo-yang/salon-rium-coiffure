@@ -1096,3 +1096,217 @@ test("Delete Break", async ({ page }) => {
         });
     }
 });
+
+test("Get Total Revenue", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Navigates to the dashboard
+    await page.goto("/admin");
+
+    // Wait for loading
+    await page.waitForTimeout(5000);
+
+    // Assert
+    await expect(page.locator("#totalRevenue")).toBeVisible();
+
+    // Logout
+    await logout(page);
+});
+
+test("Get Total Users", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Navigates to the dashboard
+    await page.goto("/admin");
+
+    // Wait for loading
+    await page.waitForTimeout(5000);
+
+    // Assert
+    await expect(page.locator("#totalUsers")).toBeVisible();
+
+    // Logout
+    await logout(page);
+});
+
+test("Get Monthly Revenue", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Navigates to the dashboard
+    await page.goto("/admin");
+
+    // Wait for loading
+    await page.waitForTimeout(5000);
+
+    // Assert
+    await expect(page.locator("#monthlyRevenue")).toBeVisible();
+
+    // Logout
+    await logout(page);
+});
+
+test("Get Revenue Growth Chart", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Navigates to the dashboard
+    await page.goto("/admin");
+
+    // Wait for loading
+    await page.waitForTimeout(1000);
+
+    // Assert
+    await expect(page.locator("#revenueGrowthChart")).toBeVisible();
+
+    // Logout
+    await logout(page);
+});
+
+test("Get Appointments Growth Chart", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Navigates to the dashboard
+    await page.goto("/admin");
+
+    // Wait for loading
+    await page.waitForTimeout(1000);
+
+    // Assert
+    await expect(page.locator("#appointmentsGrowthChart")).toBeVisible();
+
+    // Logout
+    await logout(page);
+});
+
+test("Get Upcoming Appointments", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Navigates to the dashboard
+    await page.goto("/admin");
+
+    // Wait for loading
+    await page.waitForTimeout(5000);
+
+    // Assert
+    await expect(page.locator("#upcomingAppointments")).toBeVisible();
+
+    // Logout
+    await logout(page);
+});
+
+test("Get Total Appointments", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Navigates to the dashboard
+    await page.goto("/admin");
+
+    // Click the "Analytics" tab
+    await page.getByRole("tab", { name: "Analytics" }).click();
+
+    // Wait for loading
+    await page.waitForTimeout(5000);
+
+    // Assert
+    await expect(page.locator("#totalAppointments")).toBeVisible();
+
+    // Logout
+    await logout(page);
+});
+
+test("Get Completed Appointments", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Navigates to the dashboard
+    await page.goto("/admin");
+
+    // Click the "Analytics" tab
+    await page.getByRole("tab", { name: "Analytics" }).click();
+
+    // Wait for loading
+    await page.waitForTimeout(5000);
+
+    // Assert
+    await expect(page.locator("#completedAppointments")).toBeVisible();
+
+    // Logout
+    await logout(page);
+});
+
+test("Get Cancelled Appointments", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Navigates to the dashboard
+    await page.goto("/admin");
+
+    // Click the "Analytics" tab
+    await page.getByRole("tab", { name: "Analytics" }).click();
+
+    // Wait for loading
+    await page.waitForTimeout(5000);
+
+    // Assert
+    await expect(page.locator("#cancelledAppointments")).toBeVisible();
+
+    // Logout
+    await logout(page);
+});
+
+test("Get Revenue by Category", async ({ page }) => {
+    // Login
+    await login(page);
+
+    // Navigates to the dashboard
+    await page.goto("/admin");
+
+    // Click the "Analytics" tab
+    await page.getByRole("tab", { name: "Analytics" }).click();
+
+    // Wait for loading
+    await page.waitForTimeout(5000);
+
+    // Assert
+    await expect(page.locator("#menRevenue")).toBeVisible();
+    await expect(page.locator("#womenRevenue")).toBeVisible();
+    await expect(page.locator("#kidRevenue")).toBeVisible();
+
+    // Logout
+    await logout(page);
+});
+
+test("Toggle Dark Mode", async ({ page }) => {
+    // Navigates to the home page
+    await page.goto("/");
+
+    // Set theme to light in case the system theme is dark
+    await page.getByRole("button", { name: "Toggle theme" }).click();
+    await page.getByRole("menuitem", { name: "Light" }).click();
+
+    // Get the background color before toggling dark mode
+    const bgColorBeforeToggle = await page.evaluate(
+        () => getComputedStyle(document.body).backgroundColor
+    );
+
+    // Toggle dark mode
+    await page.getByRole("button", { name: "Toggle theme" }).click();
+    await page.getByRole("menuitem", { name: "Dark" }).click();
+
+    // Get the background color after toggling dark mode
+    const bgColorAfterToggle = await page.evaluate(
+        () => getComputedStyle(document.body).backgroundColor
+    );
+
+    // Assert that the background color has changed
+    expect(bgColorBeforeToggle).not.toBe(bgColorAfterToggle);
+
+    // Reset theme to system
+    await page.getByRole("button", { name: "Toggle theme" }).click();
+    await page.getByRole("menuitem", { name: "System" }).click();
+});

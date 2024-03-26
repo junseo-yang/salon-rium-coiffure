@@ -2,21 +2,17 @@
 import Modal from "@/components/Shared/Modal";
 import * as Form from "@radix-ui/react-form";
 
-import {
-    useState,
-    useCallback,
-    useMemo
-} from "react";
+import { useState, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Roles } from "@prisma/client";
-import { createStaff } from "../../app/admin/staffs/actions"; 
+import { createStaff } from "../../app/admin/staffs/actions";
 
 const StaffModal = ({
     showDemoModal,
     setShowDemoModal
 }: {
-    showDemoModal,
-    setShowDemoModal
+    showDemoModal;
+    setShowDemoModal;
 }) => {
     const [name, setName] = useState("");
     const [description, setDescription] = useState("");
@@ -27,7 +23,7 @@ const StaffModal = ({
     return (
         <Modal showModal={showDemoModal} setShowModal={setShowDemoModal}>
             <div className="w-full overflow-hidden md:max-w-md md:rounded-2xl md:border md:border-gray-100 md:shadow-xl">
-                <div className="flex flex-col items-center justify-center space-y-3 bg-white px-4 py-6 pt-8 text-center md:px-16">
+                <div className="flex flex-col items-center justify-center space-y-3 bg-white px-4 py-6 pt-8 text-center dark:bg-black md:px-16">
                     <Form.Root
                         className="FormRoot"
                         onSubmit={async (event) => {
@@ -50,7 +46,7 @@ const StaffModal = ({
                     >
                         {/* Name Field */}
                         <Form.Field className="grid" name="name">
-                        <div
+                            <div
                                 style={{
                                     display: "flex",
                                     alignItems: "baseline",
@@ -64,11 +60,11 @@ const StaffModal = ({
                                 >
                                     Please enter staff name
                                 </Form.Message>
-                        </div>
+                            </div>
                             <Form.Control asChild>
                                 <input
                                     id="name-input"
-                                    className="Input"
+                                    className="Input dark:bg-black"
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
@@ -79,7 +75,7 @@ const StaffModal = ({
 
                         {/* Description Field */}
                         <Form.Field className="grid" name="description">
-                        <div
+                            <div
                                 style={{
                                     display: "flex",
                                     alignItems: "baseline",
@@ -89,18 +85,21 @@ const StaffModal = ({
                                 <Form.Label className="FormLabel">
                                     Description
                                 </Form.Label>
-                        </div>
+                            </div>
                             <Form.Control asChild>
                                 <textarea
                                     value={description}
-                                    onChange={(e) => setDescription(e.target.value)}
+                                    onChange={(e) =>
+                                        setDescription(e.target.value)
+                                    }
+                                    className="max-h-96 min-h-16 dark:bg-black"
                                 />
                             </Form.Control>
                         </Form.Field>
 
                         {/* Role Field */}
                         <Form.Field className="grid" name="role">
-                        <div
+                            <div
                                 style={{
                                     display: "flex",
                                     alignItems: "baseline",
@@ -110,26 +109,27 @@ const StaffModal = ({
                                 <Form.Label className="FormLabel">
                                     Role
                                 </Form.Label>
-                        </div>
-                                <select
-                                    value={role}
-                                    onChange={(e) => {
-                                        setRole(e.target.value);
-                                    }}
-                                >
+                            </div>
+                            <select
+                                value={role}
+                                onChange={(e) => {
+                                    setRole(e.target.value);
+                                }}
+                                className="dark:bg-black"
+                            >
                                 {Object.keys(Roles).map((c) => (
                                     <option key={c} value={c.toString()}>
                                         {c}
                                     </option>
                                 ))}
-                                </select>
+                            </select>
                         </Form.Field>
 
                         <Form.Submit asChild>
                             <button
                                 id="submit-button"
                                 type="submit"
-                                className="Button"
+                                className="Button hover:underline"
                                 style={{ marginTop: 10 }}
                             >
                                 Submit

@@ -18,14 +18,14 @@ export default function UserDropdown({ session }: { session: Session }) {
         <div className="relative inline-block text-left">
             <Popover
                 content={
-                    <div className="w-full rounded-md bg-white p-2 sm:w-56">
+                    <div className="w-full rounded-md p-2 sm:w-56">
                         <div className="p-2">
                             {session?.user?.name && (
-                                <p className="truncate text-sm font-medium text-gray-900">
+                                <p className="truncate text-sm font-medium">
                                     {session?.user?.name}
                                 </p>
                             )}
-                            <p className="truncate text-sm text-gray-500">
+                            <p className="truncate text-sm">
                                 {session?.user?.email}
                             </p>
                         </div>

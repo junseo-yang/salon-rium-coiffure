@@ -1,4 +1,6 @@
 import ms from "ms";
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export const timeAgo = (timestamp: Date, timeOnly?: boolean): string => {
     if (!timestamp) return "never";
@@ -61,3 +63,7 @@ export const truncate = (str: string, length: number) => {
     if (!str || str.length <= length) return str;
     return `${str.slice(0, length)}...`;
 };
+
+export function cn(...inputs: ClassValue[]) {
+    return twMerge(clsx(inputs));
+}

@@ -113,8 +113,8 @@ export default function CustomerCalendar({ service, designer }) {
 
     return (
         <>
-            <div className="rounded-md bg-gray-100 p-6">
-                <div className="mx-auto mb-5 rounded-lg bg-white shadow-md md:mx-12">
+            <div className="rounded-md p-6">
+                <div className="mx-auto mb-5 rounded-lg shadow-md md:mx-12">
                     <div className="pt-1 text-center font-bold">
                         {targetWeek[3].format("MMMM")}
                     </div>
@@ -137,7 +137,7 @@ export default function CustomerCalendar({ service, designer }) {
                                 <div className="flex items-center px-4 py-4">
                                     <div className="text-center">
                                         <p
-                                            className={`text-sm text-gray-900 transition-all duration-300  ${
+                                            className={`text-sm transition-all duration-300  ${
                                                 moment().format("MMDD") ===
                                                 d.format("MMDD")
                                                     ? "font-bold"
@@ -147,7 +147,7 @@ export default function CustomerCalendar({ service, designer }) {
                                             {d.format("ddd")}{" "}
                                         </p>
                                         <p
-                                            className={`group-hover:text-gray-100" mt-3 text-gray-900 transition-all duration-300	group-hover:font-bold ${
+                                            className={`group-hover:text-gray-100" mt-3 transition-all duration-300	group-hover:font-bold ${
                                                 moment().format("MMDD") ===
                                                 d.format("MMDD")
                                                     ? "font-bold"
@@ -170,7 +170,7 @@ export default function CustomerCalendar({ service, designer }) {
                         </button>
                     </div>
                 </div>
-                <div className="mx-auto rounded-lg bg-white px-2 py-4 text-center shadow-md  md:mx-12 md:justify-center">
+                <div className="mx-auto rounded-lg px-2 py-4 text-center shadow-md md:mx-12 md:justify-center">
                     <h3>Time</h3>
                     <div className="mt-3 align-middle">
                         {availableTimes
@@ -181,7 +181,7 @@ export default function CustomerCalendar({ service, designer }) {
                                           setSelectedTime(t);
                                       }}
                                       type="button"
-                                      className={`m-auto mt-1.5 block w-96 rounded-md border-2 border-x-blue-100  ${t === selectedTime ? "bg-blue-200" : "bg-blue-50 hover:bg-blue-100"}`}
+                                      className={`m-auto mt-1.5 block w-96 rounded-md border-2 border-x-blue-100 dark:border-white  ${t === selectedTime ? "bg-blue-200 dark:bg-white dark:text-black" : "bg-blue-50 hover:bg-blue-100 dark:bg-black dark:hover:bg-gray-500"}`}
                                   >
                                       {t}
                                   </button>
@@ -191,7 +191,7 @@ export default function CustomerCalendar({ service, designer }) {
 
                     <button
                         type="button"
-                        className="m-auto mt-10 block w-96 rounded-md border-2 border-x-blue-100 bg-blue-200"
+                        className="m-auto mt-10 block w-96 rounded-md border-2 border-x-blue-100 bg-blue-200 dark:border-white dark:bg-black"
                         onClick={() => {
                             if (
                                 !selectedDate ||
