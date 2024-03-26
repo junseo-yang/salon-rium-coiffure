@@ -142,54 +142,61 @@ export async function getTotalAppointmentsForPeriod(
     compare: boolean = false,
     status?: "pending" | "confirmed" | "cancelled"
 ): Promise<{ total: number; comparison?: string }> {
-    const now = new Date();
+    try {
+        const now = new Date();
 
-    const whereClause: any = {
-        from_date: {
-            gte: startDate,
-            lte: endDate
-        }
-    };
-
-    if (status) {
-        whereClause.status = status;
-        if (status === "confirmed") {
-            // For confirmed appointments, consider only those that are not later than the current time
-            whereClause.to_date = { lte: now };
-        }
-    }
-
-    const total = await prisma.appointment.count({ where: whereClause });
-
-    let comparison = "0.00%";
-    if (compare && endDate) {
-        const previousPeriodDuration = endDate.getTime() - startDate.getTime();
-        const previousPeriodStart = new Date(
-            startDate.getTime() - previousPeriodDuration
-        );
-        const previousPeriodEnd = new Date(startDate.getTime() - 1);
-
-        whereClause.from_date = {
-            gte: previousPeriodStart,
-            lte: previousPeriodEnd
+        const whereClause: any = {
+            from_date: {
+                gte: startDate,
+                lte: endDate
+            }
         };
 
-        const totalPreviousPeriod = await prisma.appointment.count({
-            where: whereClause
-        });
+        if (status) {
+            whereClause.status = status;
+            if (status === "confirmed") {
+                // For confirmed appointments, consider only those that are not later than the current time
+                whereClause.to_date = { lte: now };
+            }
+        }
 
-        const change =
-            totalPreviousPeriod === 0
-                ? Infinity // Case that no appointments in the previous period
-                : ((total - totalPreviousPeriod) / totalPreviousPeriod) * 100;
+        const total = await prisma.appointment.count({ where: whereClause });
 
-        // Format comparison as a string with + or - sign
-        comparison = Number.isFinite(change)
-            ? `${change >= 0 ? "+" : ""}${change.toFixed(2)}%`
-            : "No appointments"; // If no appointments in the previous period, return "No appointments"
+        let comparison = "0.00%";
+        if (compare && endDate) {
+            const previousPeriodDuration =
+                endDate.getTime() - startDate.getTime();
+            const previousPeriodStart = new Date(
+                startDate.getTime() - previousPeriodDuration
+            );
+            const previousPeriodEnd = new Date(startDate.getTime() - 1);
+
+            whereClause.from_date = {
+                gte: previousPeriodStart,
+                lte: previousPeriodEnd
+            };
+
+            const totalPreviousPeriod = await prisma.appointment.count({
+                where: whereClause
+            });
+
+            const change =
+                totalPreviousPeriod === 0
+                    ? Infinity // Case that no appointments in the previous period
+                    : ((total - totalPreviousPeriod) / totalPreviousPeriod) *
+                      100;
+
+            // Format comparison as a string with + or - sign
+            comparison = Number.isFinite(change)
+                ? `${change >= 0 ? "+" : ""}${change.toFixed(2)}%`
+                : "No appointments"; // If no appointments in the previous period, return "No appointments"
+        }
+
+        return { total, comparison };
+    } catch (error) {
+        // Return a default value to handle the error gracefully
+        return { total: 0, comparison: "+0.00%" };
     }
-
-    return { total, comparison };
 }
 
 // Gets the total revenue for all categories of services within a specific time range
@@ -225,48 +232,27 @@ export async function getServiceRevenueForPeriod(
     category: ServiceCategory,
     compare: boolean = false
 ): Promise<{ revenue: number; comparison: string; percentageOfTotal: string }> {
-    const now = new Date(); // Current date and time
-    // Helper function to calculate revenue
-    const calculateRevenue = (appointments) =>
-        appointments.reduce((acc, curr) => {
-            // Ensure service is not null before accessing its price
-            if (curr.service) {
-                return acc + parseFloat(curr.service.price);
-            }
-            return acc;
-        }, 0);
+    try {
+        const now = new Date(); // Current date and time
+        // Helper function to calculate revenue
+        const calculateRevenue = (appointments) =>
+            appointments.reduce((acc, curr) => {
+                // Ensure service is not null before accessing its price
+                if (curr.service) {
+                    return acc + parseFloat(curr.service.price);
+                }
+                return acc;
+            }, 0);
 
-    // First, calculate total revenue for all categories in the current period
-    const totalRevenue = await getTotalRevenueForPeriod(startDate, endDate);
+        // First, calculate total revenue for all categories in the current period
+        const totalRevenue = await getTotalRevenueForPeriod(startDate, endDate);
 
-    // Then, calculate revenue for the specified category
-    // Fetch appointments for the specified category within the period
-    const categoryAppointments = await prisma.appointment.findMany({
-        where: {
-            from_date: { gte: startDate, lte: endDate },
-            to_date: { lte: now },
-            status: "confirmed",
-            service: {
-                category
-            }
-        },
-        include: {
-            service: true
-        }
-    });
-
-    const categoryRevenue = calculateRevenue(categoryAppointments);
-
-    let comparison = "0.00%";
-    if (compare) {
-        // Calculate the time range for the previous period
-        const duration = endDate.getTime() - startDate.getTime();
-        const previousPeriodStart = new Date(startDate.getTime() - duration);
-        const previousPeriodEnd = new Date(startDate.getTime() - 1);
-
-        const previousCategoryAppointments = await prisma.appointment.findMany({
+        // Then, calculate revenue for the specified category
+        // Fetch appointments for the specified category within the period
+        const categoryAppointments = await prisma.appointment.findMany({
             where: {
-                from_date: { gte: previousPeriodStart, lte: previousPeriodEnd },
+                from_date: { gte: startDate, lte: endDate },
+                to_date: { lte: now },
                 status: "confirmed",
                 service: {
                     category
@@ -277,31 +263,67 @@ export async function getServiceRevenueForPeriod(
             }
         });
 
-        const previousCategoryRevenue = calculateRevenue(
-            previousCategoryAppointments
-        );
+        const categoryRevenue = calculateRevenue(categoryAppointments);
 
-        const change =
-            previousCategoryRevenue === 0
-                ? Infinity // Case that no revenue in the previous period
-                : ((categoryRevenue - previousCategoryRevenue) /
-                      previousCategoryRevenue) *
-                  100;
+        let comparison = "0.00%";
+        if (compare) {
+            // Calculate the time range for the previous period
+            const duration = endDate.getTime() - startDate.getTime();
+            const previousPeriodStart = new Date(
+                startDate.getTime() - duration
+            );
+            const previousPeriodEnd = new Date(startDate.getTime() - 1);
 
-        comparison = Number.isFinite(change)
-            ? `${change >= 0 ? "+" : ""}${change.toFixed(2)}%`
-            : "No revenue in this category"; // If no revenue in the previous period
+            const previousCategoryAppointments =
+                await prisma.appointment.findMany({
+                    where: {
+                        from_date: {
+                            gte: previousPeriodStart,
+                            lte: previousPeriodEnd
+                        },
+                        status: "confirmed",
+                        service: {
+                            category
+                        }
+                    },
+                    include: {
+                        service: true
+                    }
+                });
+
+            const previousCategoryRevenue = calculateRevenue(
+                previousCategoryAppointments
+            );
+
+            const change =
+                previousCategoryRevenue === 0
+                    ? Infinity // Case that no revenue in the previous period
+                    : ((categoryRevenue - previousCategoryRevenue) /
+                          previousCategoryRevenue) *
+                      100;
+
+            comparison = Number.isFinite(change)
+                ? `${change >= 0 ? "+" : ""}${change.toFixed(2)}%`
+                : "No revenue in this category"; // If no revenue in the previous period
+        }
+
+        // Calculate percentage of total revenue for the category
+        const percentageOfTotal =
+            totalRevenue > 0 ? (categoryRevenue / totalRevenue) * 100 : 0;
+
+        return {
+            revenue: categoryRevenue,
+            comparison,
+            percentageOfTotal: `${percentageOfTotal.toFixed(2)}%`
+        };
+    } catch (error) {
+        // Return a default value to handle the error gracefully
+        return {
+            revenue: 0,
+            comparison: "+0.00%",
+            percentageOfTotal: "0.00%"
+        };
     }
-
-    // Calculate percentage of total revenue for the category
-    const percentageOfTotal =
-        totalRevenue > 0 ? (categoryRevenue / totalRevenue) * 100 : 0;
-
-    return {
-        revenue: categoryRevenue,
-        comparison,
-        percentageOfTotal: `${percentageOfTotal.toFixed(2)}%`
-    };
 }
 
 // Get data for revenue chart - monthly view

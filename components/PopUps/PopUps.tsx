@@ -2,35 +2,59 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 import "@/components/PopUps/PopUp.module.css";
+import { Progress } from "@/components/ui/progress";
 
 type PopUp = {
     id: string;
     title: string;
     description: string;
     countdown: number;
+    initialCountdown: number;
 };
 
-type PopUpsClientComponentProps = {
+type PopUpsProps = {
     initialPopUps: PopUp[];
 };
 
-const PopUpsClientComponent: React.FC<PopUpsClientComponentProps> = ({
-    initialPopUps
-}) => {
-    const [activePopUps, setActivePopUps] = useState<PopUp[]>(initialPopUps);
+const PopUps: React.FC<PopUpsProps> = ({ initialPopUps }) => {
+    const [activePopUps, setActivePopUps] = useState<PopUp[]>(
+        initialPopUps.map((popUp) => ({
+            ...popUp,
+            initialCountdown: popUp.countdown // Set initialCountdown equal to countdown initially
+        }))
+    );
 
     const handleClose = useCallback((id: string) => {
         setActivePopUps((prev) => prev.filter((popUp) => popUp.id !== id));
+    }, []);
+
+    const handleOutsideClick = useCallback((event) => {
+        const isClickInsidePopUp = event.target.closest(".popup-content");
+        if (!isClickInsidePopUp) {
+            setActivePopUps((prevPopUps) => {
+                // Remove the first popup in the array if there are any popups
+                if (prevPopUps.length > 0) {
+                    return prevPopUps.slice(1);
+                }
+                return prevPopUps;
+            });
+        }
     }, []);
 
     // Adjust body scroll based on active pop-ups
     useEffect(() => {
         document.body.style.overflow =
             activePopUps.length > 0 ? "hidden" : "auto";
+
+        if (activePopUps.length > 0) {
+            document.addEventListener("click", handleOutsideClick);
+        }
         return () => {
             document.body.style.overflow = "auto";
+            // Remove the event listener when the component is unmounted or there are no active popups
+            document.removeEventListener("click", handleOutsideClick);
         };
-    }, [activePopUps.length]);
+    }, [activePopUps.length, handleOutsideClick]);
 
     // Countdown
     useEffect(() => {
@@ -71,7 +95,7 @@ const PopUpsClientComponent: React.FC<PopUpsClientComponentProps> = ({
                     {activePopUps.map((popUp) => (
                         <div
                             key={popUp.id}
-                            className="custom-scrollbar-content flex flex-col items-center rounded-lg border bg-white shadow-lg dark:bg-black dark:text-white"
+                            className="custom-scrollbar-content flex flex-col items-center bg-white shadow-lg dark:bg-black dark:text-white"
                             style={{
                                 minWidth: "300px",
                                 maxWidth: "500px",
@@ -79,6 +103,14 @@ const PopUpsClientComponent: React.FC<PopUpsClientComponentProps> = ({
                                 position: "relative"
                             }}
                         >
+                            <Progress
+                                value={
+                                    (popUp.countdown / popUp.initialCountdown) *
+                                    100
+                                }
+                                className="absolute top-0 max-h-1 rounded-none"
+                            />
+
                             <h2
                                 className="mb-4 break-all text-center text-xl font-bold"
                                 style={{
@@ -99,9 +131,10 @@ const PopUpsClientComponent: React.FC<PopUpsClientComponentProps> = ({
                             >
                                 {popUp.description}
                             </p>
+
                             <button
                                 onClick={() => handleClose(popUp.id)}
-                                className="absolute right-1 top-1 m-2 p-1 text-2xl"
+                                className="absolute right-0 top-0 m-2 p-1 text-2xl hover:text-gray-400"
                                 style={{
                                     cursor: "pointer",
                                     lineHeight: "1",
@@ -118,4 +151,4 @@ const PopUpsClientComponent: React.FC<PopUpsClientComponentProps> = ({
     );
 };
 
-export default PopUpsClientComponent;
+export default PopUps;

@@ -1,7 +1,7 @@
 import Balancer from "react-wrap-balancer";
 import prisma from "@/lib/prisma";
 import { ServiceCategory } from "@prisma/client";
-import PopUpsClientComponent from "@/components/PopUps/PopUpsClientComponent";
+import PopUpsManager from "@/components/PopUps/PopUpsManager";
 import { getAvailableService } from "./admin/services/actions";
 
 export default async function Home() {
@@ -24,7 +24,7 @@ export default async function Home() {
         })
         .map((popUp) => ({
             ...popUp,
-            countdown: 5
+            countdown: 8
         }));
 
     const menServices = services.filter(
@@ -40,7 +40,7 @@ export default async function Home() {
     return (
         <>
             {/* Display active pop-ups */}
-            <PopUpsClientComponent initialPopUps={activePopUps} />
+            <PopUpsManager popUps={activePopUps} />
 
             <div className="z-10 w-full max-w-xl px-5 xl:px-0">
                 <h1
