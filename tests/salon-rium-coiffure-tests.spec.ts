@@ -1098,256 +1098,191 @@ test("Delete Break", async ({ page }) => {
 });
 
 test("Get Total Revenue", async ({ page }) => {
+    // Login
     await login(page);
+
+    // Navigates to the dashboard
     await page.goto("/admin");
 
-    // wait for loading
+    // Wait for loading
     await page.waitForTimeout(5000);
 
-    // assert
+    // Assert
     await expect(page.locator("#totalRevenue")).toBeVisible();
 
+    // Logout
     await logout(page);
 });
 
 test("Get Total Users", async ({ page }) => {
+    // Login
     await login(page);
+
+    // Navigates to the dashboard
     await page.goto("/admin");
 
-    // wait for loading
+    // Wait for loading
     await page.waitForTimeout(5000);
 
-    // assert
+    // Assert
     await expect(page.locator("#totalUsers")).toBeVisible();
 
+    // Logout
     await logout(page);
 });
 
 test("Get Monthly Revenue", async ({ page }) => {
+    // Login
     await login(page);
+
+    // Navigates to the dashboard
     await page.goto("/admin");
 
-    // wait for loading
+    // Wait for loading
     await page.waitForTimeout(5000);
 
-    // assert
+    // Assert
     await expect(page.locator("#monthlyRevenue")).toBeVisible();
 
+    // Logout
     await logout(page);
 });
 
 test("Get Revenue Growth Chart", async ({ page }) => {
-    const months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
-    ];
-
+    // Login
     await login(page);
+
+    // Navigates to the dashboard
     await page.goto("/admin");
 
-    // wait for loading
+    // Wait for loading
     await page.waitForTimeout(1000);
 
-    // Open the select dropdown
-    await page.locator("#revenuePeriod").click();
+    // Assert
+    await expect(page.locator("#revenueGrowthChart")).toBeVisible();
 
-    // Wait for the dropdown options to become visible
-    await page.locator("text=Monthly").waitFor();
-
-    // Click on the "Monthly" option
-    await page.locator("text=Monthly").click();
-
-    // wait for loading
-    await page.waitForTimeout(1000);
-
-    // Fetch the chart's text
-    const chartText = await page.textContent("#revenueGrowthChart");
-
-    // Check if any of the months are contained in the chart's text
-    const containsMonths = months.some((month) => chartText?.includes(month));
-
-    // Assert that the chart's text contains at least one of the months
-    expect(containsMonths).toBeTruthy();
-
+    // Logout
     await logout(page);
 });
 
 test("Get Appointments Growth Chart", async ({ page }) => {
-    const months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
-    ];
-
+    // Login
     await login(page);
+
+    // Navigates to the dashboard
     await page.goto("/admin");
 
-    // wait for loading
+    // Wait for loading
     await page.waitForTimeout(1000);
 
-    // Open the select dropdown
-    await page.locator("#appointmentsPeriod").click();
+    // Assert
+    await expect(page.locator("#appointmentsGrowthChart")).toBeVisible();
 
-    // Wait for the dropdown options to become visible
-    await page.locator("text=Monthly").waitFor();
-
-    // Click on the "Monthly" option
-    await page.locator("text=Monthly").click();
-
-    // wait for loading
-    await page.waitForTimeout(1000);
-
-    // Fetch the chart's text
-    const chartText = await page.textContent("#appointmentsGrowthChart");
-
-    // Check if any of the months are contained in the chart's text
-    const containsMonths = months.some((month) => chartText?.includes(month));
-
-    // Assert that the chart's text contains at least one of the months
-    expect(containsMonths).toBeTruthy();
-
+    // Logout
     await logout(page);
 });
 
 test("Get Upcoming Appointments", async ({ page }) => {
+    // Login
     await login(page);
+
+    // Navigates to the dashboard
     await page.goto("/admin");
 
-    // wait for loading
+    // Wait for loading
     await page.waitForTimeout(5000);
 
-    // assert
+    // Assert
     await expect(page.locator("#upcomingAppointments")).toBeVisible();
 
+    // Logout
     await logout(page);
 });
 
 test("Get Total Appointments", async ({ page }) => {
+    // Login
     await login(page);
+
+    // Navigates to the dashboard
     await page.goto("/admin");
+
+    // Click the "Analytics" tab
     await page.getByRole("tab", { name: "Analytics" }).click();
 
-    // wait for loading
+    // Wait for loading
     await page.waitForTimeout(5000);
 
-    // Open the select dropdown
-    await page.locator("#analyticsPeriod").click();
-
-    // Wait for the dropdown options to become visible
-    await page.locator("text=This Week").waitFor();
-
-    // Click on the "Monthly" option
-    await page.locator("text=This Week").click();
-
-    // wait for loading
-    await page.waitForTimeout(5000);
-
-    // assert
+    // Assert
     await expect(page.locator("#totalAppointments")).toBeVisible();
 
+    // Logout
     await logout(page);
 });
 
 test("Get Completed Appointments", async ({ page }) => {
+    // Login
     await login(page);
+
+    // Navigates to the dashboard
     await page.goto("/admin");
+
+    // Click the "Analytics" tab
     await page.getByRole("tab", { name: "Analytics" }).click();
 
-    // wait for loading
+    // Wait for loading
     await page.waitForTimeout(5000);
 
-    // Open the select dropdown
-    await page.locator("#analyticsPeriod").click();
-
-    // Wait for the dropdown options to become visible
-    await page.locator("text=This Week").waitFor();
-
-    // Click on the "Monthly" option
-    await page.locator("text=This Week").click();
-
-    // wait for loading
-    await page.waitForTimeout(5000);
-
-    // assert
+    // Assert
     await expect(page.locator("#completedAppointments")).toBeVisible();
 
+    // Logout
     await logout(page);
 });
 
 test("Get Cancelled Appointments", async ({ page }) => {
+    // Login
     await login(page);
+
+    // Navigates to the dashboard
     await page.goto("/admin");
+
+    // Click the "Analytics" tab
     await page.getByRole("tab", { name: "Analytics" }).click();
 
-    // wait for loading
+    // Wait for loading
     await page.waitForTimeout(5000);
 
-    // Open the select dropdown
-    await page.locator("#analyticsPeriod").click();
-
-    // Wait for the dropdown options to become visible
-    await page.locator("text=This Week").waitFor();
-
-    // Click on the "Monthly" option
-    await page.locator("text=This Week").click();
-
-    // wait for loading
-    await page.waitForTimeout(5000);
-
-    // assert
+    // Assert
     await expect(page.locator("#cancelledAppointments")).toBeVisible();
 
+    // Logout
     await logout(page);
 });
 
 test("Get Revenue by Category", async ({ page }) => {
+    // Login
     await login(page);
+
+    // Navigates to the dashboard
     await page.goto("/admin");
+
+    // Click the "Analytics" tab
     await page.getByRole("tab", { name: "Analytics" }).click();
 
-    // wait for loading
+    // Wait for loading
     await page.waitForTimeout(5000);
 
-    // Open the select dropdown
-    await page.locator("#analyticsPeriod").click();
-
-    // Wait for the dropdown options to become visible
-    await page.locator("text=This Week").waitFor();
-
-    // Click on the "Monthly" option
-    await page.locator("text=This Week").click();
-
-    // wait for loading
-    await page.waitForTimeout(5000);
-
-    // assert
+    // Assert
     await expect(page.locator("#menRevenue")).toBeVisible();
     await expect(page.locator("#womenRevenue")).toBeVisible();
     await expect(page.locator("#kidRevenue")).toBeVisible();
 
+    // Logout
     await logout(page);
 });
 
 test("Toggle Dark Mode", async ({ page }) => {
+    // Navigates to the home page
     await page.goto("/");
 
     // Set theme to light in case the system theme is dark

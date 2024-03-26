@@ -39,7 +39,7 @@ export function UpcomingAppointments() {
     if (isLoading) return <UpcomingAppointmentsSkeleton />;
     if (appointments.length === 0) {
         return (
-            <div className="py-8 text-center">
+            <div id="upcomingAppointments" className="py-8 text-center">
                 No upcoming appointments found.
             </div>
         );

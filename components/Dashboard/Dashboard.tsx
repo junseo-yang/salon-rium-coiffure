@@ -439,10 +439,7 @@ export default function Dashboard() {
                                             )
                                         }
                                     >
-                                        <SelectTrigger
-                                            id="revenuePeriod"
-                                            className="w-[180px]"
-                                        >
+                                        <SelectTrigger className="w-[180px]">
                                             <SelectValue
                                                 placeholder={
                                                     revenueChartSelectedPeriod
@@ -486,10 +483,7 @@ export default function Dashboard() {
                                             )
                                         }
                                     >
-                                        <SelectTrigger
-                                            id="appointmentsPeriod"
-                                            className="w-[180px]"
-                                        >
+                                        <SelectTrigger className="w-[180px]">
                                             <SelectValue
                                                 placeholder={
                                                     appointmentsChartSelectedPeriod
@@ -543,7 +537,7 @@ export default function Dashboard() {
                             value={analyticsSelectedPeriod}
                             onValueChange={setAnalyticsSelectedPeriod}
                         >
-                            <SelectTrigger id="analyticsPeriod" className="w-[180px]">
+                            <SelectTrigger className="w-[180px]">
                                 <SelectValue
                                     placeholder={analyticsSelectedPeriod}
                                 />
