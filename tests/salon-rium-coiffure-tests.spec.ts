@@ -909,7 +909,7 @@ test("Get All Breaks", async ({ page }) => {
     await login(page);
     await page.goto("/admin/breaks");
 
-    await expect(page.getByText("Break")).toBeVisible();
+    await expect(page.getByText("Break", { exact: true })).toBeVisible();
 
     // Logout
     await logout(page);
