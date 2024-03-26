@@ -39,6 +39,19 @@ const login = async (page: Page) => {
     // Click Next
     await page.locator("#passwordNext").click();
 
+    // Click Continue
+    await page.getByText("Continue", { exact: true }).click();
+
+    await page.waitForTimeout(4000);
+
+    // Click Continue
+    await page.getByText("Continue", { exact: true }).click();
+
+    await page.waitForTimeout(4000);
+
+    // Click Continue
+    await page.getByText("Continue", { exact: true }).click();
+
     // Wait for Redirection
     await page.waitForURL("http://localhost:3000/");
 };
@@ -52,38 +65,7 @@ const logout = async (page: Page) => {
 };
 
 test("Sign In with Google", async ({ page }) => {
-    await page.goto("/");
-
-    // Click the Sign In button
-    await page.getByRole("button", { name: "Sign In" }).click();
-
-    // Click the Sign In with Google button
-    await page.getByText("Sign In with Google", { exact: true }).click();
-
-    // Wait for opening google login
-    await page.waitForTimeout(1000);
-
-    // Expect a title "Sign in - Google Accounts" a substring.
-    await expect(page).toHaveTitle(/Sign in - Google Accounts/);
-
-    // Login with Google Email
-    await page
-        .getByLabel("Email or Phone")
-        .fill(process.env.GOOGLE_USERNAME as string);
-
-    // Click Next
-    await page.locator("#identifierNext").click();
-
-    // Login with Google Password
-    await page
-        .getByLabel("Enter your password")
-        .fill(process.env.GOOGLE_PASSWORD as string);
-
-    // Click Next
-    await page.locator("#passwordNext").click();
-
-    // Wait for Redirection
-    await page.waitForURL("http://localhost:3000/");
+    await login(page);
 
     // Expect a title "Salon Rium Coiffure" a substring.
     await expect(page).toHaveTitle(/Salon Rium Coiffure/);
