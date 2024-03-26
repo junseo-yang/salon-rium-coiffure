@@ -79,7 +79,7 @@ const BreakModal = ({
     return (
         <Modal showModal={showDemoModal} setShowModal={setShowDemoModal}>
             <div className="w-full overflow-hidden md:max-w-md md:rounded-2xl md:border md:border-gray-100 md:shadow-xl">
-                <div className="flex flex-col items-center justify-center space-y-3 bg-white px-4 py-6 pt-8 text-center md:px-16">
+                <div className="flex flex-col items-center justify-center space-y-3 bg-white px-4 py-6 pt-8 text-center dark:bg-black md:px-16">
                     <Form.Root
                         className="FormRoot"
                         onSubmit={async (event) => {
@@ -153,7 +153,7 @@ const BreakModal = ({
                             <Form.Control asChild>
                                 <input
                                     id="name-input"
-                                    className="Input"
+                                    className="Input dark:bg-black"
                                     type="text"
                                     value={name}
                                     onChange={(e) => setName(e.target.value)}
@@ -180,6 +180,7 @@ const BreakModal = ({
                                 onChange={(e) => {
                                     setStaffName(e.target.value);
                                 }}
+                                className="dark:bg-black"
                             >
                                 {staffs.map((s) => (
                                     <option key={s.id} value={s.name}>
@@ -227,14 +228,15 @@ const BreakModal = ({
                                         timeCaption="Time"
                                         dateFormat="MMMM d, yyyy h:mm aa"
                                         showTimeSelect
-                                        className="Input cursor-not-allowed"
-                                        readOnly
+                                        className="Input dark:bg-black"
+                                        disabled
                                     />
                                     <div>
                                         <button
                                             type="button"
                                             onClick={toggleStartDatePicker}
                                             id="start-date-button"
+                                            className="hover:underline"
                                         >
                                             Choose Start Date
                                         </button>
@@ -242,6 +244,7 @@ const BreakModal = ({
                                         <button
                                             type="button"
                                             onClick={clearStartDate}
+                                            className="hover:underline"
                                         >
                                             Clear Start Date
                                         </button>
@@ -289,14 +292,15 @@ const BreakModal = ({
                                         timeCaption="Time"
                                         dateFormat="MMMM d, yyyy h:mm aa"
                                         showTimeSelect
-                                        className="Input cursor-not-allowed"
-                                        readOnly
+                                        className="Input dark:bg-black"
+                                        disabled
                                     />
                                     <div>
                                         <button
                                             id="end-date-button"
                                             type="button"
                                             onClick={toggleEndDatePicker}
+                                            className="hover:underline"
                                         >
                                             Choose End Date
                                         </button>
@@ -304,6 +308,7 @@ const BreakModal = ({
                                         <button
                                             type="button"
                                             onClick={clearEndDate}
+                                            className="hover:underline"
                                         >
                                             Clear End Date
                                         </button>
@@ -316,7 +321,7 @@ const BreakModal = ({
                             <button
                                 id="submit-button"
                                 type="submit"
-                                className="Button"
+                                className="Button hover:underline"
                                 style={{ marginTop: 10 }}
                             >
                                 Submit
