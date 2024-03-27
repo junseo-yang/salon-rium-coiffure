@@ -147,10 +147,10 @@ model Appointment {
   staff_name   String
   
   service         Service   @relation(fields: [serviceId], references: [id])
-  serviceId       String  @unique @db.ObjectId
+  serviceId       String  @db.ObjectId
 
   staff         Staff   @relation(fields: [staffId], references: [id])
-  staffId       String  @unique @db.ObjectId
+  staffId       String  @db.ObjectId
 
   google_calendar_event_id  String?
 }
@@ -164,5 +164,5 @@ model Break {
   to_datetime     DateTime
 
   staff         Staff   @relation(fields: [staffId], references: [id])
-  staffId       String  @unique @db.ObjectId
+  staffId       String  @db.ObjectId
 }
