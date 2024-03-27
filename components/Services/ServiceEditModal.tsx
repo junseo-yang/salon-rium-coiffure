@@ -100,7 +100,7 @@ const ServiceEditModal = ({
     return (
         <Modal showModal={showDemoModal} setShowModal={setShowDemoModal}>
             <div className="max-h-screen w-full overflow-scroll md:max-w-md md:rounded-2xl md:border md:border-gray-100 md:shadow-xl">
-                <div className="flex flex-col items-center justify-center space-y-3 bg-white px-4 py-6 pt-8 text-center md:px-16">
+                <div className="flex flex-col items-center justify-center space-y-3 bg-white px-4 py-6 pt-8 text-center dark:bg-black md:px-16">
                     <Form.Root
                         className="FormRoot"
                         onSubmit={async (event) => {
@@ -291,6 +291,7 @@ const ServiceEditModal = ({
                                 onChange={(e) => {
                                     setDuration(e.target.value);
                                 }}
+                                className="dark:bg-black"
                             >
                                 {Object.keys(Duration).map((d) => (
                                     <option key={d} value={d.toString()}>
@@ -317,6 +318,7 @@ const ServiceEditModal = ({
                                 onChange={(e) => {
                                     setInterval(e.target.value);
                                 }}
+                                className="dark:bg-black"
                             >
                                 {Object.keys(Interval).map((i) => (
                                     <option key={i} value={i.toString()}>
@@ -354,6 +356,7 @@ const ServiceEditModal = ({
                                                     staffIds.delete(s.id);
                                                 }
                                             }}
+                                            className="Input dark:bg-black"
                                         />
                                         {s.name}
                                     </label>
@@ -395,7 +398,7 @@ const ServiceEditModal = ({
                                         }
                                         open={startIsOpen}
                                         dateFormat="MMMM d, yyyy"
-                                        className="Input cursor-not-allowed"
+                                        className="Input cursor-not-allowed dark:bg-black"
                                         readOnly
                                     />
                                     <div>
@@ -453,7 +456,7 @@ const ServiceEditModal = ({
                                         }
                                         open={endIsOpen}
                                         dateFormat="MMMM d, yyyy"
-                                        className="Input cursor-not-allowed"
+                                        className="Input cursor-not-allowed dark:bg-black"
                                         readOnly
                                     />
                                     <div>
@@ -493,6 +496,7 @@ const ServiceEditModal = ({
                                 onChange={(e) => {
                                     setStartTime(e.target.value);
                                 }}
+                                className="dark:bg-black"
                             >
                                 <option value="09:00">09:00</option>
                                 <option value="10:00">10:00</option>
@@ -525,6 +529,7 @@ const ServiceEditModal = ({
                                 onChange={(e) => {
                                     setEndTime(e.target.value);
                                 }}
+                                className="dark:bg-black"
                             >
                                 <option value="09:00">09:00</option>
                                 <option value="10:00">10:00</option>

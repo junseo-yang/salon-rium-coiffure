@@ -183,7 +183,7 @@ export default function CustomerCalendar({ service, designer }) {
                                           }}
                                           disabled={!available}
                                           type="button"
-                                          className={`m-auto mt-1.5 block w-96 rounded-md border-2 border-x-blue-100 ${time === selectedTime ? "bg-blue-200" : "bg-blue-50 hover:bg-blue-100"} ${available ? "" : "!bg-gray-50"}`}
+                                          className={`m-auto mt-1.5 block w-96 rounded-md border-2 border-x-blue-100 dark:border-white dark:bg-black ${time === selectedTime ? "bg-blue-200 dark:bg-blue-300" : "bg-blue-50 hover:bg-blue-100 dark:hover:bg-blue-200"} ${available ? "" : "!bg-gray-50 dark:!bg-gray-500"}`}
                                       >
                                           {time}
                                       </button>
