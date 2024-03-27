@@ -64,7 +64,7 @@ export async function createAppointment(
 
             from_date: fromDatetime,
             to_date: toDatetime,
-            duration: "1hour",
+            duration,
 
             customer_name: customerName,
             customer_email: customerEmail,
