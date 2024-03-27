@@ -100,11 +100,20 @@ export async function getAvailableTimes(
     const endTime = moment(service.endTime, "HH:mm");
     const availableTimes = {};
     const mInterval = service.interval.replace("M", "");
-    while (startTime.isBefore(endTime)) {
-        const a = startTime.format("HH:mm");
-        const b = startTime.add(Number(mInterval), "m").format("HH:mm");
+    const mDuration = service.duration.replace("M", "");
 
-        availableTimes[`${a} ~ ${b}`] = true;
+    while (startTime.isBefore(endTime)) {
+        const endTimeInSlot = moment(startTime).add(Number(mDuration), "m");
+
+        if (endTimeInSlot > endTime) {
+            break;
+        }
+
+        availableTimes[
+            `${startTime.format("HH:mm")} ~ ${endTimeInSlot.format("HH:mm")}`
+        ] = true;
+
+        startTime.add(Number(mInterval), "m").format("HH:mm");
     }
 
     // filter
