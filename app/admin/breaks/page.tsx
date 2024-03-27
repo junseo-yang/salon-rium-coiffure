@@ -53,12 +53,12 @@ export default async function Page() {
                                                 {moment(b.from_datetime)
                                                     .local()
                                                     .format(
-                                                        "yyyy-MM-DD hh:mm"
+                                                        "yyyy-MM-DD HH:mm"
                                                     )}{" "}
                                                 ~{" "}
                                                 {moment(b.to_datetime)
                                                     .local()
-                                                    .format("yyyy-MM-DD hh:mm")}
+                                                    .format("yyyy-MM-DD HH:mm")}
                                             </p>
                                         </div>
 
