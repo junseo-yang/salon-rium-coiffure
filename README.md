@@ -144,6 +144,22 @@ This is an example of how to list things you need to use the software and how to
    ```sh
    npm install
    ```
+3. Copy the `.env.example` file with the name `.env`.
+   ```sh
+   cp .env.exmaple .env
+   ```
+4. Setup Environment Variables 
+   1. `DATABASE_URL`: Refer to https://www.mongodb.com/
+   2. `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`: Refer to https://console.cloud.google.com/
+   3. `NEXTAUTH_URL`: https://localhost:3000
+   4. `AI_LAB_TOOLS_API_KEY`: Refer to https://www.ailabtools.com/
+   5. `SMTP_EMAIL` and `SMTP_PASSWORD`: Refer to the instruction on https://www.gmass.co/blog/gmail-smtp/
+   6. `ADMIN_EMAIL`: Provide your admin email. (e.g., admin@google.com)
+   7. `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`, and `TWILIO_PHONE_NUMBER`: Refer to https://console.twilio.com/
+5. Create Database
+   ```sh
+   npx prisma db push
+   ```
 
 ### Run Application Locally
 1. Run the Application
@@ -158,18 +174,18 @@ This is an example of how to list things you need to use the software and how to
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Login
-- [ ] Service Management
-- [ ] Service/Designer Catalogue
-- [ ] Appointment Management
-- [ ] Staff Management
-- [ ] Break Management
+- [x] Login
+- [x] Service Management
+- [x] Service/Designer Catalogue
+- [x] Appointment Management
+- [x] Staff Management
+- [x] Break Management
+- [x] Google Calendar Sync
+- [x] Email/Text Message Notification System
+- [x] Pop-Up Management
+- [x] Salon Analytics/Management
+- [x] AI Virtual Hairstyle
 - [ ] Deposit/Payment System
-- [ ] Calendar Sync
-- [ ] Notification System
-- [ ] Pop-Up Management
-- [ ] Salon Management
-- [ ] AI Virtual Hairstyle
 - [ ] Chatbot for Customer Service
 
 See the [open issues](https://github.com/junseo-yang/salon-rium-coiffure/issues) for a full list of proposed features (and known issues).
@@ -248,4 +264,4 @@ Project Link: [https://github.com/junseo-yang/salon-rium-coiffure](https://githu
 [MongoDB-url]: https://www.mongodb.com/
 [Vercel]: https://img.shields.io/badge/vercel-%23000000.svg?style=for-the-badge&logo=vercel&logoColor=white
 [Vercel-url]: https://vercel.com/
-[product-screenshot-demo]: docs/images/template-showcase.gif
+[product-screenshot-demo]: docs/images/demo.gif
