@@ -31,7 +31,7 @@ export default function CustomerCalendar({ service, designer }) {
     const [selectedTime, setSelectedTime] = useState<null | string>(null);
 
     const [targetWeek, setTargetWeek] = useState(createWeekOnMid(current));
-    const [availableTimes, setAvailableTimes] = useState<null | string[]>(null);
+    const [availableTimes, setAvailableTimes] = useState<null | object>(null);
 
     // reset all selected date and selected time once either service is changed
     useEffect(() => {
@@ -174,18 +174,21 @@ export default function CustomerCalendar({ service, designer }) {
                     <h3>Time</h3>
                     <div className="mt-3 align-middle">
                         {availableTimes
-                            ? availableTimes.map((t) => (
-                                  <button
-                                      key={t}
-                                      onClick={() => {
-                                          setSelectedTime(t);
-                                      }}
-                                      type="button"
-                                      className={`m-auto mt-1.5 block w-96 rounded-md border-2 border-x-blue-100 dark:border-white  ${t === selectedTime ? "bg-blue-200 dark:bg-white dark:text-black" : "bg-blue-50 hover:bg-blue-100 dark:bg-black dark:hover:bg-gray-500"}`}
-                                  >
-                                      {t}
-                                  </button>
-                              ))
+                            ? Object.entries(availableTimes).map(
+                                  ([time, available]) => (
+                                      <button
+                                          key={time}
+                                          onClick={() => {
+                                              setSelectedTime(time);
+                                          }}
+                                          disabled={!available}
+                                          type="button"
+                                          className={`m-auto mt-1.5 block w-96 rounded-md border-2 border-x-blue-100 ${time === selectedTime ? "bg-blue-200" : "bg-blue-50 hover:bg-blue-100"} ${available ? "" : "!bg-gray-50"}`}
+                                      >
+                                          {time}
+                                      </button>
+                                  )
+                              )
                             : "Please select date first"}
                     </div>
 

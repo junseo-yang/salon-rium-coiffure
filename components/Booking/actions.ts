@@ -42,26 +42,20 @@ export async function createAppointment(
     // 12 25
     // 10:00 ~ 11:00
     const fromDatetime = new Date();
+    const fromTime = selectedTime.split(" ~ ")[0];
     fromDatetime.setMonth(Number(selectedDate.split(" ")[0]) - 1);
     fromDatetime.setDate(Number(selectedDate.split(" ")[1]));
     fromDatetime.setHours(
         // Add Timezone Offset
-        Number(selectedTime.split(" ~ ")[0].replace(":00", "")) + offset,
-        0,
+        Number(fromTime.split(":")[0]) + offset,
+        Number(fromTime.split(":")[1]),
         0,
         0
     );
 
-    const toDatetime = new Date();
-    toDatetime.setMonth(Number(selectedDate.split(" ")[0]) - 1);
-    toDatetime.setDate(Number(selectedDate.split(" ")[1]));
-    toDatetime.setHours(
-        // Add Timezone Offset
-        Number(selectedTime.split(" ~ ")[1].replace(":00", "")) + offset,
-        0,
-        0,
-        0
-    );
+    const toDatetime = new Date(fromDatetime);
+    const duration = service.duration.replace("M", "");
+    toDatetime.setMinutes(Number(duration));
 
     const appointment = await prisma.appointment.create({
         data: {
@@ -104,11 +98,13 @@ export async function getAvailableTimes(
     // populate all times divided by duration: (1h)
     const startTime = moment(service.startTime, "HH:mm");
     const endTime = moment(service.endTime, "HH:mm");
-    const times: string[] = [];
+    const availableTimes = {};
+    const mInterval = service.interval.replace("M", "");
     while (startTime.isBefore(endTime)) {
         const a = startTime.format("HH:mm");
-        const b = startTime.add(1, "h").format("HH:mm");
-        times.push(`${a} ~ ${b}`);
+        const b = startTime.add(Number(mInterval), "m").format("HH:mm");
+
+        availableTimes[`${a} ~ ${b}`] = true;
     }
 
     // filter
@@ -139,8 +135,7 @@ export async function getAvailableTimes(
         }
     });
 
-    const availableTimes = times.filter((t) => {
-        let isAvailable = true;
+    Object.keys(availableTimes).forEach((t) => {
         const fromTime = moment(t.split(" ~ ")[0], "HH:mm");
         const toTime = moment(t.split(" ~ ")[1], "HH:mm");
         fromTime.year(targetDate.getFullYear());
@@ -155,7 +150,7 @@ export async function getAvailableTimes(
             const aEndTime = moment(a.to_date);
 
             if (aStartTime.isBefore(toTime) && fromTime.isBefore(aEndTime)) {
-                isAvailable = false;
+                availableTimes[t] = false;
             }
         });
 
@@ -164,11 +159,9 @@ export async function getAvailableTimes(
             const aEndTime = moment(b.to_datetime);
 
             if (aStartTime.isBefore(toTime) && fromTime.isBefore(aEndTime)) {
-                isAvailable = false;
+                availableTimes[t] = false;
             }
         });
-
-        return isAvailable;
     });
 
     return availableTimes;

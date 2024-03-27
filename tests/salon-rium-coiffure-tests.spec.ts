@@ -3,9 +3,9 @@ import { test, expect, Page } from "@playwright/test";
 import fs from "fs";
 import moment from "moment";
 import prisma from "@/lib/prisma";
-import { Roles, ServiceCategory } from "@prisma/client";
 import { sendMail } from "@/lib/mails/mail";
 import { sendTwilio } from "@/lib/twilio/twilio";
+import { Duration, Interval, Roles, ServiceCategory } from "@prisma/client";
 
 test.describe.configure({ mode: "serial" });
 
@@ -98,6 +98,17 @@ test("Create Service", async ({ page }) => {
     // Login
     await login(page);
 
+    // create service
+    const testStaffName = `Test Staff ${Date.now()}`;
+    const testStaff = await prisma.staff.upsert({
+        where: { name: testStaffName },
+        update: {},
+        create: {
+            name: testStaffName,
+            role: Roles.Designer
+        }
+    });
+
     // Create a service
     await page.goto("/admin/services");
 
@@ -106,6 +117,14 @@ test("Create Service", async ({ page }) => {
     const testServiceName = `Test Service ${Date.now()}`;
     await page.locator("#name-input").fill(testServiceName);
     await page.locator("#price-input").fill("13.99");
+
+    await page.getByText(testStaffName).click();
+
+    await page.locator("#start-date-button").click();
+    await page.locator(".react-datepicker__week").first().first().click();
+    await page.locator("#end-date-button").click();
+    await page.locator(".react-datepicker__week").last().last().click();
+
     await page.locator("#submit-button").click();
 
     await page.waitForTimeout(1000);
@@ -125,6 +144,10 @@ test("Create Service", async ({ page }) => {
         .click();
     await page.waitForTimeout(1000);
 
+    await prisma.staff.delete({
+        where: { id: testStaff.id }
+    });
+
     // Logout
     await logout(page);
 });
@@ -132,6 +155,17 @@ test("Create Service", async ({ page }) => {
 test("Update Service", async ({ page }) => {
     // Login
     await login(page);
+
+    // create test staff first
+    const testStaffName = `Test Staff ${Date.now()}`;
+    const testStaff = await prisma.staff.upsert({
+        where: { name: testStaffName },
+        update: {},
+        create: {
+            name: testStaffName,
+            role: Roles.Designer
+        }
+    });
 
     // Create a service to update
     await page.goto("/admin/services");
@@ -141,6 +175,14 @@ test("Update Service", async ({ page }) => {
     const testServiceName = `Test Service ${Date.now()}`;
     await page.locator("#name-input").fill(testServiceName);
     await page.locator("#price-input").fill("13.99");
+
+    await page.getByText(testStaffName).click();
+
+    await page.locator("#start-date-button").click();
+    await page.locator(".react-datepicker__week").first().first().click();
+    await page.locator("#end-date-button").click();
+    await page.locator(".react-datepicker__week").last().last().click();
+
     await page.locator("#submit-button").click();
 
     await page.waitForTimeout(1000);
@@ -178,6 +220,10 @@ test("Update Service", async ({ page }) => {
         .click();
     await page.waitForTimeout(1000);
 
+    await prisma.staff.delete({
+        where: { id: testStaff.id }
+    });
+
     // Logout
     await logout(page);
 });
@@ -186,7 +232,18 @@ test("Delete Service", async ({ page }) => {
     // Login
     await login(page);
 
-    // Create a service to delete
+    // create test staff first
+    const testStaffName = `Test Staff ${Date.now()}`;
+    const testStaff = await prisma.staff.upsert({
+        where: { name: testStaffName },
+        update: {},
+        create: {
+            name: testStaffName,
+            role: Roles.Designer
+        }
+    });
+
+    // Create a service to update
     await page.goto("/admin/services");
 
     await page.locator("#btnAddService").click();
@@ -194,7 +251,16 @@ test("Delete Service", async ({ page }) => {
     const testServiceName = `Test Service ${Date.now()}`;
     await page.locator("#name-input").fill(testServiceName);
     await page.locator("#price-input").fill("13.99");
+
+    await page.getByText(testStaffName).click();
+
+    await page.locator("#start-date-button").click();
+    await page.locator(".react-datepicker__week").first().first().click();
+    await page.locator("#end-date-button").click();
+    await page.locator(".react-datepicker__week").last().last().click();
+
     await page.locator("#submit-button").click();
+
     await page.waitForTimeout(1000);
 
     // Delete the service
@@ -217,6 +283,10 @@ test("Delete Service", async ({ page }) => {
 
     // Logout
     await logout(page);
+
+    await prisma.staff.delete({
+        where: { id: testStaff.id }
+    });
 });
 
 test("Get All Staffs", async ({ page }) => {
@@ -604,6 +674,8 @@ test("Create Appointment", async ({ page }) => {
             startDate,
             startTime: "09:00",
             endTime: "19:00",
+            interval: Interval.M60,
+            duration: Duration.M60,
             staffs: {
                 connect: {
                     id: testStaff.id
@@ -677,6 +749,8 @@ test("Update Appointment", async ({ page }) => {
             startDate,
             startTime: "09:00",
             endTime: "19:00",
+            interval: Interval.M60,
+            duration: Duration.M60,
             staffs: {
                 connect: {
                     id: testStaff.id
@@ -769,6 +843,8 @@ test("Delete Appointment", async ({ page }) => {
             startDate,
             startTime: "09:00",
             endTime: "19:00",
+            interval: Interval.M60,
+            duration: Duration.M60,
             staffs: {
                 connect: {
                     id: testStaff.id
@@ -850,6 +926,8 @@ test("Calendar Appointment", async ({ page }) => {
             price: "70",
             category: ServiceCategory.Women,
             startDate,
+            interval: Interval.M60,
+            duration: Duration.M60,
             startTime: "09:00",
             endTime: "19:00",
             staffs: {

@@ -62,6 +62,20 @@ enum ServiceCategory {
   Kid
 }
 
+enum Interval {
+  M15
+  M30
+  M45
+  M60
+}
+
+enum Duration {
+  M15
+  M30
+  M45
+  M60
+}
+
 model Service {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String    @unique
@@ -70,7 +84,6 @@ model Service {
   
   startDate     DateTime
   endDate       DateTime?
-  duration      String?
   
   startTime     String
   endTime       String
@@ -84,6 +97,8 @@ model Service {
   appointments  Appointment[]
 
   category      ServiceCategory
+  interval      Interval
+  duration      Duration
 }
 
 enum Roles {

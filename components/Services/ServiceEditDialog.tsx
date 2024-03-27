@@ -3,8 +3,11 @@
 import { Pencil1Icon } from "@radix-ui/react-icons";
 import { useServiceEditModal } from "./ServiceEditModal";
 
-export default function ServiceEditDialog({ service }) {
-    const { DemoModal, setShowDemoModal } = useServiceEditModal(service);
+export default function ServiceEditDialog({ service, staffs }) {
+    const { DemoModal, setShowDemoModal } = useServiceEditModal(
+        service,
+        staffs
+    );
     return (
         <>
             <DemoModal />
