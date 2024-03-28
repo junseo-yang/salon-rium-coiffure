@@ -1,5 +1,7 @@
 import Balancer from "react-wrap-balancer";
 import prisma from "@/lib/prisma";
+import { redirect } from "next/navigation";
+import { Appointment } from "@prisma/client";
 
 export default async function Page({
     searchParams
@@ -7,12 +9,17 @@ export default async function Page({
     searchParams: { [key: string]: string | string[] | undefined };
 }) {
     const id = searchParams.appointment_id;
+    let appointment: Appointment | null = null;
 
-    const appointment = await prisma.appointment.findUnique({
-        where: {
-            id: id?.toString()
-        }
-    });
+    try {
+        appointment = await prisma.appointment.findUnique({
+            where: {
+                id: id?.toString()
+            }
+        });
+    } catch (error) {
+        redirect("/booking");
+    }
     return (
         <>
             <div className="w-full max-w-screen-xl animate-fade-up grid-cols-1 gap-5 px-5 md:grid-cols-3 xl:px-0">
@@ -56,19 +63,23 @@ export default async function Page({
 
                                 <p>
                                     Time:{" "}
-                                    {new Date(appointment?.from_date!)
-                                        .toLocaleTimeString()
-                                        .replace(":00 ", "")}{" "}
+                                    {new Date(
+                                        appointment?.from_date!
+                                    ).toLocaleTimeString("en-ca", {
+                                        timeStyle: "short",
+                                        hour12: false
+                                    })}{" "}
                                     to{" "}
-                                    {new Date(appointment?.to_date!)
-                                        .toLocaleTimeString()
-                                        .replace(":00 ", "")}
+                                    {new Date(
+                                        appointment?.to_date!
+                                    ).toLocaleTimeString("en-ca", {
+                                        timeStyle: "short",
+                                        hour12: false
+                                    })}
                                 </p>
                             </div>
                         </div>
                     </div>
-
-                    {/* <ConfirmationBox id={id}></ConfirmationBox> */}
                 </div>
             </div>
         </>

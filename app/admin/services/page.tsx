@@ -11,6 +11,8 @@ import ServiceEditDialog from "../../../components/Services/ServiceEditDialog";
 export default async function Page() {
     const services = await prisma.service.findMany();
 
+    const staffs = await prisma.staff.findMany();
+
     const session = await getServerSession(AuthOptions);
 
     // Admin Auth
@@ -29,7 +31,7 @@ export default async function Page() {
                             <Balancer>Services</Balancer>
                         </h2>
                         <div>
-                            <ServiceDialog />
+                            <ServiceDialog staffs={staffs} />
                         </div>
                     </div>
                     <div className="text-center">
@@ -42,7 +44,10 @@ export default async function Page() {
                                             {s.name} - ${s.price}
                                         </p>
                                         <div className="flex items-stretch">
-                                            <ServiceEditDialog service={s} />
+                                            <ServiceEditDialog
+                                                service={s}
+                                                staffs={staffs}
+                                            />
                                             <ServiceDelete serviceId={s.id} />
                                         </div>
                                     </div>

@@ -1,28 +1,39 @@
 "use server";
 
-import { ServiceCategory } from "@prisma/client";
+import { Duration, Interval, ServiceCategory } from "@prisma/client";
 import prisma from "@/lib/prisma";
 
 export async function createService(
     name: string,
     price: string,
     description: string,
+    startDate: Date,
+    endDate: Date | undefined,
+    startTime: string,
+    endTime: string,
+    staffIds: string[],
+    interval: Interval,
+    duration: Duration,
     category: ServiceCategory
 ) {
-    const today = new Date();
-    const aYearFromNow = new Date();
-    aYearFromNow.setFullYear(aYearFromNow.getFullYear() + 1);
-
     const service = await prisma.service.create({
         data: {
             name,
             price,
-            startDate: today,
-            endDate: aYearFromNow,
+            startDate,
+            endDate,
+            startTime,
+            endTime,
             description,
+            interval,
+            duration,
             category,
-            startTime: "09:00",
-            endTime: "19:00"
+
+            staffs: {
+                connect: staffIds.map((id) => ({
+                    id
+                }))
+            }
         }
     });
 
@@ -40,15 +51,18 @@ export async function getService(id: string) {
 }
 
 export async function getAvailableService(queryOptions?) {
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+
     const service = await prisma.service.findMany({
         where: {
             startDate: {
-                lte: new Date().toISOString()
+                lte: todayDate
             },
             OR: [
                 {
                     endDate: {
-                        gte: new Date().toISOString()
+                        gte: todayDate
                     }
                 },
                 {
@@ -70,6 +84,13 @@ export async function putService(
     name: string,
     price: string,
     description: string,
+    startDate: Date,
+    endDate: Date | undefined,
+    startTime: string,
+    endTime: string,
+    staffIds: string[],
+    interval: Interval,
+    duration: Duration,
     category: ServiceCategory
 ) {
     const result = await prisma.service.update({
@@ -79,8 +100,20 @@ export async function putService(
         data: {
             name,
             price,
+            startDate,
+            endDate,
+            startTime,
+            endTime,
             description,
-            category
+            interval,
+            duration,
+            category,
+
+            staffs: {
+                set: staffIds.map((id) => ({
+                    id
+                }))
+            }
         }
     });
 
