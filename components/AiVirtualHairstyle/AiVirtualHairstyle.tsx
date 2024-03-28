@@ -2,13 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import Balancer from "react-wrap-balancer";
-import { ChevronDown, Download, Upload } from "lucide-react";
+import { ChevronDown, Download, Upload, AlertCircle } from "lucide-react";
 import { request } from "@/app/ai-virtual-hairstyle/actions";
 import { COLORS, HAIRSTYLES } from "@/lib/constants";
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import Image from "next/image";
 import * as Toast from "@radix-ui/react-toast";
 import "./styles.css";
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger
+} from "@/components/ui/hover-card";
 import ImagePlaceHolder from "../Shared/ImagePlaceholder";
 import AiVirtualHairstylePopover from "./AiVirtualHairstylePopover";
 
@@ -355,7 +360,7 @@ export default function AiVirtualHairstyle() {
                                     />
                                 </div>
                                 {/* Image */}
-                                <div>
+                                <div className="flex">
                                     <input
                                         className="group relative block w-full min-w-0 max-w-fit flex-auto items-center justify-center space-x-2 rounded-full border border-black bg-clip-padding px-3 py-[0.32rem] text-sm font-normal text-black transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-black file:px-3 file:py-[0.32rem] file:text-white file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:cursor-pointer hover:file:cursor-pointer hover:file:bg-white hover:file:text-black dark:border-white dark:text-white"
                                         type="file"
@@ -370,6 +375,51 @@ export default function AiVirtualHairstyle() {
                                         }
                                         accept=".png,.jpg,.jpeg"
                                     />
+                                    <HoverCard>
+                                        <HoverCardTrigger>
+                                            <AlertCircle />
+                                        </HoverCardTrigger>
+                                        <HoverCardContent>
+                                            <h6>Image Requirements</h6>
+                                            <div className="text-center text-sm">
+                                                <ul>
+                                                    <li>
+                                                        Image resolution: Larger
+                                                        than 200x200px, smaller
+                                                        than 1999x1999px.
+                                                    </li>
+                                                    <li>
+                                                        Minimum Face Proportion:
+                                                        The proportion of the
+                                                        face in the image cannot
+                                                        be less than 20%.
+                                                    </li>
+                                                    <li>
+                                                        Facial Integrity: The
+                                                        face in the image should
+                                                        ideally not be obscured.
+                                                    </li>
+                                                    <li>
+                                                        Facial Angle: The face
+                                                        in the image should
+                                                        ideally be front-facing,
+                                                        with no more than a
+                                                        45-degree rotation to
+                                                        the left or right.
+                                                    </li>
+                                                    <li>
+                                                        <a
+                                                            href="https://www.ailabtools.com/doc/ai-portrait/effects/hairstyle-editor-pro/api-v200"
+                                                            target="_blank"
+                                                        >
+                                                            Click here for more
+                                                            information.
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </HoverCardContent>
+                                    </HoverCard>
                                 </div>
                                 {/* Buttons */}
                                 <div>
@@ -420,7 +470,7 @@ export default function AiVirtualHairstyle() {
                                     ) : null}
                                 </div>
                                 {/* Before/After */}
-                                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                                <div className="z-10 grid grid-cols-1 gap-5 sm:grid-cols-2">
                                     <div>
                                         <h3>
                                             <Balancer>Before</Balancer>
