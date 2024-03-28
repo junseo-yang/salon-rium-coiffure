@@ -35,7 +35,15 @@ export default async function Page() {
                                     <div className="mt-5 grid grid-cols-3">
                                         <div></div>
                                         <p>
-                                            {a.service_name} - {a.staff_name}
+                                            {`Service: ${a.service_name} | Designer: ${a.staff_name}`}
+                                            <br />
+                                            {`From: ${a.from_date.toLocaleString()}`}
+                                            <br />
+                                            {`To: ${a.to_date.toLocaleString()}`}
+                                            <br />
+                                            {`Name: ${a.customer_name} | Phone: ${a.customer_number} | Email: ${a.customer_email}`}
+                                            <br />
+                                            {`Status: ${a.status}`}
                                         </p>
                                         <div className="flex items-stretch">
                                             <AppointmentEditDialog
