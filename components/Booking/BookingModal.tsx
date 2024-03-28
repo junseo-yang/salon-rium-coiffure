@@ -16,7 +16,7 @@ import {
     createAppointment,
     sendEmailAppointmentRequest,
     sendTwilioAppointmentRequest
-} from "./actions";
+} from "../../app/booking/actions";
 
 const BookingModal = ({
     showDemoModal,

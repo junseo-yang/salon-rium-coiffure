@@ -26,7 +26,7 @@ import {
 import {
     deleteGoogleCalendarEvent,
     insertGoogleCalendarEvent
-} from "../Booking/actions";
+} from "../../app/booking/actions";
 
 const AppointmentEditModal = ({
     showDemoModal,

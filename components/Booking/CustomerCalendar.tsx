@@ -6,7 +6,7 @@ import moment, { Moment } from "moment";
 import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import { useBookingModal } from "./BookingModal";
-import { getAvailableTimes } from "./actions";
+import { getAvailableTimes } from "../../app/booking/actions";
 
 export default function CustomerCalendar({ service, designer }) {
     const current = moment();
