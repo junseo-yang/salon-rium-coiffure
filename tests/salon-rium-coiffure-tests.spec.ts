@@ -704,15 +704,16 @@ test("Create Appointment", async ({ page }) => {
     await page.locator("#submit-button").click();
 
     // assert
-    await page.waitForTimeout(1000);
-
+    await page.waitForURL(/\/booking\/confirmation/);
+    await expect(page.getByText("Thank You !", { exact: true })).toBeVisible();
     await expect(page.getByText(testService.name)).toBeVisible();
     await expect(page.getByText(testStaff.name)).toBeVisible();
 
     // delete appointment, staff and service
+    const appointmentId = page.url().split("=").slice(-1)[0];
     await prisma.appointment.delete({
         where: {
-            staffId: testStaff.id
+            id: appointmentId
         }
     });
 
@@ -789,7 +790,7 @@ test("Update Appointment", async ({ page }) => {
         .getByRole("button")
         .first()
         .click();
-    await page.selectOption("select#status", "pending");
+    await page.selectOption("select#status", "confirmed");
     await page.locator("#submit-button").click();
     await page.waitForTimeout(1000);
 
@@ -799,12 +800,12 @@ test("Update Appointment", async ({ page }) => {
         }
     });
 
-    expect(updatedAppointment?.status).toBe("pending");
+    expect(updatedAppointment?.status).toBe("confirmed");
 
     // delete appointment, staff and service
     await prisma.appointment.delete({
         where: {
-            staffId: testStaff.id
+            id: updatedAppointment!.id
         }
     });
 
