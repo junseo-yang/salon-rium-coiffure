@@ -62,6 +62,10 @@ export async function sendEmailAppointmentConfirmation(
     staff_name: string
 ) {
     const current = new Date();
+
+    // Replacing char M in duration
+    duration = duration.replace("M", "");
+
     // Send Appointment Confirmation Email to Admin
     await sendMail({
         to: process.env.ADMIN_EMAIL!,
@@ -162,6 +166,10 @@ export async function sendEmailAppointmentCancellation(
     staff_name: string
 ) {
     const current = new Date();
+
+    // Replacing char M in duration
+    duration = duration.replace("M", "");
+
     // Send Appointment Cancellation Email to Admin
     await sendMail({
         to: process.env.ADMIN_EMAIL!,

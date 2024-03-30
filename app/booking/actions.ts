@@ -191,6 +191,10 @@ export async function sendEmailAppointmentRequest(
     staff_name: string
 ) {
     const current = new Date();
+
+    // Replacing char M in duration
+    duration = duration.replace("M", "");
+
     // Send Appointment Request Email to Admin
     await sendMail({
         to: process.env.ADMIN_EMAIL!,
@@ -256,6 +260,11 @@ export async function sendTwilioAppointmentRequest(
     staff_name: string
 ) {
     const current = new Date();
+
+    // Replacing char M in duration
+    duration = duration.replace("M", "");
+
+    // Send Appointment Request Twilio to Customer
     await sendTwilio({
         to: customer_number,
         body: compileAppointmentTwilioTemplate({
