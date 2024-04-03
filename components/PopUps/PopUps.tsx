@@ -31,7 +31,11 @@ const PopUps: React.FC<PopUpsProps> = ({ initialPopUps }) => {
 
     const handleOutsideClick = useCallback((event) => {
         const isClickInsidePopUp = event.target.closest(".popup-content");
-        if (!isClickInsidePopUp) {
+        const isDoNotShowButtonClick = event.target.closest(
+            '[name="doNotShowAgain"]'
+        );
+
+        if (!isClickInsidePopUp && !isDoNotShowButtonClick) {
             setActivePopUps((prevPopUps) => {
                 // Remove the first popup in the array if there are any popups
                 if (prevPopUps.length > 0) {
@@ -42,16 +46,21 @@ const PopUps: React.FC<PopUpsProps> = ({ initialPopUps }) => {
         }
     }, []);
 
-    const handleDoNotShowAgainToday = useCallback((id: string) => {
-        const doNotShowAgainToday = JSON.parse(
-            localStorage.getItem("doNotShowAgainToday") || "{}"
-        );
-        doNotShowAgainToday[id] = new Date().toDateString(); // Save the date when user opted to not show
-        localStorage.setItem(
-            "doNotShowAgainToday",
-            JSON.stringify(doNotShowAgainToday)
-        );
-    }, []);
+    const handleDoNotShowAgainToday = useCallback(
+        (id: string) => {
+            const doNotShowAgainToday = JSON.parse(
+                localStorage.getItem("doNotShowAgainToday") || "{}"
+            );
+            doNotShowAgainToday[id] = new Date().toDateString(); // Save the date when user opted to not show
+            localStorage.setItem(
+                "doNotShowAgainToday",
+                JSON.stringify(doNotShowAgainToday)
+            );
+
+            handleClose(id); // Close the popup immediately after setting the preference
+        },
+        [handleClose]
+    );
 
     // Adjust body scroll based on active pop-ups
     useEffect(() => {
