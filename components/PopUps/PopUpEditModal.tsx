@@ -106,23 +106,6 @@ const PopUpEditModal = ({
         }
     };
 
-    // Clears the timestamp of the updated popup
-    // so that it could show again immediately after the update
-    const clearLocalStorageTimestamp = () => {
-        if (typeof window !== "undefined") {
-            const shownPopUpTimes = JSON.parse(
-                localStorage.getItem("shownPopUpTimes") || "{}"
-            );
-
-            shownPopUpTimes[popUp.id] = undefined;
-
-            localStorage.setItem(
-                "shownPopUpTimes",
-                JSON.stringify(shownPopUpTimes)
-            );
-        }
-    };
-
     return (
         <Modal showModal={showDemoModal} setShowModal={setShowDemoModal}>
             <div className="w-full overflow-hidden md:max-w-md md:rounded-2xl md:border md:border-gray-100 md:shadow-xl">
@@ -317,7 +300,6 @@ const PopUpEditModal = ({
                                 id="update-pop-up-button"
                                 type="submit"
                                 className="Button hover:underline"
-                                onClick={clearLocalStorageTimestamp}
                                 style={{ marginTop: 10 }}
                             >
                                 Update Pop-up
