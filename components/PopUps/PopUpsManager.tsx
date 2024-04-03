@@ -8,31 +8,30 @@ const PopUpsManager = ({ popUps }) => {
 
     useEffect(() => {
         if (typeof window !== "undefined") {
-            const currentTime = new Date().getTime();
-            const shownPopUpTimes = JSON.parse(
-                localStorage.getItem("shownPopUpTimes") || "{}"
+            const currentDate = new Date().toDateString();
+            const doNotShowAgainToday = JSON.parse(
+                localStorage.getItem("doNotShowAgainToday") || "{}"
             );
-            const twelveHours = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
 
-            const newEligiblePopUps = popUps.filter((popUp) => {
-                const lastShownTime = shownPopUpTimes[popUp.id];
-                return (
-                    !lastShownTime || currentTime - lastShownTime > twelveHours
-                );
+            // Cleanup logic: Remove any entries that are not for today
+            Object.keys(doNotShowAgainToday).forEach((key) => {
+                if (doNotShowAgainToday[key] !== currentDate) {
+                    delete doNotShowAgainToday[key];
+                }
             });
 
-            if (newEligiblePopUps.length > 0) {
-                // Update shown time for eligible pop-ups
-                newEligiblePopUps.forEach((popUp) => {
-                    shownPopUpTimes[popUp.id] = currentTime;
-                });
+            localStorage.setItem(
+                "doNotShowAgainToday",
+                JSON.stringify(doNotShowAgainToday)
+            );
 
-                localStorage.setItem(
-                    "shownPopUpTimes",
-                    JSON.stringify(shownPopUpTimes)
-                );
-                setShouldShowPopUps(newEligiblePopUps);
-            }
+            const eligiblePopUps = popUps.filter(
+                (popUp) =>
+                    // Check if the popup was opted out for today
+                    doNotShowAgainToday[popUp.id] !== currentDate
+            );
+
+            setShouldShowPopUps(eligiblePopUps);
         }
     }, [popUps]);
 

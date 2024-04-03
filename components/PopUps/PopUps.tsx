@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import "@/components/PopUps/PopUp.module.css";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 
 type PopUp = {
     id: string;
@@ -39,6 +40,17 @@ const PopUps: React.FC<PopUpsProps> = ({ initialPopUps }) => {
                 return prevPopUps;
             });
         }
+    }, []);
+
+    const handleDoNotShowAgainToday = useCallback((id: string) => {
+        const doNotShowAgainToday = JSON.parse(
+            localStorage.getItem("doNotShowAgainToday") || "{}"
+        );
+        doNotShowAgainToday[id] = new Date().toDateString(); // Save the date when user opted to not show
+        localStorage.setItem(
+            "doNotShowAgainToday",
+            JSON.stringify(doNotShowAgainToday)
+        );
     }, []);
 
     // Adjust body scroll based on active pop-ups
@@ -131,6 +143,18 @@ const PopUps: React.FC<PopUpsProps> = ({ initialPopUps }) => {
                             >
                                 {popUp.description}
                             </p>
+
+                            <Button
+                                className="text-sm font-normal"
+                                variant="link"
+                                id={`doNotShow-${popUp.id}`}
+                                name="doNotShowAgain"
+                                onClick={() =>
+                                    handleDoNotShowAgainToday(popUp.id)
+                                }
+                            >
+                                Don&apos;t show again today
+                            </Button>
 
                             <button
                                 onClick={() => handleClose(popUp.id)}
