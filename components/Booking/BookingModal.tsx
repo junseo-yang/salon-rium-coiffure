@@ -24,7 +24,8 @@ const BookingModal = ({
     service,
     designer,
     selectedDate,
-    selectedTime
+    selectedTime,
+    selectedYear
 }: {
     showDemoModal: boolean;
     setShowDemoModal: Dispatch<SetStateAction<boolean>>;
@@ -32,6 +33,7 @@ const BookingModal = ({
     designer: Staff;
     selectedDate: string;
     selectedTime: string;
+    selectedYear: string;
 }) => {
     const [name, setName] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -57,6 +59,7 @@ const BookingModal = ({
                                     designer,
                                     selectedTime,
                                     selectedDate,
+                                    selectedYear,
                                     name,
                                     phoneNumber,
                                     email
@@ -249,7 +252,8 @@ export function useBookingModal(
     service: Service,
     designer: Staff,
     selectedDate: string,
-    selectedTime: string
+    selectedTime: string,
+    selectedYear: string
 ) {
     const [showDemoModal, setShowDemoModal] = useState(false);
 
@@ -262,6 +266,7 @@ export function useBookingModal(
                 designer={designer}
                 selectedDate={selectedDate}
                 selectedTime={selectedTime}
+                selectedYear={selectedYear}
             />
         ),
         [
@@ -270,7 +275,8 @@ export function useBookingModal(
             service,
             designer,
             selectedDate,
-            selectedTime
+            selectedTime,
+            selectedYear
         ]
     );
 

@@ -30,6 +30,7 @@ export async function createAppointment(
 
     selectedTime: string,
     selectedDate: string,
+    selectedYear: string,
 
     customerName: string,
     customerNumber: string,
@@ -43,6 +44,7 @@ export async function createAppointment(
     // 10:00 ~ 11:00
     const fromDatetime = new Date();
     const fromTime = selectedTime.split(" ~ ")[0];
+    fromDatetime.setFullYear(Number(selectedYear));
     fromDatetime.setMonth(Number(selectedDate.split(" ")[0]) - 1);
     fromDatetime.setDate(Number(selectedDate.split(" ")[1]));
     fromDatetime.setHours(
@@ -95,6 +97,10 @@ export async function getAvailableTimes(
     designer: Staff,
     targetDate: Date
 ) {
+    const current = new Date();
+    // offset with EDT
+    const offset = 4 - current.getTimezoneOffset() / 60;
+
     // populate all times divided by duration: (1h)
     const startTime = moment(service.startTime, "HH:mm");
     const endTime = moment(service.endTime, "HH:mm");
@@ -155,8 +161,8 @@ export async function getAvailableTimes(
         toTime.date(targetDate.getDate());
 
         appointments.forEach((a) => {
-            const aStartTime = moment(a.from_date);
-            const aEndTime = moment(a.to_date);
+            const aStartTime = moment(a.from_date).subtract(offset, "h");
+            const aEndTime = moment(a.to_date).subtract(offset, "h");
 
             if (aStartTime.isBefore(toTime) && fromTime.isBefore(aEndTime)) {
                 availableTimes[t] = false;
@@ -164,8 +170,8 @@ export async function getAvailableTimes(
         });
 
         breaks.forEach((b) => {
-            const aStartTime = moment(b.from_datetime);
-            const aEndTime = moment(b.to_datetime);
+            const aStartTime = moment(b.from_datetime).subtract(offset, "h");
+            const aEndTime = moment(b.to_datetime).subtract(offset, "h");
 
             if (aStartTime.isBefore(toTime) && fromTime.isBefore(aEndTime)) {
                 availableTimes[t] = false;
