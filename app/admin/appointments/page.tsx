@@ -37,9 +37,9 @@ export default async function Page() {
                                         <p>
                                             {`Service: ${a.service_name} | Designer: ${a.staff_name}`}
                                             <br />
-                                            {`From: ${a.from_date.toLocaleString()}`}
+                                            {`From: ${a.from_date.toLocaleString(undefined, { timeZone: "America/Montreal" })}`}
                                             <br />
-                                            {`To: ${a.to_date.toLocaleString()}`}
+                                            {`To: ${a.to_date.toLocaleString(undefined, { timeZone: "America/Montreal" })}`}
                                             <br />
                                             {`Name: ${a.customer_name} | Phone: ${a.customer_number} | Email: ${a.customer_email}`}
                                             <br />

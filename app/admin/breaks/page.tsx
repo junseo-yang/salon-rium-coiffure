@@ -4,7 +4,8 @@ import AuthOptions from "@/app/api/auth/[...nextauth]/options";
 import AccessDenied from "@/components/Shared/AccessDenied";
 import BreakDialog from "@/components/Breaks/BreakDialog";
 import prisma from "@/lib/prisma";
-import moment from "moment";
+import moment from "moment-timezone";
+
 import BreakEditModal from "@/components/Breaks/BreakEditDialog";
 import BreakDelete from "@/components/Breaks/BreakDelete";
 import { AdminNav } from "@/components/Shared/AdminNav";
@@ -51,13 +52,13 @@ export default async function Page() {
                                             </p>
                                             <p>
                                                 {moment(b.from_datetime)
-                                                    .local()
+                                                    .tz("America/Montreal")
                                                     .format(
                                                         "yyyy-MM-DD HH:mm"
                                                     )}{" "}
                                                 ~{" "}
                                                 {moment(b.to_datetime)
-                                                    .local()
+                                                    .tz("America/Montreal")
                                                     .format("yyyy-MM-DD HH:mm")}
                                             </p>
                                         </div>

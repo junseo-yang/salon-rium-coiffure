@@ -58,7 +58,9 @@ export default async function Page({
                                     Date:{" "}
                                     {new Date(
                                         appointment?.from_date!
-                                    ).toLocaleDateString()}
+                                    ).toLocaleDateString(undefined, {
+                                        timeZone: "America/Montreal"
+                                    })}
                                 </p>
 
                                 <p>
@@ -66,6 +68,7 @@ export default async function Page({
                                     {new Date(
                                         appointment?.from_date!
                                     ).toLocaleTimeString("en-ca", {
+                                        timeZone: "America/Montreal",
                                         timeStyle: "short",
                                         hour12: false
                                     })}{" "}
@@ -73,6 +76,7 @@ export default async function Page({
                                     {new Date(
                                         appointment?.to_date!
                                     ).toLocaleTimeString("en-ca", {
+                                        timeZone: "America/Montreal",
                                         timeStyle: "short",
                                         hour12: false
                                     })}

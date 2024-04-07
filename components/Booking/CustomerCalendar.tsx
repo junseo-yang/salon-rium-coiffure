@@ -4,34 +4,68 @@
 
 import moment, { Moment } from "moment";
 import { ArrowLeftIcon, ArrowRightIcon } from "@radix-ui/react-icons";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import useWindowSize from "@/lib/hooks/use-window-size";
 import { useBookingModal } from "./BookingModal";
 import { getAvailableTimes } from "../../app/booking/actions";
 
 export default function CustomerCalendar({ service, designer }) {
-    const current = moment();
+    const { isDesktop } = useWindowSize();
 
     // formatting function
-    const createWeekOnMid = (midDay: Moment) => {
-        const week = [
-            moment(midDay).subtract(3, "days").startOf("day"),
-            moment(midDay).subtract(2, "days").startOf("day"),
-            moment(midDay).subtract(1, "days").startOf("day"),
-            midDay.startOf("day"),
-            moment(midDay).add(1, "days").startOf("day"),
-            moment(midDay).add(2, "days").startOf("day"),
-            moment(midDay).add(3, "days").startOf("day")
-        ];
+    const createWeekOnMid = useCallback(
+        (midDay: Moment) => {
+            const week: Moment[] = [];
 
-        return week;
-    };
+            if (isDesktop) {
+                week.push(
+                    ...[
+                        moment(midDay)
+                            .subtract(3, "days")
+                            .local()
+                            .startOf("day"),
+                        moment(midDay)
+                            .subtract(2, "days")
+                            .local()
+                            .startOf("day"),
+                        moment(midDay)
+                            .subtract(1, "days")
+                            .local()
+                            .startOf("day"),
+                        midDay.local().startOf("day"),
+                        moment(midDay).add(1, "days").local().startOf("day"),
+                        moment(midDay).add(2, "days").local().startOf("day"),
+                        moment(midDay).add(3, "days").local().startOf("day")
+                    ]
+                );
+            } else {
+                week.push(
+                    ...[
+                        moment(midDay)
+                            .subtract(1, "days")
+                            .local()
+                            .startOf("day"),
+                        midDay.local().startOf("day"),
+                        moment(midDay).add(1, "days").local().startOf("day")
+                    ]
+                );
+            }
+
+            return week;
+        },
+        [isDesktop]
+    );
 
     // stateful variables
     const [selectedDate, setSelectedDate] = useState<null | Moment>(null);
     const [selectedTime, setSelectedTime] = useState<null | string>(null);
 
-    const [targetWeek, setTargetWeek] = useState(createWeekOnMid(current));
+    const [targetWeek, setTargetWeek] = useState<null | Moment[]>(null);
     const [availableTimes, setAvailableTimes] = useState<null | object>(null);
+
+    useEffect(() => {
+        setTargetWeek(createWeekOnMid(moment()));
+    }, [createWeekOnMid, isDesktop]);
 
     // reset all selected date and selected time once either service is changed
     useEffect(() => {
@@ -90,11 +124,11 @@ export default function CustomerCalendar({ service, designer }) {
 
     // button functions
     const clickArrow = (isRight: boolean) => {
-        const currentMidDay = targetWeek[3];
+        const currentMidDay = targetWeek![Math.floor(targetWeek!.length / 2)];
         if (isRight) {
-            currentMidDay.add(1, "week");
+            currentMidDay.add(isDesktop ? 7 : 3, "day");
         } else {
-            currentMidDay.subtract(1, "week");
+            currentMidDay.subtract(isDesktop ? 7 : 3, "day");
         }
 
         setSelectedDate(null);
@@ -108,67 +142,78 @@ export default function CustomerCalendar({ service, designer }) {
         service,
         designer,
         selectedDate?.format("MM DD") ?? "",
-        selectedTime!
+        selectedTime!,
+        selectedDate?.format("YYYY") ?? ""
     );
 
     return (
         <>
-            <div className="rounded-md p-6">
-                <div className="mx-auto mb-5 rounded-lg shadow-md md:mx-12">
-                    <div className="pt-1 text-center font-bold">
-                        {targetWeek[3].format("MMMM")}
+            <div className="rounded-md">
+                <div className="mx-auto mb-5 h-36 rounded-lg shadow-md md:mx-12">
+                    <div className="mt-1 pt-1 text-center font-bold">
+                        {targetWeek
+                            ? targetWeek[
+                                  Math.floor(targetWeek.length / 2)
+                              ].format("MMMM, YYYY")
+                            : null}
                     </div>
-                    <div className="flex justify-start px-2 py-4 md:justify-center">
-                        <button
-                            className="mr-5"
-                            aria-label="Save"
-                            onClick={() => clickArrow(false)}
-                        >
-                            <ArrowLeftIcon />
-                        </button>
-                        {targetWeek.map((d) => (
+                    {targetWeek ? (
+                        <div className="flex justify-start overflow-hidden px-2 py-4  md:justify-center">
                             <button
-                                onClick={() => {
-                                    setSelectedDate(d);
-                                }}
-                                key={d.format("mmdd")}
-                                className={`group mx-1 flex w-16 cursor-pointer justify-center rounded-full ${selectedDate?.format("MMDD") === d.format("MMDD") ? "bg-blue-400" : "hover-dark-shadow transition-all duration-300 hover:bg-blue-300 hover:shadow-lg "}`}
+                                className="mr-5"
+                                aria-label="Save"
+                                onClick={() => clickArrow(false)}
                             >
-                                <div className="flex items-center px-4 py-4">
-                                    <div className="text-center">
-                                        <p
-                                            className={`text-sm transition-all duration-300  ${
-                                                moment().format("MMDD") ===
-                                                d.format("MMDD")
-                                                    ? "font-bold"
-                                                    : ""
-                                            } `}
-                                        >
-                                            {d.format("ddd")}{" "}
-                                        </p>
-                                        <p
-                                            className={`group-hover:text-gray-100" mt-3 transition-all duration-300	group-hover:font-bold ${
-                                                moment().format("MMDD") ===
-                                                d.format("MMDD")
-                                                    ? "font-bold"
-                                                    : ""
-                                            }`}
-                                        >
-                                            {" "}
-                                            {d.date()}{" "}
-                                        </p>
-                                    </div>
-                                </div>
+                                <ArrowLeftIcon />
                             </button>
-                        ))}
-                        <button
-                            className="ml-5"
-                            aria-label="Save"
-                            onClick={() => clickArrow(true)}
-                        >
-                            <ArrowRightIcon />
-                        </button>
-                    </div>
+                            {targetWeek.map((d) => (
+                                <button
+                                    onClick={() => {
+                                        setSelectedDate(d);
+                                    }}
+                                    key={d.format("mmdd")}
+                                    className={`group mx-1 flex w-16 cursor-pointer justify-center rounded-full ${selectedDate?.format("MMDD") === d.format("MMDD") ? "bg-blue-400" : "hover-dark-shadow transition-all duration-300 hover:bg-blue-300 hover:shadow-lg "}`}
+                                >
+                                    <div className="flex items-center px-4 py-4">
+                                        <div className="text-center">
+                                            <p
+                                                className={`text-sm transition-all duration-300  ${
+                                                    moment()
+                                                        .local()
+                                                        .format("MMDD") ===
+                                                    d.format("MMDD")
+                                                        ? "font-bold"
+                                                        : ""
+                                                } `}
+                                            >
+                                                {d.format("ddd")}{" "}
+                                            </p>
+                                            <p
+                                                className={`group-hover:text-gray-100" mt-3 transition-all duration-300	group-hover:font-bold ${
+                                                    moment()
+                                                        .local()
+                                                        .format("MMDD") ===
+                                                    d.format("MMDD")
+                                                        ? "font-bold"
+                                                        : ""
+                                                }`}
+                                            >
+                                                {" "}
+                                                {d.date()}{" "}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </button>
+                            ))}
+                            <button
+                                className="ml-5"
+                                aria-label="Save"
+                                onClick={() => clickArrow(true)}
+                            >
+                                <ArrowRightIcon />
+                            </button>
+                        </div>
+                    ) : null}
                 </div>
                 <div className="mx-auto rounded-lg px-2 py-4 text-center shadow-md md:mx-12 md:justify-center">
                     <h3>Time</h3>
@@ -183,7 +228,7 @@ export default function CustomerCalendar({ service, designer }) {
                                           }}
                                           disabled={!available}
                                           type="button"
-                                          className={`m-auto mt-1.5 block w-96 rounded-md border-2 border-x-blue-100 dark:border-white dark:bg-black ${time === selectedTime ? "bg-blue-200 dark:bg-blue-300" : "bg-blue-50 hover:bg-blue-100 dark:hover:bg-blue-200"} ${available ? "" : "!bg-gray-50 dark:!bg-gray-500"}`}
+                                          className={`m-auto mt-1.5 block w-10/12 rounded-md border-2 border-x-blue-100 dark:border-white dark:bg-black ${time === selectedTime ? "bg-blue-200 dark:bg-blue-300" : "bg-blue-50 hover:bg-blue-100 dark:hover:bg-blue-200"} ${available ? "" : "!bg-gray-50 dark:!bg-gray-500"}`}
                                       >
                                           {time}
                                       </button>
@@ -194,7 +239,7 @@ export default function CustomerCalendar({ service, designer }) {
 
                     <button
                         type="button"
-                        className="m-auto mt-10 block w-96 rounded-md border-2 border-x-blue-100 bg-blue-200 dark:border-white dark:bg-black"
+                        className="m-auto mt-10 block w-10/12 rounded-md border-2 border-x-blue-100 bg-blue-200 dark:border-white dark:bg-black"
                         onClick={() => {
                             if (
                                 !selectedDate ||

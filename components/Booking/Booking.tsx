@@ -2,17 +2,21 @@
 
 "use client";
 
-import Popover from "@/components/Shared/Popover";
 import { Service, Staff } from "@prisma/client";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 
-import "./styles.css";
+import useWindowSize from "@/lib/hooks/use-window-size";
 
 import * as ScrollArea from "@radix-ui/react-scroll-area";
+import BookingPopover from "./BookingPopover";
 import CustomerCalendar from "./CustomerCalendar";
 
+import "./styles.css";
+
 export default function Booking({ services }) {
+    const { isDesktop } = useWindowSize();
+
     const [filteredDesigners, setFilteredDesigners] = useState<Staff[] | null>(
         null
     );
@@ -46,7 +50,7 @@ export default function Booking({ services }) {
         <>
             <div className="m-5 flex">
                 <div className="w-100 mr-1">
-                    <Popover
+                    <BookingPopover
                         content={
                             <ScrollArea.Root className="ScrollAreaRoot">
                                 <ScrollArea.Viewport className="ScrollAreaViewport">
@@ -100,10 +104,10 @@ export default function Booking({ services }) {
                                 }`}
                             />
                         </button>
-                    </Popover>
+                    </BookingPopover>
                 </div>
                 <div>
-                    <Popover
+                    <BookingPopover
                         content={
                             <ScrollArea.Root className="ScrollAreaRoot h-1/3">
                                 <ScrollArea.Viewport className="ScrollAreaViewport">
@@ -160,10 +164,10 @@ export default function Booking({ services }) {
                                 }`}
                             />
                         </button>
-                    </Popover>
+                    </BookingPopover>
                 </div>
             </div>
-            <div className="m-5">
+            <div className={isDesktop ? "mb-5" : ""}>
                 <CustomerCalendar
                     service={selectedService}
                     designer={selectedDesigner}
