@@ -18,6 +18,11 @@ const nextConfig = {
                 protocol: "https",
                 hostname: "img.hair.ailabapi.com",
                 pathname: "**"
+            },
+            {
+                protocol: "https",
+                hostname: "img2.hairstyle.ailabapi.com",
+                pathname: "**"
             }
         ]
     }
