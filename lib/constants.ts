@@ -1,4 +1,4 @@
-export const BOOKING_PAGE_URL = `https://k-beautycare.com/booking-online/`;
+export const BOOKING_PAGE_URL = `https://www.fresha.com/a/salon-rium-coiffure-monteuriol-570-avenue-du-president-kennedy-gp9vj3c0`;
 export const AI_LAB_API_URL = `https://www.ailabapi.com/api/portrait/effects/hairstyle-editor-pro`;
 export const AI_LAB_QUERY_URL = `https://www.ailabapi.com/api/common/query-async-task-result`;
 

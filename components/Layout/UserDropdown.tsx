@@ -39,16 +39,6 @@ export default function UserDropdown({ session }: { session: Session }) {
                                 <p className="text-sm">Dashboard</p>
                             </Link>
                         ) : null}
-                        {session ? (
-                            <Link
-                                className="relative flex w-full items-center justify-start space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-gray-100"
-                                href="/ai-virtual-hairstyle"
-                                onClick={() => setOpenPopover(!openPopover)}
-                            >
-                                <Bot className="h-4 w-4" />
-                                <p className="text-sm">Ai Virtual Hairstyle</p>
-                            </Link>
-                        ) : null}
                         <button
                             className="relative flex w-full items-center justify-start space-x-2 rounded-md p-2 text-left text-sm transition-all duration-75 hover:bg-gray-100"
                             onClick={() => signOut()}

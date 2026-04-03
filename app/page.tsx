@@ -2,6 +2,7 @@ import Balancer from "react-wrap-balancer";
 import prisma from "@/lib/prisma";
 import { ServiceCategory } from "@prisma/client";
 import PopUpsManager from "@/components/PopUps/PopUpsManager";
+import { BOOKING_PAGE_URL } from "@/lib/constants";
 import { getAvailableService } from "./admin/services/actions";
 
 export default async function Home() {
@@ -75,9 +76,8 @@ export default async function Home() {
                 >
                     <a
                         className="group flex max-w-fit items-center justify-center space-x-2 rounded-full border border-black bg-black px-5 py-2 text-sm text-white transition-colors hover:bg-white hover:text-black dark:border-white dark:bg-white dark:text-black dark:hover:bg-black dark:hover:text-white"
-                        // href={BOOKING_PAGE_URL}
-                        // target="_blank"
-                        href="/booking"
+                        href={BOOKING_PAGE_URL}
+                        target="_blank"
                         rel="noopener noreferrer"
                     >
                         <p>Book Now</p>
